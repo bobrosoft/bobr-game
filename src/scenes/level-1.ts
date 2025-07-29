@@ -8,7 +8,7 @@ export const sceneLevel1 = (k:  KAPLAYCtx) => {
   k.add([
     k.rect(k.width(), 20),
     k.pos(0, k.height() - 20),
-    k.color('#9e9303'),
+    k.color('#9e9303' as any),
     k.area(),
     k.anchor('top'),
     k.body({isStatic: true}), // static body for the ground
@@ -18,7 +18,7 @@ export const sceneLevel1 = (k:  KAPLAYCtx) => {
   k.add([
     k.rect(100, 20),
     k.pos(0, 340),
-    k.color('#9e9303'),
+    k.color('#9e9303' as any),
     k.area(),
     k.anchor('top'),
     k.body({isStatic: true}),
@@ -26,7 +26,7 @@ export const sceneLevel1 = (k:  KAPLAYCtx) => {
   k.add([
     k.rect(100, 20),
     k.pos(150, k.height() - 100),
-    k.color('#9e9303'),
+    k.color('#9e9303' as any),
     k.area(),
     k.anchor('top'),
     k.body({isStatic: true}),
@@ -34,7 +34,7 @@ export const sceneLevel1 = (k:  KAPLAYCtx) => {
   k.add([
     k.rect(100, 20),
     k.pos(400, k.height() - 150),
-    k.color('#9e9303'),
+    k.color('#9e9303' as any),
     k.area(),
     k.anchor('top'),
     k.body({isStatic: true}),
