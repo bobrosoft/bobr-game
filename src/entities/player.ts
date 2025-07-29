@@ -1,7 +1,7 @@
-// src/entities/player.ts
-import type kaplay from "kaplay";
+import {Vec2} from 'kaplay';
+import {k} from '../kaplay';
 
-type KCtx = ReturnType<typeof kaplay>;
+type KCtx = typeof k;
 
 export interface PlayerConfig {
   maxRunSpeed: number;
@@ -10,129 +10,133 @@ export interface PlayerConfig {
   decelGround: number;
   decelAir: number;
   jumpForce: number;
-  coyoteTime: number;     // ms
-  jumpBuffer: number;     // ms
   minRunAnimSpeed: number;
   maxRunAnimSpeed: number;
 }
 
 const DEFAULTS: PlayerConfig = {
-  maxRunSpeed: 360,       // px/s
-  accelGround: 2200,
-  accelAir: 1200,
-  decelGround: 2600,
-  decelAir: 1400,
-  jumpForce: 600,
-  coyoteTime: 120,
-  jumpBuffer: 120,
-  minRunAnimSpeed: 6,     // frames / sec (or engine-specific unit)
-  maxRunAnimSpeed: 18,
+  maxRunSpeed: 300, // px/s
+  accelGround: 300,
+  accelAir: 150,
+  decelGround: 600,
+  decelAir: 300,
+  jumpForce: 400,
+  minRunAnimSpeed: 1, // anim speed multiplier
+  maxRunAnimSpeed: 2,
 };
 
-export function createPlayer(k: KCtx, posXY = k.vec2(100, 100), cfg: Partial<PlayerConfig> = {}) {
-  const C = { ...DEFAULTS, ...cfg };
+enum AnimName {
+  idle = 'idle',
+  walk = 'walk',
+  jump = 'jump',
+  fall = 'fall',
+}
 
-  // Track timing for coyote & jump buffer
-  let lastOnGroundTime = -9999;
-  let lastJumpPressTime = -9999;
+k.loadSprite('player', '/sprites/characters/bobr.gif', {
+  sliceX: 5,
+  sliceY: 4,
+  anims: {
+    idle: {from: 0, to: 0},
+    walk: {from: 5, to: 8, speed: 10, loop: true}, // speed here is frames per second
+    jump: {from: 10, to: 10},
+    fall: {from: 10, to: 10},
+  },
+});
+
+export function createPlayer(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Partial<PlayerConfig>) {
+  const C = {...DEFAULTS, ...cfg};
 
   const player = k.add([
-    k.sprite("player", { anim: "idle" }),
+    k.sprite('player', {anim: 'idle'}),
     k.pos(posXY),
-    k.area(),
-    k.body(),              // enables gravity + isGrounded()
-    k.anchor("center"),
-    k.state("idle", ["idle", "run", "jump", "fall"]),
+    k.area({shape: new k.Rect(k.vec2(3, 0), 20, 31)}), // custom area shape for better collision
+    k.body(), // enables gravity + isGrounded()
+    k.anchor('bot'),
+    k.state('idle', ['idle', 'walk', 'jump', 'fall']),
     {
-      id: "playerCtrl",
-      vx: 0,
-      get moveDir() {
-        return (k.isKeyDown("right") || k.isKeyDown("d") ? 1 : 0) +
-          (k.isKeyDown("left")  || k.isKeyDown("a") ? -1 : 0);
+      id: 'playerCtrl',
+      vx: 0, // horizontal velocity
+      get moveDirection(): number {
+        return (k.isButtonDown('right') ? 1 : 0) +
+          (k.isButtonDown('left') ? -1 : 0);
       },
     },
   ]);
 
-  // --- INPUT: remember jump presses for "jump buffer"
-  k.onKeyPress(["space", "up", "w"], () => {
-    lastJumpPressTime = k.time();
+  k.onButtonPress(['jump'], () => {
+    // Allow jumping only if player is grounded
+    if (player.isGrounded()) {
+      doJump();
+    }
   });
 
-  // --- MAIN UPDATE ---
   player.onUpdate(() => {
     const dt = k.dt();
     const onGround = player.isGrounded();
 
-    // track coyote time
-    if (onGround) lastOnGroundTime = k.time();
-
     // horizontal movement
-    const want = player.moveDir;
-    const absVx = Math.abs(player.vx);
-    const accel = onGround ? C.accelGround : C.accelAir;
-    const decel = onGround ? C.decelGround : C.decelAir;
+    const direction = player.moveDirection;
 
-    if (want !== 0) {
-      // accelerate toward target
-      player.vx = k.moveTowards(player.vx, want * C.maxRunSpeed, accel * dt);
+    if (direction !== 0) {
+      let accel = onGround ? C.accelGround : C.accelAir;
+
+      // If direction is opposite to current velocity, need to change acceleration
+      if (Math.sign(direction) !== Math.sign(player.vx)) {
+        accel += (onGround ? C.decelGround : C.decelAir); // add deceleration to acceleration
+      }
+
+      player.vx = moveTowards(player.vx, direction * C.maxRunSpeed, accel * dt);
     } else {
-      // decelerate toward zero
-      const sign = Math.sign(player.vx);
-      const mag = Math.max(0, absVx - decel * dt);
-      player.vx = mag * sign;
+      const accel = onGround ? C.decelGround : C.decelAir;
+      const mag = Math.max(0, Math.abs(player.vx) - accel * dt);
+      player.vx = mag * Math.sign(player.vx);
     }
 
     // apply velocity to pos (Kaplay's body() already applies gravity to vy;
     // vx is usually read by you / set on obj; if your Kaplay build needs a different prop, adapt here)
-    player.move(player.vx * dt, 0);
+    player.move(player.vx, 0);
 
-    // facing
-    if (player.vx !== 0) player.flipX = player.vx < 0;
-
-    // buffered / coyote jump
-    const canCoyote = (k.time() - lastOnGroundTime) <= C.coyoteTime / 1000;
-    const canBuffered = (k.time() - lastJumpPressTime) <= C.jumpBuffer / 1000;
-
-    if (canBuffered && canCoyote) {
-      doJump();
-      // consume jump buffer
-      lastJumpPressTime = -9999;
-    }
+    // Set face direction based on direction of movement
+    player.flipX = direction < 0 ? true : direction > 0 ? false : player.flipX;
+    player.area.scale.x = player.flipX ? -1 : 1; // need to flip collision area as well
 
     // animation state switches
     if (!onGround) {
       if (player.vel.y < 0) {
-        setAnim("jump");
+        setAnim(AnimName.jump);
       } else {
-        setAnim("fall");
+        setAnim(AnimName.fall);
       }
     } else {
       if (Math.abs(player.vx) > 5) {
-        setAnim("run");
+        setAnim(AnimName.walk);
       } else {
-        setAnim("idle");
+        setAnim(AnimName.idle);
       }
     }
 
-    // scale run animation speed by current speed
-    if (player.curAnim() === "run") {
+    // Change animation speed based on velocity
+    if (player.getCurAnim()?.name === AnimName.walk) {
       const t = k.clamp(Math.abs(player.vx) / C.maxRunSpeed, 0, 1);
-      const animSpeed = k.lerp(C.minRunAnimSpeed, C.maxRunAnimSpeed, t);
-      // Different Kaplay builds expose this differently; in most, you can do:
-      player.play("run", { speed: animSpeed });
-      // If that doesn't work in your build, try:
-      // (player.get("sprite") as any).animSpeed = animSpeed;
+      player.animSpeed = k.lerp(C.minRunAnimSpeed, C.maxRunAnimSpeed, t);
     }
   });
 
   function doJump() {
     player.jump(C.jumpForce);
-    setAnim("jump");
+    setAnim(AnimName.jump);
   }
 
-  function setAnim(name: "idle" | "run" | "jump" | "fall") {
-    if (player.curAnim() !== name) player.play(name);
+  function setAnim(name: AnimName) {
+    if (player.getCurAnim()?.name !== name) player.play(name);
   }
 
   return player;
+}
+
+function moveTowards(current: number, target: number, maxDelta: number): number {
+  const delta = target - current;
+  if (Math.abs(delta) <= maxDelta) return target;
+
+  return current + Math.sign(target) * maxDelta;
 }

@@ -1,10 +1,6 @@
 import {k} from './kaplay';
+import {sceneLevel1} from './scenes/level-1';
 
-k.add([
-  k.text("Press BBB to burp"),
-  k.anchor("center"),
-  k.pos(k.width() / 2, k.height() / 2),
-]);
+k.scene('level-1', () => sceneLevel1(k));
 
-// burp() on click / tap for our friends on mobile
-k.onClick(() => k.burp());
+k.go('level-1');
