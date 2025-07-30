@@ -15,10 +15,10 @@ export interface PlayerConfig {
 }
 
 const DEFAULTS: PlayerConfig = {
-  maxRunSpeed: 300, // px/s
-  accelGround: 300,
+  maxRunSpeed: 200, // px/s
+  accelGround: 200,
   accelAir: 150,
-  decelGround: 600,
+  decelGround: 500,
   decelAir: 300,
   jumpForce: 400,
   minRunAnimSpeed: 1, // anim speed multiplier
