@@ -1,8 +1,10 @@
-import {KAPLAYCtx} from 'kaplay';
+import {addJoystick} from '../components/addJoystick';
 import {withFriction} from '../components/withFriction';
 import {createPlayer} from '../entities/player';
+import {KCtx} from '../kaplay';
+import {Helpers} from '../misc/helpers';
 
-export const sceneLevel1 = (k:  KAPLAYCtx) => {
+export const sceneLevel1 = (k:  KCtx) => {
   k.setGravity(1000);
   
   // Create floor
@@ -55,10 +57,13 @@ export const sceneLevel1 = (k:  KAPLAYCtx) => {
     k.offscreen({destroy: true}),
   ]);
   
-  // load your level / tiles etc.
   const player = createPlayer(k, k.vec2(120, 0));
+  
+  if (Helpers.isMobilePlatform()) {
+    addJoystick(k, {size: Math.min(window.innerWidth / 15, 60)});
+  }
 
-  // camera follow (if you want)
+  // Make camera follow the player
   k.onUpdate(() => {
     k.setCamPos(player.pos);
   });
