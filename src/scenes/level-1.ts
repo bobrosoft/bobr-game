@@ -1,4 +1,5 @@
 import {KAPLAYCtx} from 'kaplay';
+import {withFriction} from '../components/withFriction';
 import {createPlayer} from '../entities/player';
 
 export const sceneLevel1 = (k:  KAPLAYCtx) => {
@@ -50,10 +51,9 @@ export const sceneLevel1 = (k:  KAPLAYCtx) => {
     k.area(),
     k.body(),
     k.anchor('bot'),
+    withFriction(k),
+    k.offscreen({destroy: true}),
   ]);
-  enemy.onGround(() => {
-    enemy.vel.x = 0; // stop moving when on ground
-  });
   
   // load your level / tiles etc.
   const player = createPlayer(k, k.vec2(120, 0));
