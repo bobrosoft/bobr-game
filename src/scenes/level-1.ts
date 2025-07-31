@@ -40,6 +40,21 @@ export const sceneLevel1 = (k:  KAPLAYCtx) => {
     k.body({isStatic: true}),
   ]);
   
+  // Add enemy
+  const enemy = k.add([
+    'enemy',
+    k.pos(130, 300),
+    k.rect(30, 30),
+    k.color('#0000ff' as any),
+    k.outline(2),
+    k.area(),
+    k.body(),
+    k.anchor('bot'),
+  ]);
+  enemy.onGround(() => {
+    enemy.vel.x = 0; // stop moving when on ground
+  });
+  
   // load your level / tiles etc.
   const player = createPlayer(k, k.vec2(120, 0));
 

@@ -1,4 +1,4 @@
-import {Vec2} from 'kaplay';
+import {BodyComp, GameObj, Vec2} from 'kaplay';
 import {k} from '../kaplay';
 
 type KCtx = typeof k;
@@ -25,21 +25,23 @@ const DEFAULTS: PlayerConfig = {
   maxRunAnimSpeed: 2,
 };
 
-enum AnimName {
+enum State {
   idle = 'idle',
   walk = 'walk',
   jump = 'jump',
   fall = 'fall',
+  attack = 'attack',
 }
 
 k.loadSprite('player', '/sprites/characters/bobr.gif', {
   sliceX: 5,
   sliceY: 4,
   anims: {
-    idle: {from: 0, to: 0},
+    idle: {from: 0, to: 1, speed: 3, loop: true},
     walk: {from: 5, to: 8, speed: 10, loop: true}, // speed here is frames per second
     jump: {from: 10, to: 10},
     fall: {from: 10, to: 10},
+    attack: {from: 15, to: 19, speed: 20, loop: false},
   },
 });
 
@@ -47,12 +49,13 @@ export function createPlayer(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Part
   const C = {...DEFAULTS, ...cfg};
 
   const player = k.add([
+    'player', // tag for easy access
     k.sprite('player', {anim: 'idle'}),
     k.pos(posXY),
-    k.area({shape: new k.Rect(k.vec2(3, 0), 20, 31)}), // custom area shape for better collision
+    k.area({shape: new k.Rect(k.vec2(1, 0), 20, 31)}), // custom area shape for better collision
     k.body(), // enables gravity + isGrounded()
     k.anchor('bot'),
-    k.state('idle', ['idle', 'walk', 'jump', 'fall']),
+    k.state(State.idle, [State.idle, State.walk, State.jump, State.fall, State.attack]),
     {
       id: 'playerCtrl',
       vx: 0, // horizontal velocity
@@ -63,11 +66,29 @@ export function createPlayer(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Part
     },
   ]);
 
-  k.onButtonPress(['jump'], () => {
+  function doJump() {
+    player.jump(C.jumpForce);
+    player.enterState(State.jump);
+  }
+
+  function setAnim(name: string, onEnd?: () => void) {
+    if (player.getCurAnim()?.name !== name) player.play(name, {onEnd});
+  }
+
+  player.onButtonPress('jump', () => {
     // Allow jumping only if player is grounded
     if (player.isGrounded()) {
       doJump();
     }
+  });
+
+  player.onButtonPress('action', () => {
+    // Allow attack only if player is not already attacking
+    if (player.state === State.attack) {
+      return;
+    }
+
+    player.enterState(State.attack);
   });
 
   player.onUpdate(() => {
@@ -100,43 +121,74 @@ export function createPlayer(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Part
     player.flipX = direction < 0 ? true : direction > 0 ? false : player.flipX;
     player.area.scale.x = player.flipX ? -1 : 1; // need to flip collision area as well
 
-    // animation state switches
-    if (!onGround) {
-      if (player.vel.y < 0) {
-        setAnim(AnimName.jump);
+    // Animation state switches
+    if (player.state !== State.attack) {
+      if (!onGround) {
+        if (player.vel.y < 0) {
+          player.enterState(State.jump);
+        } else {
+          player.enterState(State.fall);
+        }
       } else {
-        setAnim(AnimName.fall);
+        if (Math.abs(player.vx) > 5) {
+          player.enterState(State.walk);
+        } else {
+          player.enterState(State.idle);
+        }
       }
     } else {
-      if (Math.abs(player.vx) > 5) {
-        setAnim(AnimName.walk);
-      } else {
-        setAnim(AnimName.idle);
-      }
-    }
+      // Check that we're on the right animation frame to trigger the hitbox
+      if (player.getCurAnim()?.frameIndex === 2) {
+        // Add hitbox for attack
+        const hitbox = player.add([
+          'player.hitbox',
+          k.pos(k.vec2(player.flipX ? -16 : 16, 0)),
+          k.area(),
+          k.rect(20, 20),
+          k.opacity(0),
+          k.anchor('bot'),
+          k.lifespan(0.1),
+        ]);
 
-    // Change animation speed based on velocity
-    if (player.getCurAnim()?.name === AnimName.walk) {
-      const t = k.clamp(Math.abs(player.vx) / C.maxRunSpeed, 0, 1);
-      player.animSpeed = k.lerp(C.minRunAnimSpeed, C.maxRunAnimSpeed, t);
+        hitbox.onCollide('enemy', (enemy: GameObj<BodyComp>) => {
+          enemy.applyImpulse(k.vec2(player.flipX ? -20 : 20, -100));
+        });
+      }
     }
   });
 
-  function doJump() {
-    player.jump(C.jumpForce);
-    setAnim(AnimName.jump);
-  }
+  player.onStateEnter(State.idle, () => {
+    setAnim('idle');
+  });
 
-  function setAnim(name: AnimName) {
-    if (player.getCurAnim()?.name !== name) player.play(name);
-  }
+  player.onStateUpdate(State.walk, () => {
+    setAnim('walk');
+
+    const t = k.clamp(Math.abs(player.vx) / C.maxRunSpeed, 0, 1);
+    player.animSpeed = k.lerp(C.minRunAnimSpeed, C.maxRunAnimSpeed, t);
+  });
+
+  player.onStateEnter(State.jump, () => {
+    setAnim('jump');
+  });
+
+  player.onStateEnter(State.fall, () => {
+    setAnim('fall');
+  });
+
+  player.onStateEnter(State.attack, () => {
+    setAnim('attack', () => {
+      player.enterState(State.idle); // return to idle after attack
+    });
+    player.animSpeed = 1;
+  });
 
   return player;
 }
 
-function moveTowards(current: number, target: number, maxDelta: number): number {
-  const delta = target - current;
-  if (Math.abs(delta) <= maxDelta) return target;
+function moveTowards(current: number, target: number, increment: number): number {
+  const diff = target - current;
+  if (Math.abs(diff) <= increment) return target;
 
-  return current + Math.sign(target) * maxDelta;
+  return current + Math.sign(target) * increment;
 }

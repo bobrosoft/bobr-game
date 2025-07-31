@@ -13,15 +13,19 @@ export const k = kaplay({
   buttons: {
     left: {
       keyboard: ["left", "a"],
-      gamepad: ["west"],
+      gamepad: ["dpad-left"],
     },
     right: {
       keyboard: ["right", "d"],
-      gamepad: ["east"],
+      gamepad: ["dpad-right"],
     },
     jump: {
       keyboard: ["space", "up", "w"],
       gamepad: ["south"],
     },
+    action: {
+      keyboard: ["j", "z"],
+      gamepad: ["east"],
+    }
   },
 }) as  KAPLAYCtx<{}, string>;
