@@ -20,7 +20,7 @@ export const sceneLevel1 = (k:  KCtx) => {
   // Add some boxes or platforms
   k.add([
     k.rect(100, 20),
-    k.pos(0, 340),
+    k.pos(0, k.height() - 60),
     k.color('#9e9303' as any),
     k.area(),
     k.anchor('top'),
@@ -46,7 +46,7 @@ export const sceneLevel1 = (k:  KCtx) => {
   // Add enemy
   const enemy = k.add([
     'enemy',
-    k.pos(130, 300),
+    k.pos(130, k.height() - 100),
     k.rect(30, 30),
     k.color('#0000ff' as any),
     k.outline(2),
@@ -65,6 +65,6 @@ export const sceneLevel1 = (k:  KCtx) => {
 
   // Make camera follow the player
   k.onUpdate(() => {
-    k.setCamPos(player.pos);
+    k.setCamPos(player.pos.x, player.pos.y - k.height() / 4);
   });
 };

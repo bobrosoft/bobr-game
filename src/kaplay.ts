@@ -1,17 +1,13 @@
 import kaplay, {KAPLAYCtx} from 'kaplay';
 
-// Calculate responsive width and height based on window size
-const width = Math.min(window.innerWidth, 400);
-const height = Math.floor(width / (window.innerWidth / window.innerHeight));
+const dimensions = determineWidthAndHeight();
 
 export const k = kaplay({
   global: false,
-  width: width,
-  height: height,
-  letterbox: true,
+  width: dimensions.width,
+  height: dimensions.height,
   background: '#74dcf6',
   crisp: true,
-  scale: 2,
   debug: true,
   debugKey: '`',
   buttons: {
@@ -33,5 +29,24 @@ export const k = kaplay({
     }
   },
 }) as  KAPLAYCtx<{}, string>;
+
+function determineWidthAndHeight() {
+  // Calculate responsive width and height based on window size
+  let width = Math.min(window.innerWidth, 400);
+  
+  // Make width even for better pixel alignment
+  if (width % 2 !== 0) {
+    width -= 1;
+  }
+  
+  let height = Math.floor(width / (window.innerWidth / window.innerHeight));
+  
+  // Make height even as well
+  if (height % 2 !== 0) {
+    height -= 1;
+  }
+  
+  return {width, height};
+}
 
 export type KCtx = typeof k;
