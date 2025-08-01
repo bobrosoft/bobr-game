@@ -73,7 +73,8 @@ export function addJoystick(k: KCtx, options?: {
   });
 
   k.onTouchStart((pos) => {
-    if (pos.x > k.width() / 2) return; // Only left half of screen
+    if (pos.x > k.width() / 2) return; // Need to react only to the left half of screen
+    
     origin = pos;
     isDragging = true;
 
@@ -92,7 +93,9 @@ export function addJoystick(k: KCtx, options?: {
     console.log(knob.pos);
   });
 
-  k.onTouchEnd(() => {
+  k.onTouchEnd((pos) => {
+    if (pos.x > k.width() / 2) return; // Need to react only to the left half of screen
+    
     isDragging = false;
     delta = k.vec2(0, 0);
     base.pos = k.vec2(-9999, -9999);
