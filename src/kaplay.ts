@@ -8,6 +8,9 @@ export const k = kaplay({
   height: dimensions.height,
   background: '#74dcf6',
   crisp: true,
+  letterbox: true,
+  pixelDensity: 2, // needed to remove artifacts with pixels
+  scale: 2, // makes text look better because picture rendered at 2x size then scaled down
   debug: true,
   debugKey: '`',
   buttons: {
