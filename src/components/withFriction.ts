@@ -8,10 +8,14 @@ type KCtx = typeof k;
  * @param k
  * @param config
  */
-export function withFriction(k: KCtx, config?: { // this: GameObj<WithFrictionComp>,  is not working
-  friction?: number, // Friction force per second
-  maxSpeed?: number, // Optional max horizontal speed
-}): Comp {
+export function withFriction(
+  k: KCtx,
+  config?: {
+    // this: GameObj<WithFrictionComp>,  is not working
+    friction?: number; // Friction force per second
+    maxSpeed?: number; // Optional max horizontal speed
+  },
+): Comp {
   const friction = config?.friction ?? 100;
   const maxSpeed = config?.maxSpeed ?? Infinity;
 
@@ -21,7 +25,7 @@ export function withFriction(k: KCtx, config?: { // this: GameObj<WithFrictionCo
 
     update() {
       const grounded = this.isGrounded();
-      
+
       // Limit horizontal speed
       this.vel.x = Math.sign(this.vel.x) * Math.min(Math.abs(this.vel.x), maxSpeed);
 

@@ -60,8 +60,7 @@ export function createPlayer(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Part
       id: 'playerCtrl',
       vx: 0, // horizontal velocity
       get moveDirection(): number {
-        return (k.isButtonDown('right') ? 1 : 0) +
-          (k.isButtonDown('left') ? -1 : 0);
+        return (k.isButtonDown('right') ? 1 : 0) + (k.isButtonDown('left') ? -1 : 0);
       },
     },
   ]);
@@ -103,7 +102,7 @@ export function createPlayer(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Part
 
       // If direction is opposite to current velocity, need to change acceleration
       if (Math.sign(direction) !== Math.sign(player.vx)) {
-        accel += (onGround ? C.decelGround : C.decelAir); // add deceleration to acceleration
+        accel += onGround ? C.decelGround : C.decelAir; // add deceleration to acceleration
       }
 
       player.vx = moveTowards(player.vx, direction * C.maxRunSpeed, accel * dt);

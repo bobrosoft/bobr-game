@@ -4,9 +4,9 @@ import {createPlayer} from '../entities/player';
 import {KCtx} from '../kaplay';
 import {Helpers} from '../misc/helpers';
 
-export const sceneLevel1 = (k:  KCtx) => {
+export const sceneLevel1 = (k: KCtx) => {
   k.setGravity(1000);
-  
+
   // Create floor
   k.add([
     k.rect(k.width(), 20),
@@ -16,7 +16,7 @@ export const sceneLevel1 = (k:  KCtx) => {
     k.anchor('top'),
     k.body({isStatic: true}), // static body for the ground
   ]);
-  
+
   // Add some boxes or platforms
   k.add([
     k.rect(100, 20),
@@ -42,7 +42,7 @@ export const sceneLevel1 = (k:  KCtx) => {
     k.anchor('top'),
     k.body({isStatic: true}),
   ]);
-  
+
   // Add enemy
   const enemy = k.add([
     'enemy',
@@ -56,9 +56,9 @@ export const sceneLevel1 = (k:  KCtx) => {
     withFriction(k),
     k.offscreen({destroy: true}),
   ]);
-  
+
   const player = createPlayer(k, k.vec2(120, 0));
-  
+
   if (Helpers.isMobilePlatform()) {
     addJoystick(k, {size: Math.min(window.innerWidth / 15, 60)});
   }
