@@ -33,7 +33,7 @@ enum State {
   attack = 'attack',
 }
 
-k.loadSprite('player', '/sprites/characters/bobr.gif', {
+k.loadSprite('player', 'sprites/characters/bobr.gif', {
   sliceX: 5,
   sliceY: 4,
   anims: {

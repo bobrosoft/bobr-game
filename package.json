@@ -1,24 +1,26 @@
 {
-    "name": "bobr-game",
-    "type": "module",
-    "scripts": {
-        "check": "tsc",
-        "dev": "vite",
-        "build": "vite build",
-        "preview": "vite preview",
-        "zip": "npm run build && mkdir -p dist && zip -r dist/game.zip dist -x \"**/.DS_Store\""
-    },
-    "dependencies": {
-        "kaplay": "^4000.0.0-alpha.20"
-    },
-    "devDependencies": {
-        "@types/node": "^24.1.0",
-        "gif-frames": "^1.0.1",
-        "glob": "^11.0.3",
-        "jimp": "^1.6.0",
-        "typescript": "^5.8.3",
-        "vite": "^7.0.6",
-        "vite-plugin-checker": "^0.10.1",
-        "yargs": "^18.0.0"
-    }
+  "name": "bobr-game",
+  "type": "module",
+  "scripts": {
+    "check": "tsc",
+    "dev": "vite --host 0.0.0.0",
+    "build": "rm -rf ./dist && vite build",
+    "preview": "vite preview",
+    "zip": "npm run build && mkdir -p dist && zip -r dist/game.zip dist -x \"**/.DS_Store\"",
+    "deploy": "gh-pages -d dist"
+  },
+  "dependencies": {
+    "kaplay": "^4000.0.0-alpha.20"
+  },
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "gh-pages": "^6.3.0",
+    "gif-frames": "^1.0.1",
+    "glob": "^11.0.3",
+    "jimp": "^1.6.0",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.6",
+    "vite-plugin-checker": "^0.10.1",
+    "yargs": "^18.0.0"
+  }
 }
