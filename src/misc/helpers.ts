@@ -1,6 +1,10 @@
 export class Helpers {
-  static isMobilePlatform(userAgent?: string): boolean {
+  static isTouchDevice(userAgent?: string): boolean {
     userAgent = userAgent || window.navigator.userAgent;
-    return /ios|iphone|ipad|ipod|android|windows phone/gi.test(userAgent);
+    return (
+      'ontouchstart' in window ||
+      navigator.maxTouchPoints > 0 ||
+      /ios|iphone|ipad|ipod|android|windows phone/gi.test(userAgent)
+    );
   }
 }

@@ -59,7 +59,7 @@ export const sceneLevel1 = (k: KCtx) => {
 
   const player = createPlayer(k, k.vec2(120, 0));
 
-  if (Helpers.isMobilePlatform()) {
+  if (Helpers.isTouchDevice()) {
     addJoystick(k, {size: Math.min(window.innerWidth / 15, 60)});
   }
 
