@@ -7,7 +7,7 @@
     "build": "rm -rf ./dist && vite build",
     "preview": "vite preview",
     "zip": "npm run build && mkdir -p dist && zip -r dist/game.zip dist -x \"**/.DS_Store\"",
-    "deploy": "gh-pages -d dist"
+    "deploy": "npm run build && gh-pages -d dist"
   },
   "dependencies": {
     "kaplay": "^4000.0.0-alpha.20"
