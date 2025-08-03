@@ -1,9 +1,17 @@
+import {addJoystick} from './components/addJoystick';
 import {k} from './kaplay';
-import {sceneLevel1} from './scenes/level-1';
+import {Helpers} from './misc/helpers';
+import {sceneLevelHome} from './scenes/levelHome';
 
-k.scene('level-1', () => sceneLevel1(k));
+k.setLayers(['game', 'hud', 'menu'], 'game');
 
-k.go('level-1');
+k.scene('level-home', () => sceneLevelHome(k));
+k.go('level-home');
+
+// Add mobile joystick and buttons if on a touch device
+if (Helpers.isTouchDevice()) {
+  addJoystick(k, {size: Math.min(window.innerWidth / 15, 60)});
+}
 
 // Watch for orientation changes to adjust canvas size
 window.addEventListener('resize', () => {

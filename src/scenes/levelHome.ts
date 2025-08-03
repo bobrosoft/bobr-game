@@ -1,10 +1,8 @@
-import {addJoystick} from '../components/addJoystick';
 import {withFriction} from '../components/withFriction';
 import {createPlayer} from '../entities/player';
 import {KCtx} from '../kaplay';
-import {Helpers} from '../misc/helpers';
 
-export const sceneLevel1 = (k: KCtx) => {
+export const sceneLevelHome = (k: KCtx) => {
   k.setGravity(1000);
 
   // Create floor
@@ -58,10 +56,6 @@ export const sceneLevel1 = (k: KCtx) => {
   ]);
 
   const player = createPlayer(k, k.vec2(120, 0));
-
-  if (Helpers.isTouchDevice()) {
-    addJoystick(k, {size: Math.min(window.innerWidth / 15, 60)});
-  }
 
   // Make camera follow the player
   k.onUpdate(() => {

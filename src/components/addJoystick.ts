@@ -16,12 +16,17 @@ export function addJoystick(
   const size = options?.size ?? 100;
   const deadZone = options?.deadZone ?? 0.1;
 
+  k.loadSprite('joystick.jump', 'sprites/icons/jump.gif');
+  k.loadSprite('joystick.attack', 'sprites/icons/attack.gif');
+
   let isDragging = false;
   let origin = k.vec2(0, 0);
   let delta = k.vec2(0, 0);
 
   const base = k.add([
     'joystickBase',
+    k.layer('hud'),
+    k.stay(),
     k.pos(-9999, -9999),
     k.circle(size / 2),
     k.color(0, 0, 0),
@@ -33,6 +38,8 @@ export function addJoystick(
 
   const knob = k.add([
     'joystickKnob',
+    k.layer('hud'),
+    k.stay(),
     k.pos(-9999, -9999),
     k.circle(size / 4),
     k.color(255, 255, 255),
@@ -44,6 +51,8 @@ export function addJoystick(
   // Add jump button on the right side
   const jumpButton = k.add([
     'jumpButton',
+    k.layer('hud'),
+    k.stay(),
     k.pos(k.width() - size * 0.5, k.height() - size * 0.5),
     k.area(),
     k.circle(size / 3),
@@ -52,6 +61,7 @@ export function addJoystick(
     k.fixed(),
     k.anchor('center'),
   ]);
+  jumpButton.add([k.sprite('joystick.jump'), k.anchor('center')]);
 
   jumpButton.onClick(() => {
     k.pressButton('jump');
@@ -61,6 +71,8 @@ export function addJoystick(
   // Add attack button on the right side
   const attackButton = k.add([
     'attackButton',
+    k.layer('hud'),
+    k.stay(),
     k.pos(k.width() - size * 1.1, k.height() - size * 1.1),
     k.area(),
     k.circle(size / 2.5),
@@ -69,13 +81,14 @@ export function addJoystick(
     k.fixed(),
     k.anchor('center'),
   ]);
+  attackButton.add([k.sprite('joystick.attack'), k.anchor('center'), k.scale(1.2)]);
 
   attackButton.onClick(() => {
     k.pressButton('action');
     k.releaseButton('action');
   });
 
-  k.onTouchStart(pos => {
+  base.onTouchStart(pos => {
     if (pos.x > k.width() / 2) return; // Need to react only to the left half of screen
 
     origin = pos;
@@ -87,7 +100,7 @@ export function addJoystick(
     knob.hidden = false;
   });
 
-  k.onTouchMove(pos => {
+  base.onTouchMove(pos => {
     if (!isDragging) return;
     delta = pos.sub(origin);
     const max = size / 2;
@@ -96,8 +109,8 @@ export function addJoystick(
     console.log(knob.pos);
   });
 
-  k.onTouchEnd(pos => {
-    if (pos.x > k.width() / 2) return; // Need to react only to the left half of screen
+  base.onTouchEnd(pos => {
+    if (pos.x > k.width() / 0.6) return; // Need to react only to the left half of screen
 
     isDragging = false;
     delta = k.vec2(0, 0);
@@ -108,7 +121,7 @@ export function addJoystick(
     k.releaseButton('right');
   });
 
-  k.onUpdate(() => {
+  base.onUpdate(() => {
     if (!isDragging) return;
 
     const norm = delta.scale(1 / (size / 2));
