@@ -15,5 +15,7 @@ if (Helpers.isTouchDevice()) {
 
 // Watch for orientation changes to adjust canvas size
 window.addEventListener('resize', () => {
-  window.location.reload();
+  setTimeout(() => {
+    window.location.reload();
+  }, 1000);
 });
