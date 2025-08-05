@@ -26,11 +26,11 @@ const DEFAULTS: PlayerConfig = {
 };
 
 enum State {
-  idle = 'idle',
-  walk = 'walk',
-  jump = 'jump',
-  fall = 'fall',
-  attack = 'attack',
+  IDLE = 'IDLE',
+  WALK = 'WALK',
+  JUMP = 'JUMP',
+  FALL = 'FALL',
+  ATTACK = 'ATTACK',
 }
 
 k.loadSprite('player', 'sprites/characters/bobr.gif', {
@@ -52,10 +52,14 @@ export function createPlayer(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Part
     'player', // tag for easy access
     k.sprite('player', {anim: 'idle'}),
     k.pos(posXY),
-    k.area({shape: new k.Rect(k.vec2(1, 0), 20, 31)}), // custom area shape for better collision
+    k.area({
+      //
+      shape: new k.Rect(k.vec2(1, 0), 20, 31),
+      friction: 0.2, // need it so that player can stop moving when no input
+    }), // custom area shape for better collision
     k.body(), // enables gravity + isGrounded()
     k.anchor('bot'),
-    k.state(State.idle, [State.idle, State.walk, State.jump, State.fall, State.attack]),
+    k.state(State.IDLE, [State.IDLE, State.WALK, State.JUMP, State.FALL, State.ATTACK]),
     {
       id: 'playerCtrl',
       vx: 0, // horizontal velocity
@@ -67,7 +71,7 @@ export function createPlayer(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Part
 
   function doJump() {
     player.jump(C.jumpForce);
-    player.enterState(State.jump);
+    player.enterState(State.JUMP);
   }
 
   function setAnim(name: string, onEnd?: () => void) {
@@ -83,11 +87,11 @@ export function createPlayer(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Part
 
   player.onButtonPress('action', () => {
     // Allow attack only if player is not already attacking
-    if (player.state === State.attack) {
+    if (player.state === State.ATTACK) {
       return;
     }
 
-    player.enterState(State.attack);
+    player.enterState(State.ATTACK);
   });
 
   player.onUpdate(() => {
@@ -121,18 +125,18 @@ export function createPlayer(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Part
     player.area.scale.x = player.flipX ? -1 : 1; // need to flip collision area as well
 
     // Animation state switches
-    if (player.state !== State.attack) {
+    if (player.state !== State.ATTACK) {
       if (!onGround) {
         if (player.vel.y < 0) {
-          player.enterState(State.jump);
+          player.enterState(State.JUMP);
         } else {
-          player.enterState(State.fall);
+          player.enterState(State.FALL);
         }
       } else {
         if (Math.abs(player.vx) > 5) {
-          player.enterState(State.walk);
+          player.enterState(State.WALK);
         } else {
-          player.enterState(State.idle);
+          player.enterState(State.IDLE);
         }
       }
     } else {
@@ -156,28 +160,28 @@ export function createPlayer(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Part
     }
   });
 
-  player.onStateEnter(State.idle, () => {
+  player.onStateEnter(State.IDLE, () => {
     setAnim('idle');
   });
 
-  player.onStateUpdate(State.walk, () => {
+  player.onStateUpdate(State.WALK, () => {
     setAnim('walk');
 
     const t = k.clamp(Math.abs(player.vx) / C.maxRunSpeed, 0, 1);
     player.animSpeed = k.lerp(C.minRunAnimSpeed, C.maxRunAnimSpeed, t);
   });
 
-  player.onStateEnter(State.jump, () => {
+  player.onStateEnter(State.JUMP, () => {
     setAnim('jump');
   });
 
-  player.onStateEnter(State.fall, () => {
+  player.onStateEnter(State.FALL, () => {
     setAnim('fall');
   });
 
-  player.onStateEnter(State.attack, () => {
+  player.onStateEnter(State.ATTACK, () => {
     setAnim('attack', () => {
-      player.enterState(State.idle); // return to idle after attack
+      player.enterState(State.IDLE); // return to idle after attack
     });
     player.animSpeed = 1;
   });
