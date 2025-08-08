@@ -1,6 +1,6 @@
 import {addJoystick} from './components/addJoystick';
 import {k} from './kaplay';
-import {Helpers} from './misc/helpers';
+import {Helpers} from './misc/Helpers';
 import {sceneLevelHome} from './scenes/levelHome';
 
 k.setLayers(['game', 'hud', 'menu'], 'game');

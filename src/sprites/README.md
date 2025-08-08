@@ -1,4 +1,4 @@
-Here we store source files for sprites used in the game
+Here we store source files for SOME (mostly animated) sprites used in the game
 which later will be converted to spritesheet by `gen-spritesheet.js` tool.
 
 Commands used:
