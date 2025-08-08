@@ -24,10 +24,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          
+
       - name: Run preparation
         run: |
-#          rm -rf node_modules package-lock.json
           npm i
 
 #      - name: Set ENV variables
