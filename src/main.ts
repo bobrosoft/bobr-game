@@ -14,7 +14,7 @@ if (Helpers.isTouchDevice()) {
 }
 
 // Add reload button to the top right corner
-k.loadSprite('reload-button', '/sprites/icons/reload.png');
+k.loadSprite('reload-button', 'sprites/icons/reload.png');
 const reloadButton = k.add([
   'reload-button',
   k.sprite('reload-button'),
