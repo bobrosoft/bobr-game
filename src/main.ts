@@ -65,6 +65,7 @@ import {sceneLevelHome} from './scenes/levelHome';
   k.loadSprite('reload-button', 'sprites/icons/reload.png');
   const reloadButton = k.add([
     'reload-button',
+    k.layer('hud'),
     k.sprite('reload-button'),
     k.area(),
     k.pos(k.width() - 10, 10),
