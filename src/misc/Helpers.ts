@@ -1,4 +1,9 @@
 export class Helpers {
+  /**
+   * Check if the device is a touch device based on user agent or touch capabilities.
+   * @param userAgent
+   * @returns True if the device is a touch device, false otherwise.
+   */
   static isTouchDevice(userAgent?: string): boolean {
     userAgent = userAgent || window.navigator.userAgent;
     return (
@@ -6,5 +11,13 @@ export class Helpers {
       navigator.maxTouchPoints > 0 ||
       /ios|iphone|ipad|ipod|android|windows phone/gi.test(userAgent)
     );
+  }
+
+  /**
+   * Check if the device is in landscape mode based on window dimensions.
+   * @returns True if the device is in landscape mode, false otherwise.
+   */
+  static isLandscapeMode(): boolean {
+    return window.innerWidth > window.innerHeight;
   }
 }
