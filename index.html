@@ -3,6 +3,7 @@
 <head>
   <title>Bobr Quest</title>
   <link rel="manifest" href="./manifest.json" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -14,15 +15,25 @@
 <!--  <link rel="apple-touch-icon" href="/icons/icon-192.png">-->
   
   <style>
-    body {
-      background: black;
-      padding: 0;
+    html, body {
+      height: 100%;
       margin: 0;
+      padding: 0;
+      background: black;
+      /* Extend into safe area */
+      /*position: fixed;*/
+      /*top: env(safe-area-inset-top);*/
+      /*left: -env(safe-area-inset-left);*/
+      /*right: env(safe-area-inset-right);*/
+      /*bottom: env(safe-area-inset-bottom);*/
+      /*width: calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right));*/
+      /*height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));*/
+      overflow: hidden;
     }
   </style>
-  <script type="module" crossorigin src="./assets/index-DzvUSiLE.js"></script>
+  <script type="module" crossorigin src="./assets/index-CK-vm4nS.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/kaplay-DTLyooHV.js">
 </head>
-<body style="overflow:hidden">
+<body>
 </body>
 </html>
