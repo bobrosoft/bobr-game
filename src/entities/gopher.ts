@@ -63,11 +63,15 @@ export function createGopher(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Part
   mainObj.onStateEnter(State.IDLE, async () => {
     mainObj.play('idle');
     await mainObj.wait(2);
-    direction *= -1; // change direction
-    mainObj.enterState(State.WALK);
+
+    if (!mainObj.dead) {
+      direction *= -1; // change direction
+      mainObj.enterState(State.WALK);
+    }
   });
 
   mainObj.onDeath(() => {
+    mainObj.paused = true;
     mainObj.collisionIgnore = ['*'];
     mainObj.use(k.rotate(mainObj.flipX ? 10 : -10));
   });
