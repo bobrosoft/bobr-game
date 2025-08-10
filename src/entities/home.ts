@@ -1,5 +1,6 @@
 import {GameObj, Vec2} from 'kaplay';
 import {KCtx} from '../kaplay';
+import {defaultFriction} from '../misc/defaults';
 
 enum State {
   INSIDE = 'INSIDE',
@@ -169,4 +170,46 @@ function addCollisionWalls(k: KCtx, container: GameObj) {
     k.area(),
     k.body({isStatic: true}),
   ]);
+
+  // Add floor for second floor
+  container.add([
+    //
+    k.rect(120, 8, {fill: false}),
+    k.pos(57, -58),
+    k.anchor('botleft'),
+    k.area(defaultFriction),
+    k.body({isStatic: true}),
+  ]);
+
+  // Add floor for third floor
+  container.add([
+    //
+    k.rect(95, 8, {fill: false}),
+    k.pos(0, -122),
+    k.anchor('botleft'),
+    k.area(defaultFriction),
+    k.body({isStatic: true}),
+  ]);
+
+  // // Add floor for second floor
+  // container.add([
+  //   //
+  //   k.rect(120, 8, {fill: false}),
+  //   k.pos(57, -58),
+  //   k.anchor('botleft'),
+  //   k.area(defaultFriction),
+  //   k.body({isStatic: true}),
+  //   k.platformEffector({ignoreSides: [k.UP, k.LEFT, k.RIGHT]}),
+  // ]);
+  //
+  // // Add floor for third floor
+  // container.add([
+  //   //
+  //   k.rect(95, 8, {fill: false}),
+  //   k.pos(0, -122),
+  //   k.anchor('botleft'),
+  //   k.area(defaultFriction),
+  //   k.body({isStatic: true}),
+  //   k.platformEffector({ignoreSides: [k.UP, k.LEFT, k.RIGHT]}),
+  // ]);
 }

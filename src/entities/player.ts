@@ -113,6 +113,9 @@ export function createPlayer(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Part
     // horizontal movement
     const direction = player.moveDirection;
 
+    // Set friction only when on ground (hack to avoid side friction when jumping)
+    player.friction = onGround ? defaultFriction.friction : 0;
+
     if (direction !== 0) {
       let accel = onGround ? C.accelGround : C.accelAir;
 
