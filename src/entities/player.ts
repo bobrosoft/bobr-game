@@ -1,7 +1,7 @@
-import {BodyComp, GameObj, Vec2} from 'kaplay';
-import {k} from '../kaplay';
-
-type KCtx = typeof k;
+import {AreaComp, BodyComp, GameObj, PosComp, SpriteComp, Vec2} from 'kaplay';
+import {k, KCtx} from '../kaplay';
+import {defaultFriction} from '../misc/defaults';
+import {EnemyComp} from './enemy';
 
 export interface PlayerConfig {
   maxRunSpeed: number;
@@ -12,6 +12,13 @@ export interface PlayerConfig {
   jumpForce: number;
   minRunAnimSpeed: number;
   maxRunAnimSpeed: number;
+  attackPower: number;
+}
+
+export interface PlayerComp extends GameObj<string | SpriteComp | PosComp | AreaComp | BodyComp> {
+  vx: number; // horizontal velocity
+  moveDirection: number; // -1 for left, 0 for none, 1 for right
+  attackPower: number; // power of the attack
 }
 
 const DEFAULTS: PlayerConfig = {
@@ -23,6 +30,7 @@ const DEFAULTS: PlayerConfig = {
   jumpForce: 400,
   minRunAnimSpeed: 1, // anim speed multiplier
   maxRunAnimSpeed: 2,
+  attackPower: 1,
 };
 
 enum State {
@@ -45,7 +53,7 @@ k.loadSprite('player', 'sprites/characters/bobr.gif', {
   },
 });
 
-export function createPlayer(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Partial<PlayerConfig>) {
+export function createPlayer(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Partial<PlayerConfig>): PlayerComp {
   const C = {...DEFAULTS, ...cfg};
 
   const player = k.add([
@@ -55,19 +63,23 @@ export function createPlayer(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Part
     k.area({
       //
       shape: new k.Rect(k.vec2(1, 0), 20, 31),
-      friction: 0.2, // need it so that player can stop moving when no input
+      ...defaultFriction,
     }), // custom area shape for better collision
     k.body(), // enables gravity + isGrounded()
     k.anchor('bot'),
     k.state(State.IDLE, [State.IDLE, State.WALK, State.JUMP, State.FALL, State.ATTACK]),
     {
-      id: 'playerCtrl',
       vx: 0, // horizontal velocity
       get moveDirection(): number {
         return (k.isButtonDown('right') ? 1 : 0) + (k.isButtonDown('left') ? -1 : 0);
       },
+      get attackPower(): number {
+        return C.attackPower;
+      },
     },
   ]);
+
+  let hitbox: GameObj;
 
   function doJump() {
     player.jump(C.jumpForce);
@@ -94,7 +106,7 @@ export function createPlayer(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Part
     player.enterState(State.ATTACK);
   });
 
-  player.onUpdate(() => {
+  player.onFixedUpdate(() => {
     const dt = k.dt();
     const onGround = player.isGrounded();
 
@@ -142,20 +154,25 @@ export function createPlayer(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Part
     } else {
       // Check that we're on the right animation frame to trigger the hitbox
       if (player.getCurAnim()?.frameIndex === 2) {
-        // Add hitbox for attack
-        const hitbox = player.add([
-          'player.hitbox',
-          k.pos(k.vec2(player.flipX ? -16 : 16, 0)),
-          k.area(),
-          k.rect(20, 20),
-          k.opacity(0),
-          k.anchor('bot'),
-          k.lifespan(0.1),
-        ]);
+        if (!hitbox) {
+          hitbox = player.add([
+            'player.hitbox',
+            k.pos(k.vec2(player.flipX ? -16 : 16, 0)),
+            k.area(),
+            k.rect(20, 20),
+            k.opacity(0),
+            k.anchor('bot'),
+            k.lifespan(0.1),
+          ]);
 
-        hitbox.onCollide('enemy', (enemy: GameObj<BodyComp>) => {
-          enemy.applyImpulse(k.vec2(player.flipX ? -20 : 20, -100));
-        });
+          hitbox.onCollide('enemy', (enemy: EnemyComp) => {
+            enemy.registerHit(player);
+          });
+
+          hitbox.onDestroy(() => {
+            hitbox = undefined; // reset hitbox reference
+          });
+        }
       }
     }
   });

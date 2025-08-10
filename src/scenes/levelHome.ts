@@ -1,4 +1,4 @@
-import {withFriction} from '../components/withFriction';
+import {createGopher} from '../entities/gopher';
 import {createHome} from '../entities/home';
 import {createPlayer} from '../entities/player';
 import {KCtx} from '../kaplay';
@@ -46,19 +46,9 @@ export const sceneLevelHome = (k: KCtx) => {
     k.body({isStatic: true}),
   ]);
 
-  // Add enemy
-  const enemy = k.add([
-    'enemy',
-    k.pos(430, k.height() - 100),
-    k.rect(30, 30),
-    k.color('#0000ff' as any),
-    k.outline(2),
-    k.area(),
-    k.body(),
-    k.anchor('bot'),
-    withFriction(k),
-    k.offscreen({destroy: true}),
-  ]);
+  // Add gopher enemy
+  createGopher(k, k.vec2(600, k.height() - 100));
+  createGopher(k, k.vec2(800, k.height() - 100));
 
   const player = createPlayer(k, k.vec2(420, 0));
 
