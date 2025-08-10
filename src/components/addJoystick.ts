@@ -89,7 +89,7 @@ export function addJoystick(
   });
 
   base.onTouchStart(pos => {
-    if (pos.x > k.width() / 2) return; // Need to react only to the left half of screen
+    if (pos.x > k.width() * 0.6) return; // Need to react only to the left half of screen
 
     origin = pos;
     isDragging = true;
@@ -102,6 +102,8 @@ export function addJoystick(
 
   base.onTouchMove(pos => {
     if (!isDragging) return;
+    if (pos.x > k.width() * 0.6) return; // Need to react only to the left half of screen
+
     delta = pos.sub(origin);
     const max = size / 2;
     const clamped = k.vec2(k.clamp(delta.x, -max, max), k.clamp(delta.y, -max, max));
