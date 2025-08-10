@@ -7,10 +7,10 @@ export const k = kaplay({
   width: dimensions.width,
   height: dimensions.height,
   background: '#74dcf6',
-  crisp: true,
+  // crisp: true,
   letterbox: true,
   pixelDensity: 2, // needed to remove artifacts with pixels
-  scale: 2, // makes text look better because picture rendered at 2x size then scaled down
+  // scale: 2, // makes text look better because picture rendered at 2x size then scaled down
   debug: true,
   debugKey: '`',
   buttons: {
