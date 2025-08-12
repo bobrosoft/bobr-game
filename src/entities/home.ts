@@ -44,6 +44,7 @@ export function createHome(k: KCtx, posXY: Vec2) {
     k.sprite('home-outside'),
     k.anchor('botleft'),
     k.animate({relative: true}),
+    k.z(1),
   ]);
 
   addCollisionWalls(k, container);

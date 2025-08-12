@@ -12,6 +12,8 @@
     "deploy": "npm run build && gh-pages -d dist"
   },
   "dependencies": {
+    "i18next": "^25.3.4",
+    "i18next-browser-languagedetector": "^8.2.0",
     "kaplay": "^4000.0.0-alpha.20"
   },
   "devDependencies": {

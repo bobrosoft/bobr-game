@@ -1,9 +1,22 @@
+import i18next, {t} from 'i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
 import {addJoystick} from './components/addJoystick';
+import translationsRU from './i18n/ru.json';
+import translationsEN from './i18n/en.json';
 import {k} from './kaplay';
 import {Helpers} from './misc/Helpers';
 import {sceneLevelHome} from './scenes/levelHome';
 
-(() => {
+(async () => {
+  // Init i18n (without await it will not work)
+  await i18next.use(LanguageDetector).init({
+    fallbackLng: 'ru', // fallback if detected language is not available
+    resources: {
+      ru: {translation: translationsRU},
+      en: {translation: translationsEN},
+    },
+  });
+
   k.loadFont('pixel', 'fonts/Press_Start_2P/PressStart2P-Regular.ttf');
   k.setLayers(['game', 'hud', 'menu'], 'game');
 
@@ -27,8 +40,8 @@ import {sceneLevelHome} from './scenes/levelHome';
       //
       'rotate-device',
       k.sprite('rotate-device', {width: 100}),
-      k.anchor('center'),
-      k.pos(k.width() / 2, k.height() / 2 - 50),
+      k.anchor('bot'),
+      k.pos(k.width() / 2, k.height() / 2 - 10),
       k.scale(k.vec2(-1, 1)),
       k.fixed(),
       k.stay(),
@@ -37,15 +50,16 @@ import {sceneLevelHome} from './scenes/levelHome';
     k.add([
       //
       'rotate-warning-text',
-      k.text('Поверните устройство', {
+      k.text(t('common.rotateDevice'), {
         font: 'pixel',
         size: 24,
         width: k.width() * 0.8,
         align: 'center',
+        lineSpacing: 10,
       }),
       k.color('white'),
-      k.anchor('center'),
-      k.pos(k.width() / 2, k.height() / 2 + 50),
+      k.anchor('top'),
+      k.pos(k.width() / 2, k.height() / 2 + 20),
       k.fixed(),
       k.stay(),
     ]);

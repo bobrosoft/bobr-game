@@ -1,10 +1,12 @@
 {
-    "compilerOptions": {
-        "noEmit": true,
-        "target": "esnext",
-        "moduleResolution": "node"
-    },
-    "include": [
-        "src/**/*.ts"
-    ]
+  "compilerOptions": {
+    "noEmit": true,
+    "target": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true
+  },
+  "include": [
+    "src/**/*.ts"
+  ]
 }
