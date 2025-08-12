@@ -1,4 +1,4 @@
-import {AreaComp, BodyComp, GameObj, PosComp, SpriteComp, Vec2} from 'kaplay';
+import {AreaComp, BodyComp, GameObj, HealthComp, PosComp, SpriteComp, TimerComp, TimerController, Vec2} from 'kaplay';
 import {k, KCtx} from '../kaplay';
 import {defaultFriction} from '../misc/defaults';
 import {EnemyComp} from './enemy';
@@ -13,12 +13,14 @@ export interface PlayerConfig {
   minRunAnimSpeed: number;
   maxRunAnimSpeed: number;
   attackPower: number;
+  maxHealth: number;
 }
 
-export interface PlayerComp extends GameObj<string | SpriteComp | PosComp | AreaComp | BodyComp> {
+export interface PlayerComp
+  extends GameObj<string | SpriteComp | PosComp | AreaComp | BodyComp | TimerComp | HealthComp> {
   vx: number; // horizontal velocity
   moveDirection: number; // -1 for left, 0 for none, 1 for right
-  attackPower: number; // power of the attack
+  config: PlayerConfig; // player configuration
 }
 
 const DEFAULTS: PlayerConfig = {
@@ -31,6 +33,7 @@ const DEFAULTS: PlayerConfig = {
   minRunAnimSpeed: 1, // anim speed multiplier
   maxRunAnimSpeed: 2,
   attackPower: 1,
+  maxHealth: 2,
 };
 
 enum State {
@@ -67,23 +70,29 @@ export function createPlayer(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Part
     }), // custom area shape for better collision
     k.body(), // enables gravity + isGrounded()
     k.anchor('bot'),
+    k.opacity(1),
     k.state(State.IDLE, [State.IDLE, State.WALK, State.JUMP, State.FALL, State.ATTACK]),
+    k.health(C.maxHealth, C.maxHealth), // health component
+    k.timer(),
     {
       vx: 0, // horizontal velocity
+      config: C,
       get moveDirection(): number {
         return (k.isButtonDown('right') ? 1 : 0) + (k.isButtonDown('left') ? -1 : 0);
-      },
-      get attackPower(): number {
-        return C.attackPower;
       },
     },
   ]);
 
   let hitbox: GameObj;
+  let invincibleTimer: TimerController;
 
   function doJump() {
     player.jump(C.jumpForce);
     player.enterState(State.JUMP);
+  }
+
+  function getIsInvincible(): boolean {
+    return !!invincibleTimer;
   }
 
   function setAnim(name: string, onEnd?: () => void) {
@@ -178,6 +187,13 @@ export function createPlayer(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Part
         }
       }
     }
+
+    // Add flashing if player is invincible
+    if (getIsInvincible()) {
+      player.opacity = Math.abs(Math.sin(k.time() * 20)) * 0.5 + 0.5; // flash effect
+    } else {
+      player.opacity = 1; // reset opacity when not invincible
+    }
   });
 
   player.onStateEnter(State.IDLE, () => {
@@ -204,6 +220,22 @@ export function createPlayer(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Part
       player.enterState(State.IDLE); // return to idle after attack
     });
     player.animSpeed = 1;
+  });
+
+  player.onCollideUpdate('enemy', (enemy: EnemyComp) => {
+    if (!getIsInvincible() && player.state !== State.ATTACK && !enemy.dead && enemy.config.attackPower) {
+      player.hp -= enemy.config.attackPower;
+      player.applyImpulse(k.vec2(Math.sign(player.pos.x - enemy.pos.x) * 150, -230));
+      invincibleTimer?.cancel();
+      invincibleTimer = player.wait(1);
+      invincibleTimer.onEnd(() => {
+        invincibleTimer = undefined;
+      });
+    }
+  });
+
+  player.onDeath(() => {
+    window.location.reload();
   });
 
   return player;

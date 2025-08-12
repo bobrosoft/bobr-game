@@ -6,8 +6,10 @@ import {PlayerComp} from './player';
 export interface EnemyConfig {
   health: number; // hit points
   speedX?: number; // px/s
+  attackPower?: number; // power of the attack
 }
 
 export interface EnemyComp extends GameObj<string | HealthComp | SpriteComp | PosComp | AreaComp | BodyComp> {
+  config: EnemyConfig;
   registerHit: (player: PlayerComp) => void;
 }

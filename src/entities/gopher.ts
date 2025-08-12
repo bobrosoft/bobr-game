@@ -12,6 +12,7 @@ enum State {
 export function createGopher(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Partial<EnemyConfig>): EnemyComp {
   const C: EnemyConfig = {
     health: 2,
+    attackPower: 1,
     speedX: 50,
     ...cfg,
   };
@@ -42,8 +43,9 @@ export function createGopher(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Part
     {
       registerHit: (player: PlayerComp) => {
         mainObj.applyImpulse(k.vec2(Math.sign(mainObj.pos.x - player.pos.x) * 100, -200));
-        mainObj.hp -= player.attackPower;
+        mainObj.hp -= player.config.attackPower;
       },
+      config: C,
     },
   ]);
 
