@@ -1,6 +1,5 @@
-export {};
-
-declare global {
-  // Fix for ERROR(TypeScript)  Cannot find name 'BinaryData'.
-  type BinaryData = ArrayBuffer | SharedArrayBuffer | ArrayBufferView | DataView | Blob | Uint8Array;
+// Custom type definitions for TXT files to be imported as raw strings
+declare module '*.txt?raw' {
+  const content: string;
+  export default content;
 }

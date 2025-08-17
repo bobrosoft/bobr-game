@@ -66,7 +66,7 @@ export function createHome(k: KCtx, posXY: Vec2) {
   const entrance = container.add([
     'home-entrance',
     k.rect(20, 38, {fill: false}),
-    k.pos(165, 0),
+    k.pos(125, 0),
     k.anchor('botleft'),
     k.area(),
   ]);
@@ -98,7 +98,7 @@ function addCollisionWalls(k: KCtx, container: GameObj) {
   container.add([
     // to prevent jump on home entrance
     k.rect(14, 200, {fill: false}),
-    k.pos(198, -42),
+    k.pos(193, -42),
     k.anchor('botleft'),
     k.area(),
     k.body({isStatic: true}),
@@ -106,7 +106,7 @@ function addCollisionWalls(k: KCtx, container: GameObj) {
   container.add([
     // to prevent just through home entrance
     k.rect(40, 12, {fill: false}),
-    k.pos(161, -42),
+    k.pos(156, -42),
     k.anchor('botleft'),
     k.area(),
     k.body({isStatic: true}),
@@ -134,7 +134,7 @@ function addCollisionWalls(k: KCtx, container: GameObj) {
       ],
       {fill: false},
     ),
-    k.pos(0, 0),
+    k.pos(-5, 0),
     k.anchor('botleft'),
     k.area(),
     k.body({isStatic: true}),
@@ -150,7 +150,7 @@ function addCollisionWalls(k: KCtx, container: GameObj) {
       ],
       {fill: false},
     ),
-    k.pos(0, 0),
+    k.pos(-5, 0),
     k.anchor('botleft'),
     k.area(),
     k.body({isStatic: true}),
@@ -166,7 +166,7 @@ function addCollisionWalls(k: KCtx, container: GameObj) {
       ],
       {fill: false},
     ),
-    k.pos(0, 0),
+    k.pos(-5, 0),
     k.anchor('botleft'),
     k.area(),
     k.body({isStatic: true}),
