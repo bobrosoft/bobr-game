@@ -1,7 +1,7 @@
 import {Vec2} from 'kaplay';
 import {KCtx} from '../kaplay';
 import {defaultFriction} from '../misc/defaults';
-import {EnemyComp, EnemyConfig} from './enemy';
+import {EnemyComp, EnemyConfig} from './generic/enemy';
 import {PlayerComp} from './player';
 
 enum State {

@@ -2,5 +2,9 @@
   "common": {
     "loading": "Loading...",
     "rotateDevice": "Rotate your device"
+  },
+  "oldBobr": {
+    "intro1": "Hello grandson! Finally, you bought your own hut... Even if it's on a mortgage, you're still doing great!",
+    "intro2": "It's a bit empty inside... But I saw some furniture nearby while walking here. You can look for it."
   }
 }

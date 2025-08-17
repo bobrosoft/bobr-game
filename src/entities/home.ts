@@ -175,7 +175,7 @@ function addCollisionWalls(k: KCtx, container: GameObj) {
   // Add floor for second floor
   container.add([
     //
-    k.rect(120, 8, {fill: false}),
+    k.rect(120, 7, {fill: false}),
     k.pos(57, -58),
     k.anchor('botleft'),
     k.area(defaultFriction),
@@ -185,7 +185,7 @@ function addCollisionWalls(k: KCtx, container: GameObj) {
   // Add floor for third floor
   container.add([
     //
-    k.rect(95, 8, {fill: false}),
+    k.rect(95, 7, {fill: false}),
     k.pos(0, -122),
     k.anchor('botleft'),
     k.area(defaultFriction),

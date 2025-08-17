@@ -1,5 +1,5 @@
 import {AreaComp, BodyComp, GameObj, HealthComp, PosComp, SpriteComp} from 'kaplay';
-import {PlayerComp} from './player';
+import {PlayerComp} from '../player';
 
 // List generic types for the enemy game object
 

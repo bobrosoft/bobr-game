@@ -1,5 +1,6 @@
 import {createGopher} from '../entities/gopher';
 import {createHome} from '../entities/home';
+import {createOldBobr} from '../entities/old-bobr';
 import {createPlayer} from '../entities/player';
 import {KCtx} from '../kaplay';
 import {defaultFriction} from '../misc/defaults';
@@ -46,11 +47,15 @@ export const sceneLevelHome = (k: KCtx) => {
     k.body({isStatic: true}),
   ]);
 
+  // Add old bobr
+  const oldBobr = createOldBobr(k, k.vec2(280, 220));
+
+  // Add player
+  const player = createPlayer(k, k.vec2(420, 0));
+
   // Add gopher enemy
   createGopher(k, k.vec2(600, k.height() - 100));
   createGopher(k, k.vec2(800, k.height() - 100));
-
-  const player = createPlayer(k, k.vec2(420, 0));
 
   // Make camera follow the player
   k.onUpdate(() => {
