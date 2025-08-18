@@ -24,6 +24,8 @@ export function createOldBobr(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Par
       idle: {from: 0, to: 1, speed: 1.5, loop: true},
     },
   });
+  k.loadSound('old-bobr-kurwa-1', 'sounds/old-bobr-kurwa-1.ogg');
+  k.loadSound('old-bobr-kurwa-2', 'sounds/old-bobr-kurwa-2.ogg');
 
   const mainObj = k.add([
     'old-bobr',
@@ -44,6 +46,8 @@ export function createOldBobr(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Par
   ]);
 
   async function interact(player: PlayerComp): Promise<void> {
+    k.play(k.choose(['old-bobr-kurwa-1', 'old-bobr-kurwa-2']));
+
     // Rotate the sprite based on player position
     mainObj.flipX = mainObj.pos.x > player.pos.x;
 
