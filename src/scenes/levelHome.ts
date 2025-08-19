@@ -14,7 +14,7 @@ export const sceneLevelHome = (k: KCtx) => {
   k.loadSprite('tile-grass-ground', 'sprites/tiles/grass-ground.png');
   k.loadSprite('tile-grass-1', 'sprites/tiles/grass-1.png');
   k.loadSprite('tile-grass-2', 'sprites/tiles/grass-2.png');
-  // k.loadSprite('tile-grass-3', 'sprites/tiles/grass-3.png');
+  k.loadSprite('tile-grass-3', 'sprites/tiles/grass-3.png');
   k.loadSprite('tile-tree-1', 'sprites/tiles/tree-1.png');
   k.loadSprite('tile-tree-2', 'sprites/tiles/tree-2.png');
 
@@ -48,7 +48,7 @@ export const sceneLevelHome = (k: KCtx) => {
       ],
       ',': () => [
         // Grass tile
-        k.sprite(k.choose(['tile-grass-1', 'tile-grass-2']), {flipX: k.choose([true, false])}),
+        k.sprite(k.choose(['tile-grass-1', 'tile-grass-2', 'tile-grass-3']), {flipX: k.choose([true, false])}),
         k.z(k.choose([1, -1])),
         k.anchor('bot'),
         k.offscreen({hide: true}),

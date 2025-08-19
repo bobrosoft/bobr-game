@@ -57,6 +57,7 @@ k.loadSprite('player', 'sprites/characters/bobr.gif', {
     attack: {from: 15, to: 19, speed: 20, loop: false},
   },
 });
+k.loadSound('player-attack', 'sounds/bobr-attack.mp3');
 
 export function createPlayer(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Partial<PlayerConfig>): PlayerComp {
   const C = {...DEFAULTS, ...cfg};
@@ -213,6 +214,7 @@ export function createPlayer(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Part
 
           hitbox.onCollide('enemy', (enemy: EnemyComp) => {
             enemy.registerHit(player);
+            k.play('player-attack');
           });
 
           hitbox.onDestroy(() => {

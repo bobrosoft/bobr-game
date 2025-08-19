@@ -67,6 +67,8 @@ import {sceneLevelHome} from './scenes/levelHome';
     return;
   }
 
+  k.setVolume(0.6); // Set default volume for all sounds
+
   k.scene('level-home', () => sceneLevelHome(k));
   k.go('level-home');
 
