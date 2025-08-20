@@ -9,7 +9,7 @@ export interface EnemyConfig {
   attackPower?: number; // power of the attack
 }
 
-export interface EnemyComp extends GameObj<string | HealthComp | SpriteComp | PosComp | AreaComp | BodyComp> {
+export interface EnemyComp extends GameObj<string | HealthComp | SpriteComp | PosComp | AreaComp> {
   config: EnemyConfig;
   registerHit: (player: PlayerComp) => void;
 }

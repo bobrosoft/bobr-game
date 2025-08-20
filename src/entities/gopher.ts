@@ -18,6 +18,7 @@ export function createGopher(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Part
   };
 
   let direction = -1; // 1 for right, -1 for left
+  let isFirstWalk = true;
 
   k.loadSprite('gopher', 'sprites/enemies/gopher.gif', {
     sliceX: 4,
@@ -52,7 +53,8 @@ export function createGopher(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Part
   mainObj.onStateEnter(State.WALK, async () => {
     mainObj.flipX = direction < 0; // flip sprite based on direction
     mainObj.play('walk');
-    await mainObj.wait(4);
+    await mainObj.wait(4 * (isFirstWalk ? 0.5 : 1)); // Half duration for the first walk
+    isFirstWalk = false; // After the first walk, use full duration
     mainObj.enterState(State.IDLE);
   });
 

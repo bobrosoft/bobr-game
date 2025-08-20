@@ -1,4 +1,5 @@
 import {Vec2} from 'kaplay';
+import {createBumblebee} from '../entities/bumblebee';
 import {createGopher} from '../entities/gopher';
 import {createHome} from '../entities/home';
 import {createOldBobr} from '../entities/old-bobr';
@@ -63,6 +64,11 @@ export const sceneLevelHome = (k: KCtx) => {
       G: (pos: Vec2) => {
         // Gopher enemy
         createGopher(k, pos.scale(32));
+        return undefined;
+      },
+      F: (pos: Vec2) => {
+        // Gopher enemy
+        createBumblebee(k, pos.scale(32));
         return undefined;
       },
       H: (pos: Vec2) => {
