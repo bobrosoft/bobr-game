@@ -1,4 +1,4 @@
-import {Vec2} from 'kaplay';
+import {Rect, Vec2} from 'kaplay';
 import {createBumblebee} from '../entities/bumblebee';
 import {createGopher} from '../entities/gopher';
 import {createHome} from '../entities/home';
@@ -13,6 +13,7 @@ export const sceneLevelHome = (k: KCtx) => {
 
   k.loadSprite('tile-ground', 'sprites/tiles/ground.png');
   k.loadSprite('tile-grass-ground', 'sprites/tiles/grass-ground.png');
+  k.loadSprite('tile-grass-ground-air', 'sprites/tiles/grass-ground-air.png');
   k.loadSprite('tile-grass-1', 'sprites/tiles/grass-1.png');
   k.loadSprite('tile-grass-2', 'sprites/tiles/grass-2.png');
   k.loadSprite('tile-grass-3', 'sprites/tiles/grass-3.png');
@@ -35,6 +36,14 @@ export const sceneLevelHome = (k: KCtx) => {
         // Ground-grass tile
         k.sprite('tile-grass-ground'),
         k.area(defaultFriction),
+        k.body({isStatic: true}),
+        k.anchor('bot'),
+        k.offscreen({hide: true}),
+      ],
+      '-': () => [
+        // Ground-grass-air tile
+        k.sprite('tile-grass-ground-air'),
+        k.area({...defaultFriction, shape: new k.Rect(k.vec2(0, -8), 32, 24)}),
         k.body({isStatic: true}),
         k.anchor('bot'),
         k.offscreen({hide: true}),
