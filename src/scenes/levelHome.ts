@@ -5,6 +5,7 @@ import {createHome} from '../entities/home';
 import {createOldBobr} from '../entities/old-bobr';
 import {createPlayer, PlayerComp} from '../entities/player';
 import {KCtx} from '../kaplay';
+import {bgMusicManager} from '../main';
 import {defaultFriction} from '../misc/defaults';
 import map from './maps/home.txt?raw';
 
@@ -92,6 +93,10 @@ export const sceneLevelHome = (k: KCtx) => {
       },
     },
   });
+
+  bgMusicManager.loadMusic('home', 'music/home.mp3');
+  bgMusicManager.loadMusic('start-location', 'music/start-location.mp3');
+  bgMusicManager.playMusic('start-location');
 
   // Make camera follow the player
   k.onUpdate(() => {

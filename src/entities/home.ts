@@ -1,5 +1,6 @@
 import {GameObj, Vec2} from 'kaplay';
 import {KCtx} from '../kaplay';
+import {bgMusicManager} from '../main';
 import {defaultFriction} from '../misc/defaults';
 
 enum State {
@@ -7,7 +8,18 @@ enum State {
   OUTSIDE = 'OUTSIDE',
 }
 
-export function createHome(k: KCtx, posXY: Vec2) {
+interface Config {
+  isEveningTime: boolean;
+}
+
+export function createHome(k: KCtx, posXY: Vec2, config?: Partial<Config>) {
+  const C: Config = {
+    isEveningTime: false,
+    ...config,
+  };
+
+  let isInitialStateSwitch = true;
+
   k.loadSprite('home-outside', 'sprites/home/home-outside.png');
   k.loadSprite('home-inside', 'sprites/home/home-inside.png');
   k.loadSprite('home-fence', 'sprites/home/home-fence.png');
@@ -50,15 +62,26 @@ export function createHome(k: KCtx, posXY: Vec2) {
   addCollisionWalls(k, container);
 
   container.onStateEnter(State.OUTSIDE, () => {
+    if (isInitialStateSwitch) {
+      isInitialStateSwitch = false;
+      return; // skip animation on initial state set
+    }
+
     outside.unanimateAll();
     outside.animation.seek(0);
     outside.animate('opacity', [0, 1], {duration: 1, loops: 1});
+
+    bgMusicManager.playMusic('start-location');
   });
 
   container.onStateEnter(State.INSIDE, () => {
     outside.unanimateAll();
     outside.animation.seek(0);
     outside.animate('opacity', [1, 0], {duration: 1, loops: 1});
+
+    if (C.isEveningTime) {
+      bgMusicManager.playMusic('home');
+    }
   });
 
   // 180, 25x38
@@ -191,26 +214,4 @@ function addCollisionWalls(k: KCtx, container: GameObj) {
     k.area(defaultFriction),
     k.body({isStatic: true}),
   ]);
-
-  // // Add floor for second floor
-  // container.add([
-  //   //
-  //   k.rect(120, 8, {fill: false}),
-  //   k.pos(57, -58),
-  //   k.anchor('botleft'),
-  //   k.area(defaultFriction),
-  //   k.body({isStatic: true}),
-  //   k.platformEffector({ignoreSides: [k.UP, k.LEFT, k.RIGHT]}),
-  // ]);
-  //
-  // // Add floor for third floor
-  // container.add([
-  //   //
-  //   k.rect(95, 8, {fill: false}),
-  //   k.pos(0, -122),
-  //   k.anchor('botleft'),
-  //   k.area(defaultFriction),
-  //   k.body({isStatic: true}),
-  //   k.platformEffector({ignoreSides: [k.UP, k.LEFT, k.RIGHT]}),
-  // ]);
 }

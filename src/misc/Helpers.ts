@@ -20,4 +20,16 @@ export class Helpers {
   static isLandscapeMode(): boolean {
     return window.innerWidth > window.innerHeight;
   }
+
+  /**
+   * Returns a promise that resolves after a specified number of milliseconds.
+   * @param ms
+   */
+  static setTimeoutAsync(ms: number): Promise<void> {
+    return new Promise<void>(resolve => {
+      setTimeout(() => {
+        resolve();
+      }, ms);
+    });
+  }
 }

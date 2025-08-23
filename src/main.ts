@@ -1,11 +1,17 @@
-import i18next, {t} from 'i18next';
+import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
-import {addJoystick} from './components/addJoystick';
-import translationsRU from './i18n/ru.json';
+import {BgMusicManager} from './components/BgMusicManager';
+import {createHud} from './components/hud';
 import translationsEN from './i18n/en.json';
+import translationsRU from './i18n/ru.json';
 import {k} from './kaplay';
 import {Helpers} from './misc/Helpers';
 import {sceneLevelHome} from './scenes/levelHome';
+import {sceneMenu} from './scenes/menu';
+import {sceneRotateDevice} from './scenes/rotateDevice';
+
+export const bgMusicManager: BgMusicManager = new BgMusicManager(k);
+export let hud: ReturnType<typeof createHud>; // need to create it later because layers not yet defined
 
 (async () => {
   // Init i18n (without await it will not work)
@@ -19,6 +25,13 @@ import {sceneLevelHome} from './scenes/levelHome';
 
   k.loadFont('pixel', 'fonts/Press_Start_2P/PressStart2P-Regular.ttf');
   k.setLayers(['game', 'hud', 'menu'], 'game');
+
+  k.setVolume(0.5); // Set default volume for all sounds
+  hud = createHud(k);
+
+  k.scene('menu', () => sceneMenu(k));
+  k.scene('rotate-device', () => sceneRotateDevice(k));
+  k.scene('level-home', () => sceneLevelHome(k));
 
   const isInitialOrientationLandscape = Helpers.isLandscapeMode();
 
@@ -35,61 +48,8 @@ import {sceneLevelHome} from './scenes/levelHome';
 
   // Check device orientation and show warning if not landscape
   if (!isInitialOrientationLandscape) {
-    k.loadSprite('rotate-device', 'sprites/icons/rotate-device.gif');
-    const rotateWarning = k.add([
-      //
-      'rotate-device',
-      k.sprite('rotate-device', {width: 100}),
-      k.anchor('bot'),
-      k.pos(k.width() / 2, k.height() / 2 - 10),
-      k.scale(k.vec2(-1, 1)),
-      k.fixed(),
-      k.stay(),
-    ]);
-
-    k.add([
-      //
-      'rotate-warning-text',
-      k.text(t('common.rotateDevice'), {
-        font: 'pixel',
-        size: 24,
-        width: k.width() * 0.8,
-        align: 'center',
-        lineSpacing: 10,
-      }),
-      k.color('white'),
-      k.anchor('top'),
-      k.pos(k.width() / 2, k.height() / 2 + 20),
-      k.fixed(),
-      k.stay(),
-    ]);
-
-    return;
+    k.go('rotate-device');
+  } else {
+    k.go('menu');
   }
-
-  k.setVolume(0.6); // Set default volume for all sounds
-
-  k.scene('level-home', () => sceneLevelHome(k));
-  k.go('level-home');
-
-  // Add mobile joystick and buttons if on a touch device
-  if (Helpers.isTouchDevice()) {
-    addJoystick(k, {size: Math.min(window.innerWidth / 15, 60)});
-  }
-
-  // Add reload button to the top right corner
-  k.loadSprite('reload-button', 'sprites/icons/reload.png');
-  const reloadButton = k.add([
-    'reload-button',
-    k.layer('hud'),
-    k.sprite('reload-button'),
-    k.area(),
-    k.pos(k.width() - 10, 10),
-    k.anchor('topright'),
-    k.fixed(),
-    k.stay(),
-  ]);
-  reloadButton.onClick(() => {
-    window.location.reload();
-  });
 })();
