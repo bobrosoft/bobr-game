@@ -291,7 +291,7 @@ export function createPlayer(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Part
   });
 
   player.onDeath(() => {
-    window.location.reload();
+    k.go(k.getSceneName()); // restart level on death
   });
 
   return player;

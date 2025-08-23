@@ -10,8 +10,6 @@ import {defaultFriction} from '../misc/defaults';
 import map from './maps/home.txt?raw';
 
 export const sceneLevelHome = (k: KCtx) => {
-  k.setGravity(1000);
-
   k.loadSprite('tile-ground', 'sprites/tiles/ground.png');
   k.loadSprite('tile-grass-ground', 'sprites/tiles/grass-ground.png');
   k.loadSprite('tile-grass-ground-air', 'sprites/tiles/grass-ground-air.png');
@@ -23,6 +21,7 @@ export const sceneLevelHome = (k: KCtx) => {
 
   let player: PlayerComp;
 
+  k.setGravity(0);
   const level = k.addLevel(map.split('\n'), {
     pos: k.vec2(0, 0),
     tileWidth: 32,
@@ -93,6 +92,7 @@ export const sceneLevelHome = (k: KCtx) => {
       },
     },
   });
+  k.setGravity(1000);
 
   bgMusicManager.loadMusic('home', 'music/home.mp3');
   bgMusicManager.loadMusic('start-location', 'music/start-location.mp3');
@@ -104,6 +104,8 @@ export const sceneLevelHome = (k: KCtx) => {
       return;
     }
 
-    k.setCamPos(Math.max(player.pos.x, k.width() / 2), player.pos.y - k.height() / 4);
+    const x = Math.max(player.pos.x, k.width() / 2);
+    const y = player.pos.y - k.height() / 4;
+    k.setCamPos(x, y);
   });
 };
