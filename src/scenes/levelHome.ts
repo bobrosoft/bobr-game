@@ -1,37 +1,40 @@
-import {Rect, Vec2} from 'kaplay';
-import {createBumblebee} from '../entities/bumblebee';
-import {createGopher} from '../entities/gopher';
-import {createHome} from '../entities/home';
-import {createOldBobr} from '../entities/old-bobr';
-import {createPlayer, PlayerComp} from '../entities/player';
+import {addLevel} from '../components/addLevel';
+import {BumblebeeEntity} from '../entities/bumblebee';
+import {GopherEntity} from '../entities/gopher';
+import {HomeEntity} from '../entities/home';
+import {OldBobrEntity} from '../entities/old-bobr';
 import {KCtx} from '../kaplay';
 import {bgMusicManager} from '../main';
 import {defaultFriction} from '../misc/defaults';
 import map from './maps/home.txt?raw';
 
-export const sceneLevelHome = (k: KCtx) => {
-  k.loadSprite('tile-ground', 'sprites/tiles/ground.png');
-  k.loadSprite('tile-grass-ground', 'sprites/tiles/grass-ground.png');
-  k.loadSprite('tile-grass-ground-air', 'sprites/tiles/grass-ground-air.png');
-  k.loadSprite('tile-grass-1', 'sprites/tiles/grass-1.png');
-  k.loadSprite('tile-grass-2', 'sprites/tiles/grass-2.png');
-  k.loadSprite('tile-grass-3', 'sprites/tiles/grass-3.png');
-  k.loadSprite('tile-tree-1', 'sprites/tiles/tree-1.png');
-  k.loadSprite('tile-tree-2', 'sprites/tiles/tree-2.png');
+export const sceneLevelHome = async (k: KCtx) => {
+  const {player} = await addLevel(k, map, {
+    preloadResources: async (k: KCtx) => {
+      // Preload assets
+      await Promise.all([
+        k.loadSprite('tile-ground', 'sprites/tiles/ground.png'),
+        k.loadSprite('tile-grass-ground', 'sprites/tiles/grass-ground.png'),
+        k.loadSprite('tile-grass-ground-air', 'sprites/tiles/grass-ground-air.png'),
+        k.loadSprite('tile-grass-1', 'sprites/tiles/grass-1.png'),
+        k.loadSprite('tile-grass-2', 'sprites/tiles/grass-2.png'),
+        k.loadSprite('tile-grass-3', 'sprites/tiles/grass-3.png'),
+        k.loadSprite('tile-tree-1', 'sprites/tiles/tree-1.png'),
+        k.loadSprite('tile-tree-2', 'sprites/tiles/tree-2.png'),
 
-  let player: PlayerComp;
+        GopherEntity.loadResources(k),
+        BumblebeeEntity.loadResources(k),
+        HomeEntity.loadResources(k),
+        OldBobrEntity.loadResources(k),
+      ]);
 
-  k.setGravity(0);
-  const level = k.addLevel(map.split('\n'), {
-    pos: k.vec2(0, 0),
+      // Define music
+      bgMusicManager.loadMusic('home', 'music/home.mp3');
+      bgMusicManager.loadMusic('start-location', 'music/start-location.mp3');
+    },
     tileWidth: 32,
     tileHeight: 32,
     tiles: {
-      P: (pos: Vec2) => {
-        // Player entry point
-        player = createPlayer(k, pos.scale(32));
-        return undefined;
-      },
       '=': () => [
         // Ground-grass tile
         k.sprite('tile-grass-ground'),
@@ -40,14 +43,25 @@ export const sceneLevelHome = (k: KCtx) => {
         k.anchor('bot'),
         k.offscreen({hide: true}),
       ],
-      '-': () => [
-        // Ground-grass-air tile
-        k.sprite('tile-grass-ground-air'),
-        k.area({...defaultFriction, shape: new k.Rect(k.vec2(0, -8), 32, 24)}),
-        k.body({isStatic: true}),
-        k.anchor('bot'),
-        k.offscreen({hide: true}),
-      ],
+      '-': (tilePos, worldPos, getSiblings) => {
+        const siblings = getSiblings();
+
+        return [
+          // Ground-grass-air tile
+          // k.sprite(
+          //   siblings.left === ' '
+          //     ? 'tile-grass-ground'
+          //     : siblings.right === ' '
+          //       ? 'tile-grass-ground'
+          //       : 'tile-grass-ground-air',
+          // ),
+          k.sprite('tile-grass-ground-air'),
+          k.area({...defaultFriction, shape: new k.Rect(k.vec2(0, -8), 32, 24)}),
+          k.body({isStatic: true}),
+          k.anchor('bot'),
+          k.offscreen({hide: true}),
+        ];
+      },
       '.': () => [
         // Ground tile
         k.sprite('tile-ground'),
@@ -70,36 +84,29 @@ export const sceneLevelHome = (k: KCtx) => {
         k.anchor('bot'),
         k.offscreen({hide: true}),
       ],
-      G: (pos: Vec2) => {
+      G: (tilePos, worldPos) => {
         // Gopher enemy
-        createGopher(k, pos.scale(32));
-        return undefined;
+        GopherEntity.spawn(k, worldPos);
       },
-      F: (pos: Vec2) => {
-        // Gopher enemy
-        createBumblebee(k, pos.scale(32));
-        return undefined;
+      F: (tilePos, worldPos) => {
+        // Bumblebee enemy
+        BumblebeeEntity.spawn(k, worldPos);
       },
-      H: (pos: Vec2) => {
+      H: (tilePos, worldPos) => {
         // Home
-        createHome(k, pos.scale(32));
-        return undefined;
+        HomeEntity.spawn(k, worldPos);
       },
-      B: (pos: Vec2) => {
+      B: (tilePos, worldPos) => {
         // Old Bobr
-        createOldBobr(k, pos.scale(32));
-        return undefined;
+        OldBobrEntity.spawn(k, worldPos);
       },
     },
   });
-  k.setGravity(1000);
 
-  bgMusicManager.loadMusic('home', 'music/home.mp3');
-  bgMusicManager.loadMusic('start-location', 'music/start-location.mp3');
   bgMusicManager.playMusic('start-location');
 
   // Make camera follow the player
-  k.onUpdate(() => {
+  player.onUpdate(() => {
     if (!player) {
       return;
     }

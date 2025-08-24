@@ -2,6 +2,7 @@ import {GameObj, Vec2} from 'kaplay';
 import {KCtx} from '../kaplay';
 import {bgMusicManager} from '../main';
 import {defaultFriction} from '../misc/defaults';
+import {GameEntity} from './generic/entity';
 
 enum State {
   INSIDE = 'INSIDE',
@@ -12,109 +13,112 @@ interface Config {
   isEveningTime: boolean;
 }
 
-export function createHome(k: KCtx, posXY: Vec2, config?: Partial<Config>) {
-  const C: Config = {
-    isEveningTime: false,
-    ...config,
-  };
+export const HomeEntity: GameEntity<Config> = {
+  async loadResources(k: KCtx): Promise<void> {
+    await k.loadSprite('home-outside', 'sprites/home/home-outside.png');
+    await k.loadSprite('home-inside', 'sprites/home/home-inside.png');
+    await k.loadSprite('home-fence', 'sprites/home/home-fence.png');
+  },
 
-  let isInitialStateSwitch = true;
+  spawn(k: KCtx, posXY: Vec2, config?: Partial<Config>): GameObj {
+    const C: Config = {
+      isEveningTime: false,
+      ...config,
+    };
 
-  k.loadSprite('home-outside', 'sprites/home/home-outside.png');
-  k.loadSprite('home-inside', 'sprites/home/home-inside.png');
-  k.loadSprite('home-fence', 'sprites/home/home-fence.png');
+    let isInitialStateSwitch = true;
 
-  const container = k.add([
-    //
-    'home-container',
-    k.pos(posXY),
-    k.anchor('botleft'),
-    k.offscreen({hide: true, pause: true, unpause: true, distance: 300}),
-    k.state(State.OUTSIDE, [State.INSIDE, State.OUTSIDE]),
-  ]);
+    const container = k.add([
+      'home-container',
+      k.pos(posXY),
+      k.anchor('botleft'),
+      k.offscreen({hide: true, pause: true, unpause: true, distance: 300}),
+      k.state(State.OUTSIDE, [State.INSIDE, State.OUTSIDE]),
+    ]);
 
-  // Add fence
-  container.add([
-    //
-    k.sprite('home-fence'),
-    k.pos(206, 0),
-    k.anchor('botleft'),
-  ]);
+    // Add fence
+    container.add([
+      //
+      k.sprite('home-fence'),
+      k.pos(206, 0),
+      k.anchor('botleft'),
+    ]);
 
-  // Add home inside
-  const inside = container.add([
-    //
-    'home-outside',
-    k.sprite('home-inside'),
-    k.anchor('botleft'),
-  ]);
+    // Add home inside
+    const inside = container.add([
+      //
+      'home-outside',
+      k.sprite('home-inside'),
+      k.anchor('botleft'),
+    ]);
 
-  // Add home outside
-  const outside = container.add([
-    //
-    'home-outside',
-    k.sprite('home-outside'),
-    k.anchor('botleft'),
-    k.animate({relative: true}),
-    k.z(1),
-  ]);
+    // Add home outside
+    const outside = container.add([
+      //
+      'home-outside',
+      k.sprite('home-outside'),
+      k.anchor('botleft'),
+      k.animate({relative: true}),
+      k.z(1),
+    ]);
 
-  addCollisionWalls(k, container);
+    addCollisionWalls(k, container);
 
-  container.onStateEnter(State.OUTSIDE, () => {
-    if (isInitialStateSwitch) {
-      isInitialStateSwitch = false;
-      return; // skip animation on initial state set
-    }
+    container.onStateEnter(State.OUTSIDE, () => {
+      if (isInitialStateSwitch) {
+        isInitialStateSwitch = false;
+        return; // skip animation on initial state set
+      }
 
-    outside.unanimateAll();
-    outside.animation.seek(0);
-    outside.animate('opacity', [0, 1], {duration: 1, loops: 1});
+      outside.unanimateAll();
+      outside.animation.seek(0);
+      outside.animate('opacity', [0, 1], {duration: 1, loops: 1});
 
-    bgMusicManager.playMusic('start-location');
-  });
+      bgMusicManager.playMusic('start-location');
+    });
 
-  container.onStateEnter(State.INSIDE, () => {
-    outside.unanimateAll();
-    outside.animation.seek(0);
-    outside.animate('opacity', [1, 0], {duration: 1, loops: 1});
+    container.onStateEnter(State.INSIDE, () => {
+      outside.unanimateAll();
+      outside.animation.seek(0);
+      outside.animate('opacity', [1, 0], {duration: 1, loops: 1});
 
-    if (C.isEveningTime) {
-      bgMusicManager.playMusic('home');
-    }
-  });
+      if (C.isEveningTime) {
+        bgMusicManager.playMusic('home');
+      }
+    });
 
-  // 180, 25x38
-  // Add entrance collision detection
-  const entrance = container.add([
-    'home-entrance',
-    k.rect(20, 38, {fill: false}),
-    k.pos(125, 0),
-    k.anchor('botleft'),
-    k.area(),
-  ]);
-  entrance.onCollide('player', () => {
-    if (container.state !== State.INSIDE) {
-      container.enterState(State.INSIDE);
-    }
-  });
+    // 180, 25x38
+    // Add entrance collision detection
+    const entrance = container.add([
+      'home-entrance',
+      k.rect(20, 38, {fill: false}),
+      k.pos(125, 0),
+      k.anchor('botleft'),
+      k.area(),
+    ]);
+    entrance.onCollide('player', () => {
+      if (container.state !== State.INSIDE) {
+        container.enterState(State.INSIDE);
+      }
+    });
 
-  // Add exit collision detection
-  const exit = container.add([
-    'home-exit',
-    k.rect(20, 38, {fill: false}),
-    k.pos(214, 0),
-    k.anchor('botleft'),
-    k.area(),
-  ]);
-  exit.onCollide('player', () => {
-    if (container.state !== State.OUTSIDE) {
-      container.enterState(State.OUTSIDE);
-    }
-  });
+    // Add exit collision detection
+    const exit = container.add([
+      'home-exit',
+      k.rect(20, 38, {fill: false}),
+      k.pos(214, 0),
+      k.anchor('botleft'),
+      k.area(),
+    ]);
+    exit.onCollide('player', () => {
+      if (container.state !== State.OUTSIDE) {
+        container.enterState(State.OUTSIDE);
+      }
+    });
 
-  return container;
-}
+    return container;
+  },
+};
 
 function addCollisionWalls(k: KCtx, container: GameObj) {
   // Add necessary collision walls near entrance
