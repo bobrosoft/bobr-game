@@ -44,7 +44,7 @@ export async function addLevel(k: KCtx, map: string, config: Config): Promise<Ad
       }
 
       if (char === 'P') {
-        playerSpawnPos = pos.scale(32);
+        playerSpawnPos = pos.scale(k.vec2(config.tileWidth, config.tileHeight));
         return undefined;
       }
 
