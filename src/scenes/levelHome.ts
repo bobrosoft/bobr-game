@@ -16,6 +16,8 @@ export const sceneLevelHome = async (k: KCtx) => {
         k.loadSprite('tile-ground', 'sprites/tiles/ground.png'),
         k.loadSprite('tile-grass-ground', 'sprites/tiles/grass-ground.png'),
         k.loadSprite('tile-grass-ground-air', 'sprites/tiles/grass-ground-air.png'),
+        k.loadSprite('tile-grass-ground-air-left', 'sprites/tiles/grass-ground-air-left.png'),
+        k.loadSprite('tile-grass-ground-air-right', 'sprites/tiles/grass-ground-air-right.png'),
         k.loadSprite('tile-grass-1', 'sprites/tiles/grass-1.png'),
         k.loadSprite('tile-grass-2', 'sprites/tiles/grass-2.png'),
         k.loadSprite('tile-grass-3', 'sprites/tiles/grass-3.png'),
@@ -48,14 +50,14 @@ export const sceneLevelHome = async (k: KCtx) => {
 
         return [
           // Ground-grass-air tile
-          // k.sprite(
-          //   siblings.left === ' '
-          //     ? 'tile-grass-ground'
-          //     : siblings.right === ' '
-          //       ? 'tile-grass-ground'
-          //       : 'tile-grass-ground-air',
-          // ),
-          k.sprite('tile-grass-ground-air'),
+          k.sprite(
+            siblings.left === ' '
+              ? 'tile-grass-ground-air-left'
+              : siblings.right === ' '
+                ? 'tile-grass-ground-air-right'
+                : 'tile-grass-ground-air',
+          ),
+          // k.sprite('tile-grass-ground-air'),
           k.area({...defaultFriction, shape: new k.Rect(k.vec2(0, -8), 32, 24)}),
           k.body({isStatic: true}),
           k.anchor('bot'),
