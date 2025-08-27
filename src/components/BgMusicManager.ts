@@ -1,5 +1,5 @@
 import {AudioPlay, AudioPlayOpt} from 'kaplay';
-import {k, KCtx} from '../kaplay';
+import {KCtx} from '../kaplay';
 import {Helpers} from '../misc/Helpers';
 
 export interface BgMusicManagerConfig {

@@ -1,5 +1,5 @@
+import {changeScene} from '../components/changeScene';
 import {KCtx} from '../kaplay';
-import {hud} from '../main';
 
 export const sceneMenu = (k: KCtx) => {
   // Add play button in the center of the screen
@@ -15,7 +15,6 @@ export const sceneMenu = (k: KCtx) => {
   ]);
 
   playButton.onClick(() => {
-    k.go('level-home');
-    hud.show();
+    changeScene(k, 'level-home').then();
   });
 };
