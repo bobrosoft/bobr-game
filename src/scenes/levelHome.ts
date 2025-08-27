@@ -1,3 +1,4 @@
+import {addBackground} from '../components/addBackground';
 import {addLevel} from '../components/addLevel';
 import {BumblebeeEntity} from '../entities/bumblebee';
 import {GopherEntity} from '../entities/gopher';
@@ -104,6 +105,9 @@ export const sceneLevelHome = async (k: KCtx) => {
       },
     },
   });
+
+  await k.loadSprite('bg-home-day', 'sprites/backgrounds/home-day.png');
+  addBackground(k, 'bg-home-day', player);
 
   bgMusicManager.playMusic('start-location');
 

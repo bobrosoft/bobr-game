@@ -24,7 +24,7 @@ export let hud: ReturnType<typeof createHud>; // need to create it later because
   });
 
   k.loadFont('pixel', 'fonts/Press_Start_2P/PressStart2P-Regular.ttf');
-  k.setLayers(['game', 'hud', 'menu'], 'game');
+  k.setLayers(['bg', 'game', 'hud', 'menu', 'fade'], 'game');
 
   k.setVolume(0.5); // Set default volume for all sounds
   hud = createHud(k);
