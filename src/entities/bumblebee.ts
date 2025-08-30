@@ -47,9 +47,9 @@ export const BumblebeeEntity: GameEntity<Config, EnemyComp> = {
       k.health(C.health, C.health),
       k.timer(),
       k.pos(posXY),
-      k.area(defaultFriction),
+      k.area({...defaultFriction, collisionIgnore: ['obstacle']}),
       k.body({gravityScale: 0}),
-      k.anchor('bot'),
+      k.anchor('center'),
       k.offscreen({pause: true, unpause: true, hide: true}),
       {
         registerHit: (player: PlayerComp) => {
