@@ -1,6 +1,7 @@
 import {KCtx} from '../kaplay';
 import {Helpers} from '../misc/Helpers';
 import {addJoystick} from './addJoystick';
+import {changeScene} from './changeScene';
 
 export const createHud = (k: KCtx) => {
   // Add mobile joystick and buttons if on a touch device
@@ -22,7 +23,7 @@ export const createHud = (k: KCtx) => {
     k.stay(),
   ]);
   reloadButton.onClick(() => {
-    k.go('level-home');
+    changeScene(k, 'level-home').then();
   });
 
   // Hide by default, will be shown when the game starts

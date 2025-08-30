@@ -31,17 +31,21 @@ export let fadeManager: FadeManager;
 
   k.setVolume(0.5); // Set default volume for all sounds
   hud = createHud(k);
-
   fadeManager = new FadeManager(k);
 
   k.scene('menu', () => sceneMenu(k));
   k.scene('rotate-device', () => sceneRotateDevice(k));
-  k.scene('level-home', sceneTransitionWrapper(k, sceneLevelHome, {fadeInDuration: 2, fadeOutDuration: 0.3}));
+  k.scene('level-home', sceneTransitionWrapper(k, sceneLevelHome));
 
   const isInitialOrientationLandscape = Helpers.isLandscapeMode();
 
   // Watch for orientation changes to adjust canvas size
   window.addEventListener('resize', () => {
+    // If initial orientation was landscape, no need to reload on orientation change
+    if (isInitialOrientationLandscape) {
+      return;
+    }
+
     if (Helpers.isLandscapeMode() === isInitialOrientationLandscape) {
       return; // No change in orientation, no need to reload
     }

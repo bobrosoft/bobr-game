@@ -1,4 +1,5 @@
 import {AreaComp, BodyComp, GameObj, HealthComp, PosComp, SpriteComp, TimerComp, TimerController, Vec2} from 'kaplay';
+import {changeScene} from '../components/changeScene';
 import {KCtx} from '../kaplay';
 import {defaultFriction} from '../misc/defaults';
 import {EnemyComp} from './generic/enemy';
@@ -296,7 +297,7 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
     });
 
     player.onDeath(() => {
-      k.go(k.getSceneName()); // restart level on death
+      changeScene(k, k.getSceneName()).then(); // restart level on death
     });
 
     return player;
