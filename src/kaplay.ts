@@ -6,7 +6,7 @@ export const k = kaplay({
   global: false,
   width: dimensions.width,
   height: dimensions.height,
-  background: '#74dcf6',
+  background: '#000000',
   // crisp: true,
   letterbox: true,
   pixelDensity: 2, // needed to remove artifacts with pixels

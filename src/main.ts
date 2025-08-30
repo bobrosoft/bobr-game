@@ -29,6 +29,17 @@ export let fadeManager: FadeManager;
   k.loadFont('pixel', 'fonts/Press_Start_2P/PressStart2P-Regular.ttf');
   k.setLayers(['bg', 'game', 'hud', 'menu', 'fade'], 'game');
 
+  // Add default blue background
+  k.add([
+    k.layer('bg'),
+    k.rect(k.width(), k.height()),
+    k.color('#74dcf6' as any),
+    k.pos(0, 0),
+    k.anchor('topleft'),
+    k.fixed(),
+    k.stay(),
+  ]);
+
   k.setVolume(0.5); // Set default volume for all sounds
   hud = createHud(k);
   fadeManager = new FadeManager(k);
