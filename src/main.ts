@@ -3,6 +3,7 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import {BgMusicManager} from './components/BgMusicManager';
 import {FadeManager} from './components/FadeManager';
 import {createHud} from './components/hud';
+import {sceneTransitionWrapper} from './components/sceneTransitionWrapper';
 import translationsEN from './i18n/en.json';
 import translationsRU from './i18n/ru.json';
 import {k} from './kaplay';
@@ -35,7 +36,7 @@ export let fadeManager: FadeManager;
 
   k.scene('menu', () => sceneMenu(k));
   k.scene('rotate-device', () => sceneRotateDevice(k));
-  k.scene('level-home', () => sceneLevelHome(k));
+  k.scene('level-home', sceneTransitionWrapper(k, sceneLevelHome, {fadeInDuration: 2, fadeOutDuration: 0.3}));
 
   const isInitialOrientationLandscape = Helpers.isLandscapeMode();
 

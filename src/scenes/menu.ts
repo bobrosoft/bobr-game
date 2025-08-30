@@ -1,4 +1,3 @@
-import {changeScene} from '../components/changeScene';
 import {KCtx} from '../kaplay';
 
 export const sceneMenu = (k: KCtx) => {
@@ -15,6 +14,6 @@ export const sceneMenu = (k: KCtx) => {
   ]);
 
   playButton.onClick(() => {
-    changeScene(k, 'level-home').then();
+    k.go('level-home');
   });
 };
