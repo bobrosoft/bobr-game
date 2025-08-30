@@ -1,5 +1,6 @@
 import {t} from 'i18next';
 import {Vec2} from 'kaplay';
+import {infoIcon} from '../components/InfoIconComp';
 import {showDialogSeries} from '../components/showDialog';
 import {KCtx} from '../kaplay';
 import {defaultFriction} from '../misc/defaults';
@@ -9,6 +10,7 @@ import {PlayerComp} from './player';
 
 enum State {
   IDLE = 'IDLE',
+  INTERACTING = 'INTERACTING',
 }
 
 export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
@@ -36,7 +38,7 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
       'old-bobr',
       'interactable',
       k.sprite('old-bobr', {anim: 'idle'}),
-      k.state(State.IDLE, [State.IDLE]),
+      k.state(State.IDLE, [State.IDLE, State.INTERACTING]),
       k.timer(),
       k.pos(posXY),
       k.area({...defaultFriction, collisionIgnore: ['player', 'enemy']}),
@@ -46,10 +48,14 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
       {
         config: C,
         interact,
+        shouldShowInfoIcon,
       },
     ]);
 
     async function interact(player: PlayerComp): Promise<void> {
+      mainObj.enterState(State.INTERACTING);
+
+      // Play a random sound
       k.play(k.choose(['old-bobr-kurwa-1', 'old-bobr-kurwa-2']));
 
       // Rotate the sprite based on player position
@@ -61,10 +67,37 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
         t('oldBobr.intro1'),
         t('oldBobr.intro2'),
       ]);
+
+      mainObj.enterState(State.IDLE);
+    }
+
+    function shouldShowInfoIcon(): boolean {
+      if (mainObj.state === State.INTERACTING) {
+        return false;
+      }
+
+      return true;
+    }
+
+    function updateInfoIcon() {
+      if (shouldShowInfoIcon()) {
+        mainObj.use(infoIcon(6 * (mainObj.flipX ? -1 : 1)));
+      } else {
+        mainObj.unuse(infoIcon.id);
+      }
     }
 
     mainObj.onStateEnter(State.IDLE, async () => {
       mainObj.play('idle');
+      updateInfoIcon();
+    });
+
+    mainObj.onStateEnter(State.INTERACTING, async () => {
+      updateInfoIcon();
+    });
+
+    mainObj.onEnterScreen(() => {
+      updateInfoIcon();
     });
 
     return mainObj;

@@ -7,4 +7,5 @@ export interface NpcConfig {}
 
 export interface NpcComp extends GameObj<string | SpriteComp | PosComp | AreaComp>, Interactable {
   config: NpcConfig;
+  shouldShowInfoIcon?: () => boolean;
 }
