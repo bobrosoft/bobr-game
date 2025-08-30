@@ -1,5 +1,4 @@
-import {GameObj} from 'kaplay';
-import {k, KCtx} from '../kaplay';
+import {KCtx} from '../kaplay';
 
 /**
  * Adds a joystick and buttons for left/right movement, jump, and action.

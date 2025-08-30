@@ -2,8 +2,8 @@ import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import {BgMusicManager} from './components/BgMusicManager';
 import {FadeManager} from './components/FadeManager';
-import {createHud} from './components/hud';
-import {sceneTransitionWrapper} from './components/sceneTransitionWrapper';
+import {HudManager} from './components/HudManager';
+import {sceneTransitionWrapper} from './misc/sceneTransitionWrapper';
 import translationsEN from './i18n/en.json';
 import translationsRU from './i18n/ru.json';
 import {k} from './kaplay';
@@ -13,7 +13,7 @@ import {sceneMenu} from './scenes/menu';
 import {sceneRotateDevice} from './scenes/rotateDevice';
 
 export const bgMusicManager: BgMusicManager = new BgMusicManager(k);
-export let hud: ReturnType<typeof createHud>; // need to create it later because layers not yet defined
+export let hudManager: HudManager; // need to create it later because layers not yet defined
 export let fadeManager: FadeManager;
 
 (async () => {
@@ -41,7 +41,7 @@ export let fadeManager: FadeManager;
   ]);
 
   k.setVolume(0.5); // Set default volume for all sounds
-  hud = createHud(k);
+  hudManager = new HudManager(k);
   fadeManager = new FadeManager(k);
 
   k.scene('menu', () => sceneMenu(k));

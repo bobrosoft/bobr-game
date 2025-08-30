@@ -1,4 +1,4 @@
-import {changeScene} from '../components/changeScene';
+import {changeScene} from '../misc/changeScene';
 import {KCtx} from '../kaplay';
 
 export const sceneMenu = (k: KCtx) => {

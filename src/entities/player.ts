@@ -1,5 +1,5 @@
 import {AreaComp, BodyComp, GameObj, HealthComp, PosComp, SpriteComp, TimerComp, TimerController, Vec2} from 'kaplay';
-import {changeScene} from '../components/changeScene';
+import {changeScene} from '../misc/changeScene';
 import {KCtx} from '../kaplay';
 import {defaultFriction} from '../misc/defaults';
 import {EnemyComp} from './generic/enemy';

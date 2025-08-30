@@ -1,5 +1,5 @@
 import {KCtx} from '../kaplay';
-import {fadeManager, hud} from '../main';
+import {fadeManager, hudManager} from '../main';
 
 /**
  * Change to a new scene with a fade out and fade in effect.
@@ -8,7 +8,7 @@ import {fadeManager, hud} from '../main';
  * @param newSceneName
  */
 export async function changeScene(k: KCtx, newSceneName: string) {
-  hud.hide();
+  hudManager.hide();
   await fadeManager.showOverlay(0.3);
   k.go(newSceneName);
 

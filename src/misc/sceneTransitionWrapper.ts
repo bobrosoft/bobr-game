@@ -1,6 +1,6 @@
 import {KCtx} from '../kaplay';
-import {fadeManager, hud} from '../main';
-import {Helpers} from '../misc/Helpers';
+import {fadeManager, hudManager} from '../main';
+import {Helpers} from './Helpers';
 
 /**
  * A wrapper for scene functions to add a fade in effect when the scene starts.
@@ -20,6 +20,6 @@ export function sceneTransitionWrapper(
     await sceneFunc(k);
     await Helpers.setTimeoutAsync(500);
     await fadeManager.hideOverlay(options?.fadeInDuration || 2);
-    hud.show();
+    hudManager.show();
   };
 }
