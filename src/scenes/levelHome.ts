@@ -19,11 +19,15 @@ export const sceneLevelHome = async (k: KCtx) => {
         k.loadSprite('tile-grass-ground-air', 'sprites/tiles/grass-ground-air.png'),
         k.loadSprite('tile-grass-ground-air-left', 'sprites/tiles/grass-ground-air-left.png'),
         k.loadSprite('tile-grass-ground-air-right', 'sprites/tiles/grass-ground-air-right.png'),
+        k.loadSprite('tile-grass-ground-inclined-left-1', 'sprites/tiles/grass-ground-inclined-left-1.png'),
+        k.loadSprite('tile-grass-ground-inclined-left-2', 'sprites/tiles/grass-ground-inclined-left-2.png'),
+        k.loadSprite('tile-grass-ground-inclined-left-3', 'sprites/tiles/grass-ground-inclined-left-3.png'),
         k.loadSprite('tile-grass-1', 'sprites/tiles/grass-1.png'),
         k.loadSprite('tile-grass-2', 'sprites/tiles/grass-2.png'),
         k.loadSprite('tile-grass-3', 'sprites/tiles/grass-3.png'),
         k.loadSprite('tile-tree-1', 'sprites/tiles/tree-1.png'),
         k.loadSprite('tile-tree-2', 'sprites/tiles/tree-2.png'),
+        k.loadSprite('rock', 'sprites/tiles/rock.png'),
 
         GopherEntity.loadResources(k),
         BumblebeeEntity.loadResources(k),
@@ -50,6 +54,7 @@ export const sceneLevelHome = async (k: KCtx) => {
         const siblings = getSiblings();
 
         return [
+          'obstacle',
           // Ground-grass-air tile
           k.sprite(
             siblings.left === ' '
@@ -65,14 +70,42 @@ export const sceneLevelHome = async (k: KCtx) => {
           k.offscreen({hide: true}),
         ];
       },
-      '.': () => [
-        // Ground tile
-        k.sprite('tile-ground'),
-        k.area(defaultFriction),
-        k.body({isStatic: true}),
-        k.anchor('bot'),
-        k.offscreen({hide: true}),
-      ],
+      '.': (tilePos, worldPos, getSiblings) => {
+        const siblings = getSiblings();
+        if (siblings.topRight === '/') {
+          // Special ground case for inclined surfaces
+          return [
+            //
+            'obstacle',
+            k.sprite('tile-grass-ground-inclined-left-1'),
+            k.anchor('bot'),
+            k.offscreen({hide: true}),
+          ];
+        }
+
+        if (siblings.topLeft === '\\') {
+          // Special ground case for inclined surfaces
+          return [
+            //
+            'obstacle',
+            k.sprite('tile-grass-ground-inclined-left-1', {flipX: true}),
+            k.anchor('bot'),
+            k.offscreen({hide: true}),
+          ];
+        }
+
+        const needCollisions =
+          siblings.left === ' ' || siblings.right === ' ' || siblings.bottom === ' ' || siblings.left === '';
+
+        return [
+          // Ground tile
+          'obstacle',
+          k.sprite('tile-ground'),
+          ...(needCollisions ? [k.area(defaultFriction), k.body({isStatic: true})] : []),
+          k.anchor('bot'),
+          k.offscreen({hide: true}),
+        ];
+      },
       ',': () => [
         // Grass tile
         k.sprite(k.choose(['tile-grass-1', 'tile-grass-2', 'tile-grass-3']), {flipX: k.choose([true, false])}),
@@ -80,11 +113,100 @@ export const sceneLevelHome = async (k: KCtx) => {
         k.anchor('bot'),
         k.offscreen({hide: true}),
       ],
+      '/': (tilePos, worldPos, getSiblings) => {
+        const siblings = getSiblings();
+        if (siblings.left === '/') {
+          return [
+            'obstacle',
+            k.sprite('tile-grass-ground-inclined-left-3'),
+            k.area({
+              ...defaultFriction,
+              shape: new k.Polygon([
+                //
+                k.vec2(-16, 0),
+                k.vec2(-16, -16),
+                k.vec2(16, -32),
+                k.vec2(16, 0),
+              ]),
+            }),
+            k.body({isStatic: true}),
+            k.anchor('bot'),
+            k.offscreen({hide: true}),
+          ];
+        }
+
+        return [
+          'obstacle',
+          k.sprite('tile-grass-ground-inclined-left-2'),
+          k.area({
+            ...defaultFriction,
+            shape: new k.Polygon([
+              //
+              k.vec2(-16, 0),
+              k.vec2(16, -16),
+              k.vec2(16, 0),
+              k.vec2(-16, 16),
+            ]),
+          }),
+          k.body({isStatic: true}),
+          k.anchor('bot'),
+          k.offscreen({hide: true}),
+        ];
+      },
+      '\\': (tilePos, worldPos, getSiblings) => {
+        const siblings = getSiblings();
+        if (siblings.right === '\\') {
+          return [
+            'obstacle',
+            k.sprite('tile-grass-ground-inclined-left-3', {flipX: true}),
+            k.area({
+              ...defaultFriction,
+              shape: new k.Polygon([
+                //
+                k.vec2(16, 0),
+                k.vec2(16, -16),
+                k.vec2(-16, -32),
+                k.vec2(-16, 0),
+              ]),
+            }),
+            k.body({isStatic: true}),
+            k.anchor('bot'),
+            k.offscreen({hide: true}),
+          ];
+        }
+
+        return [
+          'obstacle',
+          k.sprite('tile-grass-ground-inclined-left-2', {flipX: true}),
+          k.area({
+            ...defaultFriction,
+            shape: new k.Polygon([
+              //
+              k.vec2(16, 0),
+              k.vec2(-16, -16),
+              k.vec2(-16, 0),
+              k.vec2(16, 16),
+            ]),
+          }),
+          k.body({isStatic: true}),
+          k.anchor('bot'),
+          k.offscreen({hide: true}),
+        ];
+      },
       t: () => [
         // Tree tile
         k.sprite(k.choose(['tile-tree-1', 'tile-tree-2']), {flipX: k.choose([true, false])}),
         k.z(k.choose([1, -1])),
         k.anchor('bot'),
+        k.offscreen({hide: true}),
+      ],
+      r: () => [
+        // Rock tile
+        'obstacle',
+        k.sprite('rock', {flipX: k.choose([true, false])}),
+        k.anchor('bot'),
+        k.area(defaultFriction),
+        k.body({mass: 2}),
         k.offscreen({hide: true}),
       ],
       G: (tilePos, worldPos) => {
