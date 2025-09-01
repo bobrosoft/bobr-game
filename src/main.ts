@@ -46,7 +46,7 @@ export let fadeManager: FadeManager;
 
   k.scene('menu', () => sceneMenu(k));
   k.scene('rotate-device', () => sceneRotateDevice(k));
-  k.scene('level-home', sceneTransitionWrapper(k, sceneLevelHome));
+  k.scene(sceneLevelHome.id, sceneTransitionWrapper(k, sceneLevelHome));
 
   const isInitialOrientationLandscape = Helpers.isLandscapeMode();
 

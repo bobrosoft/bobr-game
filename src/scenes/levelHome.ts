@@ -244,3 +244,5 @@ export const sceneLevelHome = async (k: KCtx) => {
     k.setCamPos(x, y);
   });
 };
+
+sceneLevelHome.id = 'level-home';
