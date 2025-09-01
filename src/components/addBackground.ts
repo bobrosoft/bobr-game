@@ -21,8 +21,8 @@ export function addBackground(k: KCtx, spriteName: string, player: PlayerComp, o
   ]);
 
   background.onUpdate(() => {
-    background.pos.x = k.width() / 2 + -k.getCamPos().x / 100;
-    background.pos.y = k.height() / 2 + (options?.offsetY || 0) - k.getCamPos().y / 50;
+    background.pos.x = k.width() / 2 + -k.getCamPos().x / 50;
+    background.pos.y = k.height() / 2 + (options?.offsetY || 0) - k.getCamPos().y / 25;
   });
 
   return background;
