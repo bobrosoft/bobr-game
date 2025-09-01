@@ -5,12 +5,12 @@ import {GopherEntity} from '../entities/gopher';
 import {HomeEntity} from '../entities/home';
 import {OldBobrEntity} from '../entities/old-bobr';
 import {KCtx} from '../kaplay';
-import {bgMusicManager} from '../main';
+import {bgMusicManager, gameStateManager} from '../main';
 import {defaultFriction} from '../misc/defaults';
 import map from './maps/home.txt?raw';
 
 export const sceneLevelHome = async (k: KCtx) => {
-  const {player} = await addLevel(k, map, {
+  const {player, level} = await addLevel(k, map, {
     preloadResources: async (k: KCtx) => {
       // Preload assets
       await Promise.all([
@@ -232,14 +232,18 @@ export const sceneLevelHome = async (k: KCtx) => {
   addBackground(k, 'bg-home-day', player, {offsetY: 40});
 
   bgMusicManager.playMusic('start-location');
+  gameStateManager.setState({
+    currentLevel: sceneLevelHome.id,
+  });
 
   // Make camera follow the player
+  const levelWidth = level.levelWidth() - 16;
   player.onUpdate(() => {
     if (!player) {
       return;
     }
 
-    const x = Math.max(player.pos.x, k.width() / 2);
+    const x = k.clamp(player.pos.x, k.width() / 2, levelWidth - k.width() / 2);
     const y = player.pos.y - k.height() / 4;
     k.setCamPos(x, y);
   });

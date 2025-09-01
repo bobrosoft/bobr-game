@@ -3,6 +3,7 @@ import {Vec2} from 'kaplay';
 import {infoIcon} from '../components/InfoIconComp';
 import {showDialogSeries} from '../components/showDialog';
 import {KCtx} from '../kaplay';
+import {gameStateManager} from '../main';
 import {defaultFriction} from '../misc/defaults';
 import {GameEntity} from './generic/entity';
 import {NpcComp, NpcConfig} from './generic/npc';
@@ -32,8 +33,6 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
       ...config,
     };
 
-    let direction = -1; // 1 for right, -1 for left
-
     const mainObj = k.add([
       'old-bobr',
       'interactable',
@@ -53,6 +52,11 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
     ]);
 
     async function interact(player: PlayerComp): Promise<void> {
+      const availableInteraction = getAvailableInteractionType();
+      if (!availableInteraction) {
+        return;
+      }
+
       mainObj.enterState(State.INTERACTING);
 
       // Play a random sound
@@ -61,13 +65,7 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
       // Rotate the sprite based on player position
       mainObj.flipX = mainObj.pos.x > player.pos.x;
 
-      // Show dialog series
-      await showDialogSeries(k, mainObj, player, [
-        //
-        t('oldBobr.intro1'),
-        t('oldBobr.intro2'),
-      ]);
-
+      await performInteraction(availableInteraction, player); // main logic is here
       mainObj.enterState(State.IDLE);
     }
 
@@ -76,7 +74,13 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
         return false;
       }
 
-      return true;
+      switch (getAvailableInteractionType()) {
+        case InteractionType.SAY_INTRO_REPEAT:
+          return false;
+
+        default:
+          return true;
+      }
     }
 
     function updateInfoIcon() {
@@ -84,6 +88,44 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
         mainObj.use(infoIcon(6 * (mainObj.flipX ? -1 : 1)));
       } else {
         mainObj.unuse(infoIcon.id);
+      }
+    }
+
+    function getAvailableInteractionType(): InteractionType {
+      const gameState = gameStateManager.state;
+
+      if (!gameState.oldBobr.isIntroSaid) {
+        return InteractionType.SAY_INTRO;
+      } else {
+        return InteractionType.SAY_INTRO_REPEAT;
+      }
+    }
+
+    async function performInteraction(type: InteractionType, player: PlayerComp) {
+      const gameState = gameStateManager.state;
+
+      switch (type) {
+        case InteractionType.SAY_INTRO:
+          await showDialogSeries(k, mainObj, player, [
+            //
+            t('oldBobr.intro1'),
+            t('oldBobr.intro2'),
+          ]);
+
+          gameStateManager.setState({
+            oldBobr: {
+              ...gameState.oldBobr,
+              isIntroSaid: true,
+            },
+          });
+          break;
+
+        case InteractionType.SAY_INTRO_REPEAT:
+          await showDialogSeries(k, mainObj, player, [
+            //
+            t(k.choose(['oldBobr.introRepeat1', 'oldBobr.introRepeat2', 'oldBobr.introRepeat3'])),
+          ]);
+          break;
       }
     }
 
@@ -103,3 +145,8 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
     return mainObj;
   },
 };
+
+enum InteractionType {
+  SAY_INTRO = 'SAY_INTRO',
+  SAY_INTRO_REPEAT = 'SAY_INTRO_REPEAT',
+}

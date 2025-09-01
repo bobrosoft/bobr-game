@@ -1,6 +1,8 @@
 import {AreaComp, GameObj} from 'kaplay';
 import {KCtx} from '../kaplay';
+import {gameStateManager} from '../main';
 import {Helpers} from '../misc/Helpers';
+import {sceneLevelHome} from '../scenes/levelHome';
 import {addJoystick} from './addJoystick';
 import {changeScene} from '../misc/changeScene';
 
@@ -27,7 +29,8 @@ export class HudManager {
       this.k.stay(),
     ]);
     this.reloadButton.onClick(() => {
-      changeScene(this.k, 'level-home').then();
+      gameStateManager.resetState();
+      changeScene(this.k, sceneLevelHome.id).then();
     });
 
     // Hide by default, will be shown when the game starts

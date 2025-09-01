@@ -3,3 +3,7 @@ declare module '*.txt?raw' {
   const content: string;
   export default content;
 }
+
+type PartialDeep<T> = {
+  [P in keyof T]?: T[P] extends object ? PartialDeep<T[P]> : T[P];
+};

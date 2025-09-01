@@ -2,6 +2,7 @@ import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import {BgMusicManager} from './components/BgMusicManager';
 import {FadeManager} from './components/FadeManager';
+import {GameStateManager} from './components/GameStateManager';
 import {HudManager} from './components/HudManager';
 import {sceneTransitionWrapper} from './misc/sceneTransitionWrapper';
 import translationsEN from './i18n/en.json';
@@ -12,6 +13,7 @@ import {sceneLevelHome} from './scenes/levelHome';
 import {sceneMenu} from './scenes/menu';
 import {sceneRotateDevice} from './scenes/rotateDevice';
 
+export const gameStateManager = new GameStateManager();
 export const bgMusicManager: BgMusicManager = new BgMusicManager(k);
 export let hudManager: HudManager; // need to create it later because layers not yet defined
 export let fadeManager: FadeManager;

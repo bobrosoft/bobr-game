@@ -124,6 +124,7 @@ function addCollisionWalls(k: KCtx, container: GameObj) {
   // Add necessary collision walls near entrance
   container.add([
     // to prevent jump on home entrance
+    'obstacle',
     k.rect(14, 200, {fill: false}),
     k.pos(193, -42),
     k.anchor('botleft'),
@@ -132,6 +133,7 @@ function addCollisionWalls(k: KCtx, container: GameObj) {
   ]);
   container.add([
     // to prevent just through home entrance
+    'obstacle',
     k.rect(40, 12, {fill: false}),
     k.pos(156, -42),
     k.anchor('botleft'),
@@ -142,6 +144,7 @@ function addCollisionWalls(k: KCtx, container: GameObj) {
   // Add left wall
   container.add([
     //
+    'obstacle',
     k.rect(10, 220, {fill: false}),
     k.pos(-10, 0),
     k.anchor('botleft'),
@@ -151,6 +154,7 @@ function addCollisionWalls(k: KCtx, container: GameObj) {
 
   // Add right wall polys
   container.add([
+    'obstacle',
     k.polygon(
       [
         //
@@ -167,6 +171,7 @@ function addCollisionWalls(k: KCtx, container: GameObj) {
     k.body({isStatic: true}),
   ]);
   container.add([
+    'obstacle',
     k.polygon(
       [
         //
@@ -183,6 +188,7 @@ function addCollisionWalls(k: KCtx, container: GameObj) {
     k.body({isStatic: true}),
   ]);
   container.add([
+    'obstacle',
     k.polygon(
       [
         //
@@ -202,6 +208,7 @@ function addCollisionWalls(k: KCtx, container: GameObj) {
   // Add floor for second floor
   container.add([
     //
+    'obstacle',
     k.rect(120, 7, {fill: false}),
     k.pos(57, -58),
     k.anchor('botleft'),
@@ -212,6 +219,7 @@ function addCollisionWalls(k: KCtx, container: GameObj) {
   // Add floor for third floor
   container.add([
     //
+    'obstacle',
     k.rect(95, 7, {fill: false}),
     k.pos(0, -122),
     k.anchor('botleft'),
