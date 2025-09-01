@@ -61,12 +61,13 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
         attack: {from: 15, to: 19, speed: 20, loop: false},
       },
     });
+    await k.loadSprite('player-hit-wave', 'sprites/characters/bobr-hit-wave.png');
 
     await k.loadSound('player-attack', 'sounds/bobr-attack.mp3');
   },
 
   spawn(k: KCtx, posXY: Vec2 = k.vec2(100, 100), config?: Partial<PlayerConfig>): PlayerComp {
-    const C = {...DEFAULTS, ...config};
+    const C: PlayerConfig = {...DEFAULTS, ...config};
 
     const player = k.add([
       'player', // tag for easy access
@@ -212,8 +213,7 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
               'player.hitbox',
               k.pos(k.vec2(player.flipX ? -16 : 16, 0)),
               k.area(),
-              k.rect(20, 20),
-              k.opacity(0),
+              k.sprite('player-hit-wave', {flipX: player.flipX}), // 20x20
               k.anchor('bot'),
               k.lifespan(0.1),
             ]);
