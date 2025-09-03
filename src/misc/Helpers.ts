@@ -1,3 +1,5 @@
+import deepmerge from 'deepmerge';
+
 export class Helpers {
   /**
    * Check if the device is a touch device based on user agent or touch capabilities.
@@ -31,5 +33,14 @@ export class Helpers {
         resolve();
       }, ms);
     });
+  }
+
+  /**
+   * Merges any number of objects into a single result object, returning a new merged object.
+   * @param target
+   * @param sources
+   */
+  static mergeDeep(target: any, ...sources: any[]): any {
+    return deepmerge.all([target, ...sources], {arrayMerge: (_, source) => source});
   }
 }
