@@ -1,4 +1,5 @@
 import {KCtx} from '../kaplay';
+import {hud} from './HudComp';
 
 /**
  * Adds a joystick and buttons for left/right movement, jump, and action.
@@ -25,46 +26,39 @@ export function addJoystick(
 
   const base = k.add([
     'joystickBase',
-    'hud',
-    k.layer('hud'),
-    k.fixed(),
-    k.stay(),
+    hud({shouldBeShown: true, targetOpacity: 0.2}),
     k.pos(-9999, -9999),
     k.circle(size / 2),
     k.color(0, 0, 0),
-    // k.outline(1, k.rgb(255, 255, 255), 0.5),
-    k.opacity(0.2),
     k.anchor('center'),
   ]);
 
   const knob = k.add([
     'joystickKnob',
-    'hud',
-    k.layer('hud'),
-    k.fixed(),
-    k.stay(),
+    hud({shouldBeShown: true, targetOpacity: 0.7}),
     k.pos(-9999, -9999),
     k.circle(size / 4),
     k.color(255, 255, 255),
-    k.opacity(0.7),
     k.anchor('center'),
   ]);
 
   // Add jump button on the right side
   const jumpButton = k.add([
     'jumpButton',
-    'hud',
-    k.layer('hud'),
-    k.fixed(),
-    k.stay(),
+    hud({shouldBeShown: true, targetOpacity: 0.2}),
     k.pos(k.width() - size * 0.5, k.height() - size * 0.5),
     k.area(),
     k.circle(size / 3),
     k.color(0, 0, 0),
-    k.opacity(0.2),
     k.anchor('center'),
   ]);
-  jumpButton.add([k.sprite('joystick.jump'), k.anchor('center')]);
+  k.add([
+    //
+    hud({shouldBeShown: true}),
+    k.sprite('joystick.jump'),
+    k.pos(jumpButton.pos),
+    k.anchor('center'),
+  ]);
 
   jumpButton.onClick(() => {
     k.pressButton('jump');
@@ -74,18 +68,20 @@ export function addJoystick(
   // Add attack button on the right side
   const attackButton = k.add([
     'attackButton',
-    'hud',
-    k.layer('hud'),
-    k.fixed(),
-    k.stay(),
+    hud({shouldBeShown: true, targetOpacity: 0.2}),
     k.pos(k.width() - size * 1.1, k.height() - size * 1.1),
     k.area(),
     k.circle(size / 2.5),
     k.color(0, 0, 0),
-    k.opacity(0.2),
     k.anchor('center'),
   ]);
-  attackButton.add([k.sprite('joystick.attack'), k.anchor('center'), k.scale(1.2)]);
+  k.add([
+    hud({shouldBeShown: true}),
+    k.sprite('joystick.attack'),
+    k.pos(attackButton.pos),
+    k.anchor('center'),
+    k.scale(1.2),
+  ]);
 
   attackButton.onClick(() => {
     k.pressButton('action');
