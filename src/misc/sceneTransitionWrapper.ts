@@ -1,5 +1,5 @@
 import {KCtx} from '../kaplay';
-import {fadeManager, hudManager} from '../main';
+import {fadeManager, gsm, hudManager} from '../main';
 import {Helpers} from './Helpers';
 
 /**
@@ -17,6 +17,7 @@ export function sceneTransitionWrapper(
   return async () => {
     // You should use changeScene to change scene for it to work properly
 
+    gsm.prepareForNewScene();
     await sceneFunc(k);
     await Helpers.setTimeoutAsync(500);
     await fadeManager.hideOverlay(options?.fadeInDuration || 2);

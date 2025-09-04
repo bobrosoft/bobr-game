@@ -3,7 +3,7 @@ import {Vec2} from 'kaplay';
 import {infoIcon} from '../components/InfoIconComp';
 import {showDialogSeries} from '../components/showDialog';
 import {KCtx} from '../kaplay';
-import {gameStateManager} from '../main';
+import {gsm} from '../main';
 import {defaultFriction} from '../misc/defaults';
 import {GameEntity} from './generic/entity';
 import {NpcComp, NpcConfig} from './generic/npc';
@@ -92,17 +92,19 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
     }
 
     function getAvailableInteractionType(): InteractionType {
-      const gameState = gameStateManager.state;
+      const gameState = gsm.state;
 
-      if (!gameState.oldBobr.isIntroSaid) {
+      if (!gameState.persistent.oldBobr.isIntroSaid) {
         return InteractionType.SAY_INTRO;
+      } else if (gameState.persistent.player.deaths >= 1 && !gameState.persistent.player.hasLuckyCharm) {
+        return InteractionType.GIVE_LUCKY_CHARM;
       } else {
         return InteractionType.SAY_INTRO_REPEAT;
       }
     }
 
     async function performInteraction(type: InteractionType, player: PlayerComp) {
-      const gameState = gameStateManager.state;
+      const gameState = gsm.state;
 
       switch (type) {
         case InteractionType.SAY_INTRO:
@@ -112,10 +114,11 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
             t('oldBobr.intro2'),
           ]);
 
-          gameStateManager.setState({
-            oldBobr: {
-              ...gameState.oldBobr,
-              isIntroSaid: true,
+          gsm.update({
+            persistent: {
+              oldBobr: {
+                isIntroSaid: true,
+              },
             },
           });
           break;
@@ -125,6 +128,28 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
             //
             t(k.choose(['oldBobr.introRepeat1', 'oldBobr.introRepeat2', 'oldBobr.introRepeat3'])),
           ]);
+          break;
+
+        case InteractionType.GIVE_LUCKY_CHARM:
+          await showDialogSeries(k, mainObj, player, [
+            //
+            t('oldBobr.giveLuckyCharm1'),
+            t('oldBobr.giveLuckyCharm2'),
+          ]);
+
+          gsm.update({
+            persistent: {
+              player: {
+                hasLuckyCharm: true,
+              },
+            },
+            temp: {
+              player: {
+                health: 2,
+              },
+            },
+          });
+
           break;
       }
     }
@@ -149,4 +174,5 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
 enum InteractionType {
   SAY_INTRO = 'SAY_INTRO',
   SAY_INTRO_REPEAT = 'SAY_INTRO_REPEAT',
+  GIVE_LUCKY_CHARM = 'GIVE_LUCKY_CHARM',
 }

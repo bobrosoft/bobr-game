@@ -1,6 +1,7 @@
 import {Comp, CompList, Vec2} from 'kaplay';
 import {PlayerComp, PlayerEntity} from '../entities/player';
 import {KCtx} from '../kaplay';
+import {gsm} from '../main';
 
 interface Config {
   preloadResources: (k: KCtx) => Promise<void>;

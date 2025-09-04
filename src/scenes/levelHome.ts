@@ -5,7 +5,7 @@ import {GopherEntity} from '../entities/gopher';
 import {HomeEntity} from '../entities/home';
 import {OldBobrEntity} from '../entities/old-bobr';
 import {KCtx} from '../kaplay';
-import {bgMusicManager, gameStateManager} from '../main';
+import {bgMusicManager, gsm} from '../main';
 import {defaultFriction} from '../misc/defaults';
 import map from './maps/home.txt?raw';
 
@@ -232,8 +232,10 @@ export const sceneLevelHome = async (k: KCtx) => {
   addBackground(k, 'bg-home-day', player, {offsetY: 40});
 
   bgMusicManager.playMusic('start-location');
-  gameStateManager.setState({
-    currentLevel: sceneLevelHome.id,
+  gsm.update({
+    persistent: {
+      currentLevel: sceneLevelHome.id,
+    },
   });
 
   // Make camera follow the player

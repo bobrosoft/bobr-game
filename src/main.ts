@@ -13,7 +13,7 @@ import {sceneLevelHome} from './scenes/levelHome';
 import {sceneMenu} from './scenes/menu';
 import {sceneRotateDevice} from './scenes/rotateDevice';
 
-export const gameStateManager = new GameStateManager();
+export const gsm = new GameStateManager();
 export const bgMusicManager: BgMusicManager = new BgMusicManager(k);
 export let hudManager: HudManager; // need to create it later because layers not yet defined
 export let fadeManager: FadeManager;
@@ -21,7 +21,12 @@ export let fadeManager: FadeManager;
 (async () => {
   // Init i18n (without await it will not work)
   await i18next.use(LanguageDetector).init({
+    supportedLngs: ['en', 'ru'],
     fallbackLng: 'ru', // fallback if detected language is not available
+    detection: {
+      order: ['localStorage', 'navigator'],
+      caches: ['localStorage'],
+    },
     resources: {
       ru: {translation: translationsRU},
       en: {translation: translationsEN},

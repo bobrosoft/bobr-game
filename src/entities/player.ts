@@ -1,4 +1,5 @@
 import {AreaComp, BodyComp, GameObj, HealthComp, PosComp, SpriteComp, TimerComp, TimerController, Vec2} from 'kaplay';
+import {gsm} from '../main';
 import {changeScene} from '../misc/changeScene';
 import {KCtx} from '../kaplay';
 import {defaultFriction} from '../misc/defaults';
@@ -16,11 +17,9 @@ export interface PlayerConfig {
   minRunAnimSpeed: number;
   maxRunAnimSpeed: number;
   attackPower: number;
-  maxHealth: number;
 }
 
-export interface PlayerComp
-  extends GameObj<string | SpriteComp | PosComp | AreaComp | BodyComp | TimerComp | HealthComp> {
+export interface PlayerComp extends GameObj<string | SpriteComp | PosComp | AreaComp | BodyComp | TimerComp> {
   vx: number; // horizontal velocity
   config: PlayerConfig; // player configuration
   waitForActionButton: () => Promise<void>; // function to wait for action button press
@@ -36,7 +35,6 @@ const DEFAULTS: PlayerConfig = {
   minRunAnimSpeed: 1, // anim speed multiplier
   maxRunAnimSpeed: 2,
   attackPower: 1,
-  maxHealth: 2,
 };
 
 enum State {
@@ -82,7 +80,6 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
       k.anchor('bot'),
       k.opacity(1),
       k.state<State>(State.IDLE, [State.IDLE, State.WALK, State.JUMP, State.FALL, State.ATTACK, State.INTERACT]),
-      k.health(C.maxHealth, C.maxHealth), // health component
       k.timer(),
       {
         vx: 0, // horizontal velocity
@@ -286,8 +283,19 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
 
     player.onCollideUpdate('enemy', (enemy: EnemyComp) => {
       if (!getIsInvincible() && player.state !== State.ATTACK && !enemy.dead && enemy.config.attackPower) {
-        player.hp -= enemy.config.attackPower;
+        // Update player health
+        gsm.update({
+          temp: {
+            player: {
+              health: Math.max(0, gsm.state.temp.player.health - enemy.config.attackPower),
+            },
+          },
+        });
+
+        // Knockback effect
         player.applyImpulse(k.vec2(Math.sign(player.pos.x - enemy.pos.x) * 150, -230));
+
+        // Apply invincibility frames
         invincibleTimer?.cancel();
         invincibleTimer = player.wait(1);
         invincibleTimer.onEnd(() => {
@@ -296,8 +304,18 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
       }
     });
 
-    player.onDeath(() => {
-      changeScene(k, k.getSceneName()).then(); // restart level on death
+    const gsmSub = gsm.onUpdate(state => {
+      // Check for player death
+      if (state.temp.player.health <= 0) {
+        changeScene(k, k.getSceneName()).then(); // restart level on death
+      }
+    });
+
+    player.onDestroy(() => {
+      invincibleTimer?.cancel();
+      invincibleTimer = undefined;
+
+      gsmSub.cancel(); // unsubscribe from gsm updates
     });
 
     return player;
