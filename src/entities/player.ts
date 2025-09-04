@@ -212,7 +212,8 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
               k.area(),
               k.sprite('player-hit-wave', {flipX: player.flipX}), // 20x20
               k.anchor('bot'),
-              // k.lifespan(0.1), // it leads to a bug where sounds in a whole game stop to play
+              k.opacity(1), // required for k.lifespan
+              k.lifespan(0, {fade: 0.15}),
             ]);
 
             hitbox.onCollide('enemy', (enemy: EnemyComp) => {
@@ -220,13 +221,8 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
               k.play('player-attack');
             });
 
-            // Need to manually destroy the hitbox after a short delay
-            // Replacement for k.lifespan(0.1)
-            player.wait(0.1, () => {
-              if (hitbox) {
-                hitbox.destroy();
-                hitbox = undefined;
-              }
+            hitbox.onDestroy(() => {
+              hitbox = undefined; // reset hitbox reference
             });
           }
         }
