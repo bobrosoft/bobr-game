@@ -1,4 +1,4 @@
-import {AreaComp, GameObj, OpacityComp, PosComp, ScaleComp} from 'kaplay';
+import {AreaComp, GameObj, OpacityComp, PosComp, ScaleComp, SpriteComp} from 'kaplay';
 import {KCtx} from '../kaplay';
 import {gsm} from '../main';
 import {changeScene} from '../misc/changeScene';
@@ -17,7 +17,7 @@ export class HudManager {
   protected isShown = false;
   protected dimOverlay: GameObj<OpacityComp>;
   protected reloadButton: GameObj<HudComp | AreaComp>;
-  protected luckyCharm: GameObj<HudComp | AreaComp | OpacityComp | PosComp | ScaleComp>;
+  protected luckyCharm: GameObj<HudComp | AreaComp | OpacityComp | PosComp | ScaleComp | SpriteComp>;
 
   constructor(protected k: KCtx) {
     // Add local fade-in overlay for HUD
@@ -54,7 +54,14 @@ export class HudManager {
     });
 
     // Add lucky charm
-    this.k.loadSprite('lucky-charm', 'sprites/icons/lucky-charm.png');
+    this.k.loadSprite('lucky-charm', 'sprites/icons/lucky-charm.gif', {
+      sliceX: 2,
+      sliceY: 1,
+      anims: {
+        health2: {from: 0, to: 0, loop: false},
+        health1: {from: 1, to: 1, loop: false},
+      },
+    });
     this.luckyCharm = this.k.add([
       'lucky-charm',
       hud({shouldBeShown: gsm.state.persistent.player.hasLuckyCharm}),
@@ -145,6 +152,13 @@ export class HudManager {
       this.luckyCharm.shouldBeShown = false;
       this.luckyCharm.paused = true;
       this.luckyCharm.opacity = 0;
+    }
+
+    // Update lacky charm animation based on health
+    if (state.persistent.player.hasLuckyCharm) {
+      if (state.temp.player.health) {
+        this.luckyCharm.play('health' + state.temp.player.health);
+      }
     }
   }
 }
