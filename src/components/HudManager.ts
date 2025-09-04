@@ -130,6 +130,7 @@ export class HudManager {
       });
 
       await this.k.wait(1);
+      this.k.play('player-take-key');
 
       this.hideDimOverlay().then();
       await this.k.tween(
