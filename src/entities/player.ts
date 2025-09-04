@@ -62,6 +62,8 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
     await k.loadSprite('player-hit-wave', 'sprites/characters/bobr-hit-wave.png');
 
     await k.loadSound('player-attack', 'sounds/bobr-attack.mp3');
+    await k.loadSound('player-take-item', 'sounds/bobr-take-item.ogg');
+    await k.loadSound('player-take-key', 'sounds/bobr-take-key.ogg');
   },
 
   spawn(k: KCtx, posXY: Vec2 = k.vec2(100, 100), config?: Partial<PlayerConfig>): PlayerComp {
@@ -295,6 +297,8 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
 
         // Knockback effect
         player.applyImpulse(k.vec2(Math.sign(player.pos.x - enemy.pos.x) * 150, -230));
+        k.shake(4);
+        k.play('player-attack');
 
         // Apply invincibility frames
         invincibleTimer?.cancel();
