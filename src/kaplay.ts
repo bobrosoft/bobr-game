@@ -33,7 +33,7 @@ export const k = kaplay({
   },
 }) as KAPLAYCtx<{}, string>;
 
-function determineWidthAndHeight() {
+function determineWidthAndHeight(): {width: number; height: number} {
   // Calculate responsive width and height based on window size
   let width = Math.min(window.innerWidth, 400);
 

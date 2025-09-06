@@ -101,13 +101,13 @@ export class HudManager {
     this.isShown = false;
   }
 
-  async showDimOverlay() {
+  async slightlyDimTheGame() {
     return this.k.tween(0, 0.4, 0.6, v => {
       this.dimOverlay.opacity = v;
     });
   }
 
-  async hideDimOverlay() {
+  async slightlyUndimTheGame() {
     return this.k.tween(0.4, 0, 0.6, v => {
       this.dimOverlay.opacity = v;
     });
@@ -121,10 +121,11 @@ export class HudManager {
 
       const initialPos = this.k.vec2(this.k.width() / 2 + 10, this.k.height() / 2 - 10);
       const endPos = this.luckyCharm.pos.clone();
+      this.luckyCharm.play('health2');
       this.luckyCharm.pos = initialPos.clone();
       this.luckyCharm.scale = this.k.vec2(2);
 
-      await this.showDimOverlay();
+      await this.slightlyDimTheGame();
       await this.k.tween(0, 1, 1, v => {
         this.luckyCharm.opacity = v;
       });
@@ -132,7 +133,7 @@ export class HudManager {
       await this.k.wait(1);
       this.k.play('player-take-key');
 
-      this.hideDimOverlay().then();
+      this.slightlyUndimTheGame().then();
       await this.k.tween(
         0,
         1,

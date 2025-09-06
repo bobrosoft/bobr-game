@@ -108,24 +108,13 @@ export class BgMusicManager {
   protected async fadeOutCurrentMusic(fadeOutDuration?: number): Promise<void> {
     fadeOutDuration = fadeOutDuration ?? this.config.fadeOutDuration + 0.000001; // to avoid division by zero
 
-    return new Promise(resolve => {
-      if (this.currentMusic && !this.currentMusic.paused) {
-        const initialVolume = this.currentMusic.volume;
-        let elapsedTime = 0;
-        const sub = this.k.onUpdate(() => {
-          elapsedTime += this.k.dt();
-
-          this.currentMusic.volume = this.k.lerp(initialVolume, 0, elapsedTime / fadeOutDuration);
-
-          if (this.currentMusic!.volume === 0) {
-            this.currentMusic.stop();
-            sub.cancel();
-            resolve();
-          }
-        });
-      } else {
-        resolve();
-      }
-    });
+    if (this.currentMusic && !this.currentMusic.paused) {
+      await this.k.tween(this.currentMusic.volume, 0, fadeOutDuration, v => {
+        if (this.currentMusic) {
+          this.currentMusic.volume = v;
+        }
+      });
+      this.currentMusic.stop();
+    }
   }
 }
