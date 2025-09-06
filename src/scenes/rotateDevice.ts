@@ -43,6 +43,8 @@ export const sceneRotateDevice = (k: KCtx) => {
   a.rel = 'noopener';
   a.innerHTML = t('common.howToInstall');
   a.style.position = 'absolute';
+  a.style.width = '100%';
+  a.style.boxSizing = 'border-box';
   a.style.bottom = '10%';
   a.style.left = '0';
   a.style.display = 'block';
