@@ -29,40 +29,32 @@ export const sceneRotateDevice = (k: KCtx) => {
     k.fixed(),
   ]);
 
-  // Add instructions to install PWA
-  const instructionButton = k.add([
-    //
-    'rotate-device-instructions',
-    k.rect(k.width() * 0.9, 56, {radius: 8, fill: false}),
-    k.outline(2, new k.Color(255, 255, 255)),
-    k.anchor('center'),
-    k.area(),
-    k.pos(k.width() / 2, k.height() * 0.85),
-    k.fixed(),
-  ]);
+  // Add instructions on how to install to home screen
+  let url = 'https://www.cdc.gov/niosh/mining/tools/installpwa.html#cdc_generic_section_2-installing-a-pwa-on-ios';
+  switch (i18next.language) {
+    case 'ru':
+      url = 'https://darkshaurma.com/about/pwa/';
+      break;
+  }
 
-  instructionButton.add([
-    //
-    k.text(t('common.howToInstall'), {
-      font: 'pixel',
-      size: 14,
-      width: k.width() * 0.8,
-      align: 'center',
-      lineSpacing: 10,
-    }),
-    k.color('white'),
-    k.anchor('center'),
-  ]);
+  const a = document.createElement('a');
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.innerHTML = t('common.howToInstall');
+  a.style.position = 'absolute';
+  a.style.bottom = '10%';
+  a.style.left = '0';
+  a.style.display = 'block';
+  a.style.padding = '20px';
+  a.style.color = 'white';
+  a.style.fontFamily = 'pixel, monospace';
+  a.style.textAlign = 'center';
+  a.style.lineHeight = '1.5em';
 
-  instructionButton.onClick(() => {
-    setTimeout(() => {
-      let url = 'https://www.cdc.gov/niosh/mining/tools/installpwa.html#cdc_generic_section_2-installing-a-pwa-on-ios';
-      switch (i18next.language) {
-        case 'ru':
-          url = 'https://darkshaurma.com/about/pwa/';
-          break;
-      }
-      window.open(url, '_blank');
-    }, 100); // need timeout or browser may block opening the new tab
+  document.querySelector('body').appendChild(a);
+
+  k.onSceneLeave(() => {
+    document.querySelector('body').removeChild(a);
   });
 };
