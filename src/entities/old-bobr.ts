@@ -1,6 +1,7 @@
 import {t} from 'i18next';
 import {Vec2} from 'kaplay';
 import {infoIcon} from '../components/InfoIconComp';
+import {interactable} from '../components/InteractableComp';
 import {showDialogSeries} from '../components/showDialog';
 import {KCtx} from '../kaplay';
 import {gsm} from '../main';
@@ -35,7 +36,6 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
 
     const mainObj = k.add([
       'old-bobr',
-      'interactable',
       k.sprite('old-bobr', {anim: 'idle'}),
       k.state(State.IDLE, [State.IDLE, State.INTERACTING]),
       k.timer(),
@@ -44,9 +44,9 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
       k.body(),
       k.anchor('bot'),
       k.offscreen({pause: true, unpause: true, hide: true}),
+      interactable(interact),
       {
         config: C,
-        interact,
         shouldShowInfoIcon,
       },
     ]);

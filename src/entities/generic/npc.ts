@@ -1,11 +1,11 @@
 import {AreaComp, GameObj, PosComp, SpriteComp} from 'kaplay';
-import {Interactable} from './interactable';
+import {InteractableComp} from '../../components/InteractableComp';
 
 // List generic types for the NPC game object
 
 export interface NpcConfig {}
 
-export interface NpcComp extends GameObj<string | SpriteComp | PosComp | AreaComp>, Interactable {
+export interface NpcComp extends GameObj<string | SpriteComp | PosComp | AreaComp | InteractableComp> {
   config: NpcConfig;
   shouldShowInfoIcon?: () => boolean;
 }
