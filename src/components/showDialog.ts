@@ -1,15 +1,20 @@
-import {GameObj} from 'kaplay';
+import {GameObj, PosComp, SpriteComp, Vec2} from 'kaplay';
 import {PlayerComp} from '../entities/player';
 import {KCtx} from '../kaplay';
 
 /**
  * Show a dialog box above an NPC with a typewriter effect.
  * @param k
- * @param subj
+ * @param targetObj The NPC or object above which the dialog should appear
  * @param text
  * @param cfg
  */
-export function showDialog(k: KCtx, subj: GameObj, text: string, cfg?: {speed?: number}): GameObj {
+export function showDialog(
+  k: KCtx,
+  targetObj: GameObj<PosComp | SpriteComp>,
+  text: string,
+  cfg?: {speed?: number},
+): GameObj {
   cfg = {
     speed: 0.05, // default typing speed
     ...cfg,
@@ -61,9 +66,16 @@ export function showDialog(k: KCtx, subj: GameObj, text: string, cfg?: {speed?: 
     }
   });
 
-  function calcPosition() {
-    // Calculate position based on NPC's position
-    return subj.pos.add(0, -subj.height);
+  function calcPosition(): Vec2 {
+    const initialPos = targetObj.pos.add(0, -targetObj.height);
+    const camPos = k.getCamPos();
+    const screenWidth = k.width();
+
+    // Need to limit within screen bounds
+    const x = k.clamp(initialPos.x, camPos.x - screenWidth / 2 + width / 2, camPos.x + screenWidth - width / 2);
+    const y = initialPos.y;
+
+    return k.vec2(x, y);
   }
 
   return container;
@@ -72,14 +84,14 @@ export function showDialog(k: KCtx, subj: GameObj, text: string, cfg?: {speed?: 
 /**
  * Show a series of dialog boxes with a typewriter effect, one after another.
  * @param k
- * @param subj
- * @param player
+ * @param targetObj The NPC or object above which the dialog should appear
+ * @param player The player component to wait for action button presses
  * @param texts
  * @param cfg
  */
 export function showDialogSeries(
   k: KCtx,
-  subj: GameObj,
+  targetObj: GameObj<PosComp | SpriteComp>,
   player: PlayerComp,
   texts: string[],
   cfg?: {speed?: number},
@@ -89,7 +101,7 @@ export function showDialogSeries(
 
     async function showNextDialog() {
       if (currentIndex < texts.length) {
-        const dialog = showDialog(k, subj, texts[currentIndex], cfg);
+        const dialog = showDialog(k, targetObj, texts[currentIndex], cfg);
         await player.waitForActionButton();
         dialog.destroy();
         currentIndex++;

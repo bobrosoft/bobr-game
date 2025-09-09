@@ -9,7 +9,7 @@ import translationsEN from './i18n/en.json';
 import translationsRU from './i18n/ru.json';
 import {k} from './kaplay';
 import {Helpers} from './misc/Helpers';
-import {sceneLevelHome} from './scenes/levelHome';
+import {sceneLevel_1_1} from './scenes/level-1-1';
 import {sceneMenu} from './scenes/menu';
 import {sceneRotateDevice} from './scenes/rotateDevice';
 
@@ -53,7 +53,7 @@ export let fadeManager: FadeManager;
 
   k.scene('menu', () => sceneMenu(k));
   k.scene('rotate-device', () => sceneRotateDevice(k));
-  k.scene(sceneLevelHome.id, sceneTransitionWrapper(k, sceneLevelHome));
+  k.scene(sceneLevel_1_1.id, sceneTransitionWrapper(k, sceneLevel_1_1));
 
   const isInitialOrientationLandscape = Helpers.isLandscapeMode();
 

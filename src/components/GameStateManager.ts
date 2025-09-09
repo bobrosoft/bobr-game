@@ -1,11 +1,13 @@
 import {Helpers} from '../misc/Helpers';
 
 export interface GameState {
+  version: number; // for future state migrations
   persistent: {
     currentLevel: string;
     player: {
       deaths: number;
       hasLuckyCharm: boolean;
+      inventory: string[]; // list of item IDs
     };
     oldBobr: {
       isIntroSaid?: boolean;
@@ -14,6 +16,7 @@ export interface GameState {
   temp: {
     player: {
       health: number;
+      tempInventory: string[];
     };
   };
 }
@@ -33,12 +36,14 @@ export class GameStateManager {
     const savedState = localStorage.getItem(this.localStorageKey);
     try {
       if (savedState) {
+        const clearState = this.getClearState();
         const persistentState = JSON.parse(savedState) as GameState['persistent'];
 
-        this._state = {
+        this._state = Helpers.mergeDeep(this.getClearState(), {
+          version: clearState.version, // use current version
           persistent: persistentState,
           temp: this.getTempStateFromPersistentState(persistentState),
-        };
+        });
       }
     } catch (e) {
       // ignore
@@ -56,12 +61,17 @@ export class GameStateManager {
     }
     this.isUpdating = true;
 
-    // Check if health at zero
-    if (newStatePart.temp?.player?.health === 0) {
+    // Check if player just died
+    if (this._state.temp.player.health && newStatePart.temp?.player?.health === 0) {
       newStatePart = Helpers.mergeDeep(newStatePart, {
         persistent: {
           player: {
             deaths: this._state.persistent.player.deaths + 1,
+          },
+        },
+        temp: {
+          player: {
+            tempInventory: [], // drop all temp items on death
           },
         },
       });
@@ -87,23 +97,7 @@ export class GameStateManager {
 
   reset() {
     localStorage.removeItem(this.localStorageKey);
-
-    const initialPersistentState = {
-      currentLevel: undefined,
-      player: {
-        deaths: 0,
-        hasLuckyCharm: false,
-      },
-      oldBobr: {
-        isIntroSaid: false,
-      },
-    };
-
-    this._state = {
-      persistent: initialPersistentState,
-      temp: this.getTempStateFromPersistentState(initialPersistentState),
-    };
-
+    this._state = this.getClearState();
     this.update({}); // Trigger update to notify subscribers and save state
   }
 
@@ -111,16 +105,79 @@ export class GameStateManager {
    * Prepare temp state for a new scene (e.g. reset player health, etc.)
    */
   prepareForNewScene() {
-    this._state.temp = {
-      ...this.getTempStateFromPersistentState(this._state.persistent),
-      player: {
-        health: this._state.temp.player.health
-          ? this._state.temp.player.health
-          : this._state.persistent.player.hasLuckyCharm
-            ? 2
-            : 1,
+    // If player has picked up items in the current scene, we keep them
+    this.update({
+      persistent: {
+        player: {
+          inventory: [
+            ...this._state.persistent.player.inventory,
+            ...this._state.temp.player.tempInventory.filter(
+              itemId => !this._state.persistent.player.inventory.includes(itemId),
+            ),
+          ],
+        },
       },
-    };
+      temp: {
+        ...this.getTempStateFromPersistentState(this._state.persistent),
+      },
+    });
+  }
+
+  getIsPlayerHasItem(itemId: string): boolean {
+    return (
+      this._state.persistent.player.inventory.includes(itemId) || this._state.temp.player.tempInventory.includes(itemId)
+    );
+  }
+
+  addToPersistentInventory(itemId: string): void {
+    if (this.getIsPlayerHasItem(itemId)) {
+      return;
+    }
+
+    this.update({
+      persistent: {
+        player: {
+          inventory: [...this._state.persistent.player.inventory, itemId],
+        },
+      },
+    });
+  }
+
+  addToTempInventory(itemId: string): void {
+    if (this.getIsPlayerHasItem(itemId)) {
+      return;
+    }
+
+    this.update({
+      temp: {
+        player: {
+          tempInventory: [...this._state.temp.player.tempInventory, itemId],
+        },
+      },
+    });
+  }
+
+  moveTempItemsToPersistentInventory(): void {
+    const newItems = this._state.temp.player.tempInventory.filter(
+      itemId => !this._state.persistent.player.inventory.includes(itemId),
+    );
+
+    if (newItems.length === 0) {
+      return;
+    }
+
+    this.update({
+      persistent: {
+        player: {
+          inventory: [...this._state.persistent.player.inventory, ...newItems],
+        },
+      },
+      temp: {
+        player: {
+          tempInventory: [],
+        },
+      },
+    });
   }
 
   /**
@@ -142,7 +199,28 @@ export class GameStateManager {
     return {
       player: {
         health: persistentState.player.hasLuckyCharm ? 2 : 1,
+        tempInventory: [],
       },
+    };
+  }
+
+  protected getClearState(): GameState {
+    const initialPersistentState = {
+      currentLevel: undefined,
+      player: {
+        deaths: 0,
+        hasLuckyCharm: false,
+        inventory: [],
+      },
+      oldBobr: {
+        isIntroSaid: false,
+      },
+    };
+
+    return {
+      version: 1,
+      persistent: initialPersistentState,
+      temp: this.getTempStateFromPersistentState(initialPersistentState),
     };
   }
 }

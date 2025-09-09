@@ -1,15 +1,17 @@
 import {addBackground} from '../components/addBackground';
+import {addFurnitureItem} from '../components/addFurnitureItem';
 import {addLevel} from '../components/addLevel';
 import {BumblebeeEntity} from '../entities/bumblebee';
 import {GopherEntity} from '../entities/gopher';
 import {HomeEntity} from '../entities/home';
+import {MapItemEntity} from '../entities/map-item';
 import {OldBobrEntity} from '../entities/old-bobr';
 import {KCtx} from '../kaplay';
 import {bgMusicManager, gsm} from '../main';
 import {defaultFriction} from '../misc/defaults';
-import map from './maps/home.txt?raw';
+import map from './maps/level-1-1.txt?raw';
 
-export const sceneLevelHome = async (k: KCtx) => {
+export const sceneLevel_1_1 = async (k: KCtx) => {
   const {player, level} = await addLevel(k, map, {
     preloadResources: async (k: KCtx) => {
       // Preload assets
@@ -33,6 +35,7 @@ export const sceneLevelHome = async (k: KCtx) => {
         BumblebeeEntity.loadResources(k),
         HomeEntity.loadResources(k),
         OldBobrEntity.loadResources(k),
+        MapItemEntity.loadResources(k),
       ]);
 
       // Define music
@@ -225,6 +228,20 @@ export const sceneLevelHome = async (k: KCtx) => {
         // Old Bobr
         OldBobrEntity.spawn(k, worldPos);
       },
+      '1': (tilePos, worldPos) => {
+        addFurnitureItem(k, {
+          itemId: 'home-kitchen-chair-left',
+          sprite: 'home-kitchen-chair',
+          worldPos,
+        });
+      },
+      '2': (tilePos, worldPos) => {
+        addFurnitureItem(k, {
+          itemId: 'home-kitchen-table',
+          sprite: 'home-kitchen-table',
+          worldPos,
+        });
+      },
     },
   });
 
@@ -234,21 +251,14 @@ export const sceneLevelHome = async (k: KCtx) => {
   bgMusicManager.playMusic('start-location');
   gsm.update({
     persistent: {
-      currentLevel: sceneLevelHome.id,
+      currentLevel: sceneLevel_1_1.id,
     },
   });
 
-  // Make camera follow the player
-  const levelWidth = level.levelWidth() - 16;
-  player.onUpdate(() => {
-    if (!player) {
-      return;
-    }
-
-    const x = k.clamp(player.pos.x, k.width() / 2, levelWidth - k.width() / 2);
-    const y = player.pos.y - k.height() / 4;
-    k.setCamPos(x, y);
+  player.setCamFollowPlayer(level, {
+    rightTilesPadding: 2, // to hide wall on the right and exit collision box
+    topTilesPadding: -5, // so we can see more on top
   });
 };
 
-sceneLevelHome.id = 'level-home';
+sceneLevel_1_1.id = 'level-1-1';

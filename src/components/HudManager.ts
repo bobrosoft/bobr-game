@@ -3,7 +3,7 @@ import {KCtx} from '../kaplay';
 import {gsm} from '../main';
 import {changeScene} from '../misc/changeScene';
 import {Helpers} from '../misc/Helpers';
-import {sceneLevelHome} from '../scenes/levelHome';
+import {sceneLevel_1_1} from '../scenes/level-1-1';
 import {addJoystick} from './addJoystick';
 import {GameState} from './GameStateManager';
 import {hud} from './HudComp';
@@ -50,7 +50,7 @@ export class HudManager {
     ]);
     this.reloadButton.onClick(() => {
       gsm.reset();
-      changeScene(this.k, sceneLevelHome.id).then();
+      changeScene(this.k, sceneLevel_1_1.id).then();
     });
 
     // Add lucky charm

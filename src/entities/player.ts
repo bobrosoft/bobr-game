@@ -1,11 +1,11 @@
-import {AreaComp, BodyComp, GameObj, HealthComp, PosComp, SpriteComp, TimerComp, TimerController, Vec2} from 'kaplay';
+import {AreaComp, BodyComp, GameObj, LevelComp, PosComp, SpriteComp, TimerComp, TimerController, Vec2} from 'kaplay';
+import {KCtx} from '../kaplay';
 import {gsm} from '../main';
 import {changeScene} from '../misc/changeScene';
-import {KCtx} from '../kaplay';
 import {defaultFriction} from '../misc/defaults';
 import {EnemyComp} from './generic/enemy';
 import {GameEntity} from './generic/entity';
-import {Interactable} from './generic/interactable';
+import {InteractableComp} from '../components/InteractableComp';
 
 export interface PlayerConfig {
   maxRunSpeed: number;
@@ -23,6 +23,15 @@ export interface PlayerComp extends GameObj<string | SpriteComp | PosComp | Area
   vx: number; // horizontal velocity
   config: PlayerConfig; // player configuration
   waitForActionButton: () => Promise<void>; // function to wait for action button press
+  setCamFollowPlayer: (
+    level: GameObj<PosComp | LevelComp>,
+    options?: {
+      leftTilesPadding?: number;
+      rightTilesPadding?: number;
+      topTilesPadding?: number;
+      bottomTilesPadding?: number;
+    },
+  ) => void;
 }
 
 const DEFAULTS: PlayerConfig = {
@@ -87,6 +96,7 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
         vx: 0, // horizontal velocity
         config: C,
         waitForActionButton,
+        setCamFollowPlayer,
       },
     ]);
 
@@ -106,11 +116,54 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
       if (player.getCurAnim()?.name !== name) player.play(name, {onEnd});
     }
 
+    /**
+     * Returns a promise that resolves when the action button is pressed
+     */
     function waitForActionButton(): Promise<void> {
       return new Promise(resolve => {
         player.onButtonPress('action', () => {
           resolve();
         });
+      });
+    }
+
+    /**
+     * Make the camera follow the player, with optional level bounds offsets
+     * @param level
+     * @param options
+     */
+    function setCamFollowPlayer(
+      level: GameObj<PosComp | LevelComp>,
+      options?: {
+        leftTilesPadding?: number;
+        rightTilesPadding?: number;
+        topTilesPadding?: number;
+        bottomTilesPadding?: number;
+      },
+    ) {
+      const levelWidth = level.levelWidth() - level.tileWidth() / 2;
+      const levelHeight = level.levelHeight() - level.tileHeight() / 2;
+      const kHeight = k.height();
+
+      const leftPadding = (options.leftTilesPadding ?? 0) * level.tileWidth();
+      const rightPadding = (options.rightTilesPadding ?? 0) * level.tileWidth();
+      const topPadding = (options.topTilesPadding ?? 0) * level.tileHeight();
+      const bottomPadding = (options.bottomTilesPadding ?? 0) * level.tileHeight();
+
+      const leftLimit = level.pos.x + leftPadding + k.width() / 2;
+      const rightLimit = level.pos.x + levelWidth - rightPadding - k.width() / 2;
+      const topLimit = level.pos.y + topPadding + k.height() / 2;
+      const bottomLimit = level.pos.y + levelHeight - bottomPadding - k.height() / 2;
+
+      // Make camera follow the player
+      player.onUpdate(() => {
+        if (!player) {
+          return;
+        }
+
+        const x = k.clamp(player.pos.x, leftLimit, rightLimit);
+        const y = k.clamp(player.pos.y - kHeight / 4, topLimit, bottomLimit);
+        k.setCamPos(x, y);
       });
     }
 
@@ -139,7 +192,11 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
         k.opacity(0),
       ]);
 
-      interactionHitbox.onCollide('interactable', async (obj: GameObj<Interactable>) => {
+      interactionHitbox.onCollide('interactable', async (obj: GameObj<InteractableComp>) => {
+        if (isInteractableObjectDetected) {
+          return;
+        }
+
         isInteractableObjectDetected = true;
         player.enterState(State.INTERACT);
 

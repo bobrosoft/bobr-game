@@ -40,7 +40,7 @@ export class Helpers {
    * @param target
    * @param sources
    */
-  static mergeDeep(target: any, ...sources: any[]): any {
+  static mergeDeep<T>(target: T, ...sources: T[]): T {
     return deepmerge.all([target, ...sources], {arrayMerge: (_, source) => source});
   }
 }

@@ -12,5 +12,11 @@
     "introRepeat3": "The house won't furnish itself... Time to get to work!",
     "giveLuckyCharm1": "Oh, I almost forgot! Here, take this for good luck...",
     "giveLuckyCharm2": "It's my lucky charm. May it protect you as it once protected me."
+  },
+  "home": {
+    "kitchenTableRepeat1": "Hmm, who would throw away such a gorgeous table?..",
+    "kitchenTableRepeat2": "Mmm, it smells so good...",
+    "kitchenTableRepeat3": "Mmm, it looks so tasty... but I still need it.",
+    "kitchenChairRepeat1": "Why is it so small?.. Oh well, I don't have much choice."
   }
 }

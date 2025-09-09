@@ -1,6 +1,9 @@
+import {t} from 'i18next';
 import {GameObj, Vec2} from 'kaplay';
+import {interactable} from '../components/InteractableComp';
+import {showDialogSeries} from '../components/showDialog';
 import {KCtx} from '../kaplay';
-import {bgMusicManager} from '../main';
+import {bgMusicManager, gsm} from '../main';
 import {defaultFriction} from '../misc/defaults';
 import {GameEntity} from './generic/entity';
 
@@ -18,6 +21,8 @@ export const HomeEntity: GameEntity<Config> = {
     await k.loadSprite('home-outside', 'sprites/home/home-outside.png');
     await k.loadSprite('home-inside', 'sprites/home/home-inside.png');
     await k.loadSprite('home-fence', 'sprites/home/home-fence.png');
+    await k.loadSprite('home-kitchen-table', 'sprites/home/home-kitchen-table.png');
+    await k.loadSprite('home-kitchen-chair', 'sprites/home/home-kitchen-chair.png');
   },
 
   spawn(k: KCtx, posXY: Vec2, config?: Partial<Config>): GameObj {
@@ -52,6 +57,53 @@ export const HomeEntity: GameEntity<Config> = {
       k.anchor('botleft'),
     ]);
 
+    /// Add furniture to first floor
+    const kitchenChairLeft = container.add([
+      //
+      'home-kitchen-chair-left',
+      k.sprite('home-kitchen-chair'),
+      k.anchor('bot'),
+      k.pos(64, 0),
+      k.area(),
+      interactable(async player => {
+        await showDialogSeries(k, player, player, [
+          t(k.choose(['home.kitchenChairRepeat1'])),
+        ]);
+      }),
+    ]);
+    kitchenChairLeft.hidden = true;
+
+    const kitchenTable = container.add([
+      //
+      'home-kitchen-table',
+      k.sprite('home-kitchen-table'),
+      k.anchor('bot'),
+      k.pos(92, 0),
+      k.area(),
+      k.z(1),
+      interactable(async player => {
+        await showDialogSeries(k, player, player, [
+          t(k.choose(['home.kitchenTableRepeat1', 'home.kitchenTableRepeat2', 'home.kitchenTableRepeat3'])),
+        ]);
+      }),
+    ]);
+    kitchenTable.hidden = true;
+
+    const kitchenChairRight = container.add([
+      //
+      'home-kitchen-chair-right',
+      k.sprite('home-kitchen-chair', {flipX: true}),
+      k.anchor('bot'),
+      k.pos(120, 0),
+      k.area(),
+      interactable(async player => {
+        await showDialogSeries(k, player, player, [
+          t(k.choose(['home.kitchenChairRepeat1'])),
+        ]);
+      }),
+    ]);
+    kitchenChairRight.hidden = true;
+
     // Add home outside
     const outside = container.add([
       //
@@ -59,10 +111,20 @@ export const HomeEntity: GameEntity<Config> = {
       k.sprite('home-outside'),
       k.anchor('botleft'),
       k.animate({relative: true}),
-      k.z(1),
+      k.z(2),
     ]);
 
     addCollisionWalls(k, container);
+
+    function updateFurnitureVisibility() {
+      const hasTable = gsm.getIsPlayerHasItem('home-kitchen-table');
+      const hasChairLeft = gsm.getIsPlayerHasItem('home-kitchen-chair-left');
+      const hasChairRight = gsm.getIsPlayerHasItem('home-kitchen-chair-right');
+
+      kitchenTable.hidden = !hasTable;
+      kitchenChairLeft.hidden = !hasChairLeft;
+      kitchenChairRight.hidden = !hasChairRight;
+    }
 
     container.onStateEnter(State.OUTSIDE, () => {
       if (isInitialStateSwitch) {
@@ -78,6 +140,9 @@ export const HomeEntity: GameEntity<Config> = {
     });
 
     container.onStateEnter(State.INSIDE, () => {
+      gsm.moveTempItemsToPersistentInventory(); // to save furniture items if player returned home
+      updateFurnitureVisibility();
+
       outside.unanimateAll();
       outside.animation.seek(0);
       outside.animate('opacity', [1, 0], {duration: 1, loops: 1});
