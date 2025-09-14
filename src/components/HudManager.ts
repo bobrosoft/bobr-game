@@ -4,7 +4,7 @@ import {gsm} from '../main';
 import {changeScene} from '../misc/changeScene';
 import {Helpers} from '../misc/Helpers';
 import {sceneLevel_1_1} from '../scenes/level-1-1';
-import {addJoystick} from './addJoystick';
+import {addJoystick, JoystickGameObj} from './addJoystick';
 import {GameState} from './GameStateManager';
 import {hud} from './HudComp';
 
@@ -16,6 +16,7 @@ interface HudComp {
 export class HudManager {
   protected isShown = false;
   protected dimOverlay: GameObj<OpacityComp>;
+  protected joystick?: JoystickGameObj;
   protected reloadButton: GameObj<HudComp | AreaComp>;
   protected luckyCharm: GameObj<HudComp | AreaComp | OpacityComp | PosComp | ScaleComp | SpriteComp>;
 
@@ -35,7 +36,7 @@ export class HudManager {
 
     // Add mobile joystick and buttons if on a touch device
     if (Helpers.isTouchDevice()) {
-      addJoystick(this.k, {size: Math.min(window.innerWidth / 15, 60)});
+      this.joystick = addJoystick(this.k, {size: Math.min(window.innerWidth / 15, 60)});
     }
 
     // Add reload button to the top right corner
@@ -99,6 +100,7 @@ export class HudManager {
       o.paused = true;
     });
     this.isShown = false;
+    this.joystick?.releaseKnob();
   }
 
   async slightlyDimTheGame() {

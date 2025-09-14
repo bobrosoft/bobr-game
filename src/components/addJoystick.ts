@@ -1,5 +1,10 @@
+import {GameObj} from 'kaplay';
 import {KCtx} from '../kaplay';
 import {hud} from './HudComp';
+
+export interface JoystickGameObj extends GameObj {
+  releaseKnob: () => void;
+}
 
 /**
  * Adds a joystick and buttons for left/right movement, jump, and action.
@@ -13,7 +18,7 @@ export function addJoystick(
     size?: number;
     deadZone?: number;
   },
-) {
+): JoystickGameObj {
   const size = options?.size ?? 100;
   const deadZone = options?.deadZone ?? 0.1;
 
@@ -31,6 +36,9 @@ export function addJoystick(
     k.circle(size / 2),
     k.color(0, 0, 0),
     k.anchor('center'),
+    {
+      releaseKnob,
+    },
   ]);
 
   const knob = k.add([
@@ -112,14 +120,7 @@ export function addJoystick(
 
   base.onTouchEnd(pos => {
     if (pos.x > k.width() * 0.6) return; // Need to react only to the left half of screen
-
-    isDragging = false;
-    delta = k.vec2(0, 0);
-    base.pos = k.vec2(-9999, -9999);
-    knob.pos = k.vec2(-9999, -9999);
-
-    k.releaseButton('left');
-    k.releaseButton('right');
+    releaseKnob();
   });
 
   base.onUpdate(() => {
@@ -139,4 +140,16 @@ export function addJoystick(
       k.releaseButton('right');
     }
   });
+
+  function releaseKnob() {
+    isDragging = false;
+    delta = k.vec2(0, 0);
+    base.pos = k.vec2(-9999, -9999);
+    knob.pos = k.vec2(-9999, -9999);
+
+    k.releaseButton('left');
+    k.releaseButton('right');
+  }
+
+  return base;
 }
