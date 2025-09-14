@@ -81,4 +81,11 @@ export let fadeManager: FadeManager;
   } else {
     k.go('menu');
   }
+  
+  k.debug.log(window.navigator.userAgent);
+
+  // setInterval(() => {
+  //   k.debug.log('numObjects: ', k.debug.numObjects(), ' | fps: ', k.debug.fps());
+  // }, 1000);
+  // k.debug.inspect = true;
 })();

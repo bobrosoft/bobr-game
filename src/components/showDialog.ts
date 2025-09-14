@@ -1,6 +1,7 @@
 import {GameObj, PosComp, SpriteComp, Vec2} from 'kaplay';
 import {PlayerComp} from '../entities/player';
 import {KCtx} from '../kaplay';
+import {Helpers} from '../misc/Helpers';
 
 /**
  * Show a dialog box above an NPC with a typewriter effect.
@@ -20,6 +21,7 @@ export function showDialog(
     ...cfg,
   };
 
+  const hasNotch = Helpers.hasNotch(); // later will need to adjust for notch
   const width = k.width() / 2;
   const padding = 5; // padding around text
   let currentText = '';
@@ -72,7 +74,11 @@ export function showDialog(
     const screenWidth = k.width();
 
     // Need to limit within screen bounds
-    const x = k.clamp(initialPos.x, camPos.x - screenWidth / 2 + width / 2, camPos.x + screenWidth - width / 2);
+    const x = k.clamp(
+      initialPos.x,
+      camPos.x - screenWidth / 2 + width / 2 + (hasNotch ? 26 : 0),
+      camPos.x + screenWidth - width / 2 - (hasNotch ? 26 : 0),
+    );
     const y = initialPos.y;
 
     return k.vec2(x, y);

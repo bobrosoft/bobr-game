@@ -24,6 +24,14 @@ export class Helpers {
   }
 
   /**
+   * Check if the device has a notch (currently only checks for iPhones).
+   * @returns True if the device has a notch, false otherwise.
+   */
+  static hasNotch(): boolean {
+    return !!navigator.userAgent.match(/iPhone/);
+  }
+
+  /**
    * Returns a promise that resolves after a specified number of milliseconds.
    * @param ms
    */
