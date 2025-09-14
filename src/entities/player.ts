@@ -71,8 +71,8 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
     await k.loadSprite('player-hit-wave', 'sprites/characters/bobr-hit-wave.png');
 
     await k.loadSound('player-attack', 'sounds/bobr-attack.mp3');
-    await k.loadSound('player-take-item', 'sounds/bobr-take-item.ogg');
-    await k.loadSound('player-take-key', 'sounds/bobr-take-key.ogg');
+    await k.loadSound('player-take-item', 'sounds/bobr-take-item.mp3');
+    await k.loadSound('player-take-key', 'sounds/bobr-take-key.mp3');
   },
 
   spawn(k: KCtx, posXY: Vec2 = k.vec2(100, 100), config?: Partial<PlayerConfig>): PlayerComp {
