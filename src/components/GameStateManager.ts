@@ -4,6 +4,7 @@ export interface GameState {
   version: number; // for future state migrations
   persistent: {
     currentLevel: string;
+    spawnAtExitIndex?: number; // index of the exit to spawn at when loading the level
     player: {
       deaths: number;
       hasLuckyCharm: boolean;
@@ -11,6 +12,7 @@ export interface GameState {
     };
     oldBobr: {
       isIntroSaid?: boolean;
+      isRespawnInfoSaid?: boolean;
     };
   };
   temp: {
@@ -26,6 +28,7 @@ export class GameStateManager {
   protected localStorageKey = 'gameState';
   protected isUpdating = false;
   protected subscribersOnUpdate: Array<(state: GameState) => void> = [];
+  protected subscribersOnDeath: Array<() => void> = [];
 
   get state() {
     return this._state;
@@ -55,6 +58,8 @@ export class GameStateManager {
   }
 
   update(newStatePart: PartialDeep<GameState>, skipSave?: boolean) {
+    let shouldTriggerDeath = false;
+
     // Prevent recursive updates
     if (this.isUpdating) {
       throw new Error('Cannot call update() inside another update() call');
@@ -75,6 +80,8 @@ export class GameStateManager {
           },
         },
       });
+
+      shouldTriggerDeath = true;
     }
 
     // Merge new state part into the current state
@@ -89,6 +96,11 @@ export class GameStateManager {
     }
 
     this.isUpdating = false;
+
+    // Trigger death callbacks if needed
+    if (shouldTriggerDeath) {
+      this.subscribersOnDeath.forEach(cb => cb());
+    }
   }
 
   save() {
@@ -191,6 +203,16 @@ export class GameStateManager {
     return {
       cancel: () => {
         this.subscribersOnUpdate = this.subscribersOnUpdate.filter(cb => cb !== callback);
+      },
+    };
+  }
+
+  onDeath(callback: () => void): {cancel: () => void} {
+    this.subscribersOnDeath.push(callback);
+
+    return {
+      cancel: () => {
+        this.subscribersOnDeath = this.subscribersOnDeath.filter(cb => cb !== callback);
       },
     };
   }

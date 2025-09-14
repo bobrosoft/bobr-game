@@ -366,18 +366,15 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
       }
     });
 
-    const gsmSub = gsm.onUpdate(state => {
-      // Check for player death
-      if (state.temp.player.health <= 0) {
-        changeScene(k, k.getSceneName()).then(); // restart level on death
-      }
+    const gsmOnDeathSub = gsm.onDeath(() => {
+      changeScene(k, gsm.state.persistent.currentLevel, gsm.state.persistent.spawnAtExitIndex).then(); // restart level on death
     });
 
     player.onDestroy(() => {
       invincibleTimer?.cancel();
       invincibleTimer = undefined;
 
-      gsmSub.cancel(); // unsubscribe from gsm updates
+      gsmOnDeathSub.cancel(); // unsubscribe from gsm updates
     });
 
     return player;

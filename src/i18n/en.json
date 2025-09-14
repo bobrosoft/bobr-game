@@ -10,8 +10,11 @@
     "introRepeat1": "I saw some furniture nearby while I was walking here. You can look for it.",
     "introRepeat2": "It's a nice day for a walk, don't you think?",
     "introRepeat3": "The house won't furnish itself... Time to get to work!",
-    "giveLuckyCharm1": "Oh, I almost forgot! Here, take this for good luck...",
-    "giveLuckyCharm2": "It's my lucky charm. May it protect you as it once protected me."
+    "giveLuckyCharm1": "Oh, I barely dragged you here... Are you okay?..",
+    "giveLuckyCharm2": "Ou, I almost forgot! Here, take this for good luck...",
+    "giveLuckyCharm3": "It's my lucky charm. May it protect you as it once protected me.",
+    "respawnInfo1": "If something happens to you, I'll always help you get back home.",
+    "respawnInfo2": "And don't worry about your stuff, it won't disappear!"
   },
   "home": {
     "kitchenTableRepeat1": "Hmm, who would throw away such a gorgeous table?..",

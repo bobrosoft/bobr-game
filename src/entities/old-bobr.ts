@@ -6,6 +6,7 @@ import {showDialogSeries} from '../components/showDialog';
 import {KCtx} from '../kaplay';
 import {gsm} from '../main';
 import {defaultFriction} from '../misc/defaults';
+import {sceneLevel_1_2} from '../scenes/level-1-2';
 import {GameEntity} from './generic/entity';
 import {NpcComp, NpcConfig} from './generic/npc';
 import {PlayerComp} from './player';
@@ -74,7 +75,12 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
         return false;
       }
 
-      switch (getAvailableInteractionType()) {
+      const interactionType = getAvailableInteractionType();
+      if (!interactionType) {
+        return false;
+      }
+
+      switch (interactionType) {
         case InteractionType.SAY_INTRO_REPEAT:
           return false;
 
@@ -98,6 +104,11 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
         return InteractionType.SAY_INTRO;
       } else if (gameState.persistent.player.deaths >= 1 && !gameState.persistent.player.hasLuckyCharm) {
         return InteractionType.GIVE_LUCKY_CHARM;
+      } else if (
+        gameState.persistent.currentLevel === sceneLevel_1_2.id &&
+        !gameState.persistent.oldBobr.isRespawnInfoSaid
+      ) {
+        return InteractionType.SAY_RESPAWN_INFO;
       } else {
         return InteractionType.SAY_INTRO_REPEAT;
       }
@@ -135,6 +146,7 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
             //
             t('oldBobr.giveLuckyCharm1'),
             t('oldBobr.giveLuckyCharm2'),
+            t('oldBobr.giveLuckyCharm3'),
           ]);
 
           gsm.update({
@@ -150,6 +162,22 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
             },
           });
 
+          break;
+
+        case InteractionType.SAY_RESPAWN_INFO:
+          await showDialogSeries(k, mainObj, player, [
+            //
+            t('oldBobr.respawnInfo1'),
+            t('oldBobr.respawnInfo2'),
+          ]);
+
+          gsm.update({
+            persistent: {
+              oldBobr: {
+                isRespawnInfoSaid: true,
+              },
+            },
+          });
           break;
       }
     }
@@ -175,4 +203,5 @@ enum InteractionType {
   SAY_INTRO = 'SAY_INTRO',
   SAY_INTRO_REPEAT = 'SAY_INTRO_REPEAT',
   GIVE_LUCKY_CHARM = 'GIVE_LUCKY_CHARM',
+  SAY_RESPAWN_INFO = 'SAY_RESPAWN_INFO',
 }

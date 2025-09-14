@@ -19,7 +19,7 @@ export const MapItemEntity: GameEntity<MapItemConfig, MapItemGameObj> = {
   async loadResources(k): Promise<void> {
     // NOTE: you should load sprite resources in the scene
 
-    k.loadSound('player-take-item', 'sounds/bobr-take-item.ogg');
+    k.loadSound('player-take-item', 'sounds/bobr-take-item.mp3');
   },
 
   spawn(k, posXY, config) {

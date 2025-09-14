@@ -1,3 +1,4 @@
+import {gsm} from '../main';
 import {changeScene} from '../misc/changeScene';
 import {KCtx} from '../kaplay';
 import {sceneLevel_1_1} from './level-1-1';
@@ -16,6 +17,10 @@ export const sceneMenu = (k: KCtx) => {
   ]);
 
   playButton.onClick(() => {
-    changeScene(k, sceneLevel_1_1.id).then();
+    changeScene(
+      k,
+      gsm.state.persistent.currentLevel || sceneLevel_1_1.id,
+      gsm.state.persistent.spawnAtExitIndex,
+    ).then();
   });
 };

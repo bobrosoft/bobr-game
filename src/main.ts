@@ -10,6 +10,7 @@ import translationsRU from './i18n/ru.json';
 import {k} from './kaplay';
 import {Helpers} from './misc/Helpers';
 import {sceneLevel_1_1} from './scenes/level-1-1';
+import {sceneLevel_1_2} from './scenes/level-1-2';
 import {sceneMenu} from './scenes/menu';
 import {sceneRotateDevice} from './scenes/rotateDevice';
 
@@ -54,6 +55,7 @@ export let fadeManager: FadeManager;
   k.scene('menu', () => sceneMenu(k));
   k.scene('rotate-device', () => sceneRotateDevice(k));
   k.scene(sceneLevel_1_1.id, sceneTransitionWrapper(k, sceneLevel_1_1));
+  k.scene(sceneLevel_1_2.id, sceneTransitionWrapper(k, sceneLevel_1_2));
 
   const isInitialOrientationLandscape = Helpers.isLandscapeMode();
 

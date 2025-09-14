@@ -1,6 +1,8 @@
 import {Comp, CompList, Vec2} from 'kaplay';
+import {ExitConfig, ExitEntity} from '../entities/exit';
 import {PlayerComp, PlayerEntity} from '../entities/player';
-import {KCtx} from '../kaplay';
+import {k, KCtx} from '../kaplay';
+import {gsm} from '../main';
 
 interface Config {
   preloadResources: (k: KCtx) => Promise<void>;
@@ -15,6 +17,7 @@ interface Config {
       charAt: (x: number, y: number) => string,
     ) => CompList<Comp> | void
   >;
+  exitPoints: ExitConfig[];
 }
 
 /**
@@ -24,7 +27,8 @@ interface Config {
  * @param config
  */
 export async function addLevel(k: KCtx, map: string, config: Config): Promise<AddLevelResult> {
-  let playerSpawnPos: Vec2;
+  const exitPointsPositions: {worldPos: Vec2}[] = [];
+  let playerSpawnPos: Vec2 | undefined;
   let parsedMap = map.split('\n');
 
   // Preload resources
@@ -43,8 +47,15 @@ export async function addLevel(k: KCtx, map: string, config: Config): Promise<Ad
         return undefined;
       }
 
+      // Remember player default spawn point
       if (char === 'P') {
         playerSpawnPos = pos.scale(k.vec2(config.tileWidth, config.tileHeight));
+        return undefined;
+      }
+
+      // Remember all exit points
+      if (char === 'E') {
+        exitPointsPositions.push({worldPos: pos.scale(k.vec2(config.tileWidth, config.tileHeight))});
         return undefined;
       }
 
@@ -61,7 +72,46 @@ export async function addLevel(k: KCtx, map: string, config: Config): Promise<Ad
     },
   });
 
-  // Create player at the remembered entry point
+  // Sort exit points by their position (left to right)
+  exitPointsPositions.sort((a, b) => {
+    if (a.worldPos.x === b.worldPos.x) {
+      return a.worldPos.y - b.worldPos.y;
+    }
+    return a.worldPos.x - b.worldPos.x;
+  });
+
+  // Create exit entities at the remembered exit points
+  exitPointsPositions.forEach((exitPointPos, index) => {
+    ExitEntity.spawn(k, exitPointPos.worldPos, config.exitPoints[index]);
+  });
+
+  // If we have a remembered exit to spawn at, use it
+  if (gsm.state.persistent.spawnAtExitIndex !== undefined) {
+    const exitIndex = gsm.state.persistent.spawnAtExitIndex;
+
+    if (!exitPointsPositions[exitIndex]) {
+      k.debug.error('Invalid exit index to spawn at:' + exitIndex);
+      return;
+    }
+
+    playerSpawnPos = exitPointsPositions[exitIndex].worldPos.add(
+      config.exitPoints[exitIndex].spawnOffsetTiles.scale(k.vec2(config.tileWidth, config.tileHeight)),
+    );
+  } else {
+    gsm.update({
+      persistent: {
+        spawnAtExitIndex: undefined,
+      },
+    });
+  }
+
+  // Ensure we have a spawn point
+  if (!playerSpawnPos) {
+    k.debug.error('No player spawn point found on the map!');
+    return;
+  }
+
+  // Create player at required position
   const player = PlayerEntity.spawn(k, playerSpawnPos);
 
   k.setGravity(1000);
