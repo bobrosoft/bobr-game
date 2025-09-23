@@ -4,7 +4,7 @@ import {BgMusicManager} from './components/BgMusicManager';
 import {FadeManager} from './components/FadeManager';
 import {GameStateManager} from './components/GameStateManager';
 import {HudManager} from './components/HudManager';
-import {sceneTransitionWrapper} from './misc/sceneTransitionWrapper';
+import {sceneWrapper} from './misc/changeScene';
 import translationsEN from './i18n/en.json';
 import translationsRU from './i18n/ru.json';
 import {k} from './kaplay';
@@ -54,8 +54,8 @@ export let fadeManager: FadeManager;
 
   k.scene('menu', () => sceneMenu(k));
   k.scene('rotate-device', () => sceneRotateDevice(k));
-  k.scene(sceneLevel_1_1.id, sceneTransitionWrapper(k, sceneLevel_1_1));
-  k.scene(sceneLevel_1_2.id, sceneTransitionWrapper(k, sceneLevel_1_2));
+  k.scene(sceneLevel_1_1.id, sceneWrapper(k, sceneLevel_1_1));
+  k.scene(sceneLevel_1_2.id, sceneWrapper(k, sceneLevel_1_2));
 
   const isInitialOrientationLandscape = Helpers.isLandscapeMode();
 

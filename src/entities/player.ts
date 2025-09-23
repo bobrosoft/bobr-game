@@ -367,7 +367,10 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
     });
 
     const gsmOnDeathSub = gsm.onDeath(() => {
-      changeScene(k, gsm.state.persistent.currentLevel, gsm.state.persistent.spawnAtExitIndex).then(); // restart level on death
+      changeScene(k, gsm.state.persistent.currentLevel, {
+        spawnAtExitIndex: gsm.state.persistent.spawnAtExitIndex,
+        quickSwitch: false,
+      }).then(); // restart level on death
     });
 
     player.onDestroy(() => {
