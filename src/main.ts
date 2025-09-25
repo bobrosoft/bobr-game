@@ -11,6 +11,7 @@ import {k} from './kaplay';
 import {Helpers} from './misc/Helpers';
 import {sceneLevel_1_1} from './scenes/level-1-1';
 import {sceneLevel_1_2} from './scenes/level-1-2';
+import {sceneLevel_1_3} from './scenes/level-1-3';
 import {sceneMenu} from './scenes/menu';
 import {sceneRotateDevice} from './scenes/rotateDevice';
 
@@ -56,6 +57,7 @@ export let fadeManager: FadeManager;
   k.scene('rotate-device', () => sceneRotateDevice(k));
   k.scene(sceneLevel_1_1.id, sceneWrapper(k, sceneLevel_1_1));
   k.scene(sceneLevel_1_2.id, sceneWrapper(k, sceneLevel_1_2));
+  k.scene(sceneLevel_1_3.id, sceneWrapper(k, sceneLevel_1_3));
 
   const isInitialOrientationLandscape = Helpers.isLandscapeMode();
 

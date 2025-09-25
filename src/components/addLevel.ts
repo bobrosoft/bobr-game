@@ -8,15 +8,7 @@ interface Config {
   preloadResources: (k: KCtx) => Promise<void>;
   tileWidth: number;
   tileHeight: number;
-  tiles: Record<
-    string,
-    (
-      tilePos: Vec2,
-      worldPos: Vec2,
-      getSiblings: () => SiblingTiles,
-      charAt: (x: number, y: number) => string,
-    ) => CompList<Comp> | void
-  >;
+  tiles: Record<string, TileFactory>;
   exitPoints: ExitConfig[];
 }
 
@@ -166,3 +158,10 @@ interface SiblingTiles {
   bottomLeft: string;
   bottomRight: string;
 }
+
+export type TileFactory = (
+  tilePos: Vec2,
+  worldPos: Vec2,
+  getSiblings: () => SiblingTiles,
+  charAt: (x: number, y: number) => string,
+) => CompList<Comp> | void;

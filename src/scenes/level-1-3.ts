@@ -1,16 +1,14 @@
 import {addBackground} from '../components/addBackground';
-import {addFurnitureItem} from '../components/addFurnitureItem';
 import {addLevel} from '../components/addLevel';
 import {BumblebeeEntity} from '../entities/bumblebee';
 import {ExitEntity} from '../entities/exit';
 import {GopherEntity} from '../entities/gopher';
-import {HomeEntity} from '../entities/home';
 import {MapItemEntity} from '../entities/map-item';
 import {OldBobrEntity} from '../entities/old-bobr';
 import {KCtx} from '../kaplay';
 import {bgMusicManager, gsm} from '../main';
 import {sceneLevel_1_2} from './level-1-2';
-import map from './maps/level-1-1.txt?raw';
+import map from './maps/level-1-3.txt?raw';
 import {tileGrass} from './tiles/tileGrass';
 import {tileGround} from './tiles/tileGround';
 import {tileGroundGrass} from './tiles/tileGroundGrass';
@@ -20,7 +18,7 @@ import {tileGroundGrassInclinedRight} from './tiles/tileGroundGrassInclinedRight
 import {tileRock} from './tiles/tileRock';
 import {tileTree} from './tiles/tileTree';
 
-export const sceneLevel_1_1 = async (k: KCtx) => {
+export const sceneLevel_1_3 = async (k: KCtx) => {
   const {player, level} = await addLevel(k, map, {
     preloadResources: async (k: KCtx) => {
       // Preload assets
@@ -43,13 +41,11 @@ export const sceneLevel_1_1 = async (k: KCtx) => {
         ExitEntity.loadResources(k),
         GopherEntity.loadResources(k),
         BumblebeeEntity.loadResources(k),
-        HomeEntity.loadResources(k),
         OldBobrEntity.loadResources(k),
         MapItemEntity.loadResources(k),
       ]);
 
       // Define music
-      bgMusicManager.loadMusic('home', 'music/home.mp3');
       bgMusicManager.loadMusic('start-location', 'music/start-location.mp3');
     },
     tileWidth: 32,
@@ -71,35 +67,31 @@ export const sceneLevel_1_1 = async (k: KCtx) => {
         // Bumblebee enemy
         BumblebeeEntity.spawn(k, worldPos);
       },
-      H: (tilePos, worldPos) => {
-        // Home
-        HomeEntity.spawn(k, worldPos);
-      },
       B: (tilePos, worldPos) => {
         // Old Bobr
-        OldBobrEntity.spawn(k, worldPos);
+        OldBobrEntity.spawn(k, worldPos, {flipX: true});
       },
-      '1': (tilePos, worldPos) => {
-        addFurnitureItem(k, {
-          itemId: 'home-kitchen-chair-left',
-          sprite: 'home-kitchen-chair-left',
-          worldPos,
-        });
-      },
-      '2': (tilePos, worldPos) => {
-        addFurnitureItem(k, {
-          itemId: 'home-kitchen-table',
-          sprite: 'home-kitchen-table',
-          worldPos,
-        });
-      },
+      // '1': (tilePos, worldPos) => {
+      //   addFurnitureItem(k, {
+      //     itemId: 'home-kitchen-chair-right',
+      //     sprite: 'home-kitchen-chair-right',
+      //     worldPos,
+      //   });
+      // },
+      // '2': (tilePos, worldPos) => {
+      //   addFurnitureItem(k, {
+      //     itemId: 'home-kitchen-table',
+      //     sprite: 'home-kitchen-table',
+      //     worldPos,
+      //   });
+      // },
     },
     exitPoints: [
       {
         currentMapExitIndex: 0,
-        spawnOffsetTiles: k.vec2(-2, 0),
+        spawnOffsetTiles: k.vec2(2, 0),
         destLevel: sceneLevel_1_2.id,
-        destLevelExitIndex: 0,
+        destLevelExitIndex: 1,
       },
     ],
   });
@@ -110,14 +102,15 @@ export const sceneLevel_1_1 = async (k: KCtx) => {
   bgMusicManager.playMusic('start-location');
   gsm.update({
     persistent: {
-      currentLevel: sceneLevel_1_1.id,
+      currentLevel: sceneLevel_1_3.id,
     },
   });
 
   player.setCamFollowPlayer(level, {
-    rightTilesPadding: 2, // to hide wall on the right and exit collision box
+    leftTilesPadding: 2, // to hide wall on the left and exit collision box
+    rightTilesPadding: 2, // to hide wall on the right
     topTilesPadding: -5, // so we can see more on top
   });
 };
 
-sceneLevel_1_1.id = 'level-1-1';
+sceneLevel_1_3.id = 'level-1-3';

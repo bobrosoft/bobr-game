@@ -3,10 +3,17 @@ import {changeScene} from '../misc/changeScene';
 import {GameEntity} from './generic/entity';
 
 export interface ExitConfig {
-  currentMapExitIndex: number; // index calculated from left to right. Leftmost exit on the map is 0.
-  spawnOffsetTiles: Vec2; // offset to apply to player spawn position
-  destLevel: string; // level name to go to
-  destLevelExitIndex: number; // index calculated from left to right. Leftmost exit on the map is 0.
+  /** Index calculated from left to right. Leftmost exit on the map is 0. */
+  currentMapExitIndex: number;
+
+  /** Offset to apply to player spawn position on current map */
+  spawnOffsetTiles: Vec2;
+
+  /** Destination level name to go to */
+  destLevel: string;
+
+  /** Destination level exit index */
+  destLevelExitIndex: number;
 }
 
 export interface ExitGameObj extends GameObj<PosComp | AreaComp> {}

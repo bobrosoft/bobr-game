@@ -22,7 +22,11 @@ export const HomeEntity: GameEntity<Config> = {
     await k.loadSprite('home-inside', 'sprites/home/home-inside.png');
     await k.loadSprite('home-fence', 'sprites/home/home-fence.png');
     await k.loadSprite('home-kitchen-table', 'sprites/home/home-kitchen-table.png');
-    await k.loadSprite('home-kitchen-chair', 'sprites/home/home-kitchen-chair.png');
+    await k.loadSprite('home-kitchen-chair-left', 'sprites/home/home-kitchen-chair-left.png');
+    await k.loadSprite('home-kitchen-chair-right', 'sprites/home/home-kitchen-chair-right.png');
+
+    // Define music
+    bgMusicManager.loadMusic('home', 'music/home.mp3');
   },
 
   spawn(k: KCtx, posXY: Vec2, config?: Partial<Config>): GameObj {
@@ -61,14 +65,12 @@ export const HomeEntity: GameEntity<Config> = {
     const kitchenChairLeft = container.add([
       //
       'home-kitchen-chair-left',
-      k.sprite('home-kitchen-chair'),
+      k.sprite('home-kitchen-chair-left'),
       k.anchor('bot'),
       k.pos(64, 0),
       k.area(),
       interactable(async player => {
-        await showDialogSeries(k, player, player, [
-          t(k.choose(['home.kitchenChairRepeat1'])),
-        ]);
+        await showDialogSeries(k, player, player, [t(k.choose(['home.kitchenChairRepeat1']))]);
       }),
     ]);
     kitchenChairLeft.hidden = true;
@@ -92,14 +94,12 @@ export const HomeEntity: GameEntity<Config> = {
     const kitchenChairRight = container.add([
       //
       'home-kitchen-chair-right',
-      k.sprite('home-kitchen-chair', {flipX: true}),
+      k.sprite('home-kitchen-chair-right'),
       k.anchor('bot'),
       k.pos(120, 0),
       k.area(),
       interactable(async player => {
-        await showDialogSeries(k, player, player, [
-          t(k.choose(['home.kitchenChairRepeat1'])),
-        ]);
+        await showDialogSeries(k, player, player, [t(k.choose(['home.kitchenChairRepeat1']))]);
       }),
     ]);
     kitchenChairRight.hidden = true;

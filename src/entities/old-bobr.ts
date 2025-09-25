@@ -37,7 +37,7 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
 
     const mainObj = k.add([
       'old-bobr',
-      k.sprite('old-bobr', {anim: 'idle'}),
+      k.sprite('old-bobr', {anim: 'idle', flipX: C.flipX || false}),
       k.state(State.IDLE, [State.IDLE, State.INTERACTING]),
       k.timer(),
       k.pos(posXY),
