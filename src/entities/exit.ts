@@ -35,6 +35,7 @@ export const ExitEntity: GameEntity<ExitConfig, ExitGameObj> = {
     mainObj.onCollide('player', () => {
       // Switch level
       changeScene(k, config.destLevel, {
+        isGameLevel: true,
         spawnAtExitIndex: config.destLevelExitIndex,
         quickSwitch: true,
       }).then();

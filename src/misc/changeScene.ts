@@ -14,16 +14,19 @@ let isUsingQuickSwitch = false;
 export async function changeScene(
   k: KCtx,
   newSceneName: string,
-  options?: {spawnAtExitIndex?: number; quickSwitch?: boolean},
+  options: {isGameLevel: boolean; spawnAtExitIndex?: number; quickSwitch?: boolean},
 ): Promise<void> {
   isUsingQuickSwitch = options?.quickSwitch || false;
 
-  // Remember where to spawn in the new scene
-  gsm.update({
-    persistent: {
-      spawnAtExitIndex: options?.spawnAtExitIndex,
-    },
-  });
+  // Remember game level and where to spawn in the new scene
+  if (options.isGameLevel) {
+    gsm.update({
+      persistent: {
+        spawnAtExitIndex: options?.spawnAtExitIndex,
+        currentLevel: newSceneName,
+      },
+    });
+  }
 
   // Start transition
   if (!isUsingQuickSwitch) {
@@ -51,7 +54,7 @@ export function sceneWrapper(k: KCtx, sceneFunc: (k: KCtx) => Promise<void>) {
 
     if (isUsingQuickSwitch) {
       hudManager.show();
-      await fadeManager.hideOverlay(1);
+      await fadeManager.hideOverlay(0.5);
     } else {
       await fadeManager.hideOverlay(1);
       hudManager.show();

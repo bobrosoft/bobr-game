@@ -51,7 +51,7 @@ export class HudManager {
     ]);
     this.reloadButton.onClick(() => {
       gsm.reset();
-      changeScene(this.k, sceneLevel_1_1.id).then();
+      changeScene(this.k, sceneLevel_1_1.id, {isGameLevel: true}).then();
     });
 
     // Add lucky charm

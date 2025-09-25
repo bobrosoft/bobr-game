@@ -108,11 +108,6 @@ export const sceneLevel_1_1 = async (k: KCtx) => {
   addBackground(k, 'bg-home-day', player, {offsetY: 40});
 
   bgMusicManager.playMusic('start-location');
-  gsm.update({
-    persistent: {
-      currentLevel: sceneLevel_1_1.id,
-    },
-  });
 
   player.setCamFollowPlayer(level, {
     rightTilesPadding: 2, // to hide wall on the right and exit collision box
