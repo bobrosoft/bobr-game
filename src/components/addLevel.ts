@@ -8,7 +8,7 @@ interface Config {
   preloadResources: (k: KCtx) => Promise<void>;
   tileWidth: number;
   tileHeight: number;
-  tiles: Record<string, TileFactory>;
+  tiles: Record<string, TileEntity>;
   exitPoints: ExitConfig[];
 }
 
@@ -25,7 +25,11 @@ export async function addLevel(k: KCtx, map: string, config: Config): Promise<Ad
 
   // Preload resources
   await PlayerEntity.loadResources(k);
+  await ExitEntity.loadResources(k);
   await config.preloadResources(k);
+
+  // Load resources for all tiles
+  await Promise.all(Object.values(config.tiles).map(tile => tile.loadResources(k)));
 
   k.setGravity(0);
   const level = k.addLevel(parsedMap, {
@@ -53,7 +57,8 @@ export async function addLevel(k: KCtx, map: string, config: Config): Promise<Ad
 
       if (config.tiles[char]) {
         return (
-          config.tiles[char](
+          config.tiles[char].factory(
+            k,
             pos,
             pos.scale(k.vec2(config.tileWidth, config.tileHeight)),
             () => getSiblingsAt(pos.x, pos.y),
@@ -148,7 +153,7 @@ interface AddLevelResult {
   player: PlayerComp | undefined;
 }
 
-interface SiblingTiles {
+export interface SiblingTiles {
   top: string;
   bottom: string;
   left: string;
@@ -159,9 +164,18 @@ interface SiblingTiles {
   bottomRight: string;
 }
 
-export type TileFactory = (
-  tilePos: Vec2,
-  worldPos: Vec2,
-  getSiblings: () => SiblingTiles,
-  charAt: (x: number, y: number) => string,
-) => CompList<Comp> | void;
+export interface TileEntity {
+  /**
+   * Load all resources required for this tile definition
+   * @param k
+   */
+  loadResources(k: KCtx): Promise<void>;
+
+  factory(
+    k: KCtx,
+    tilePos: Vec2,
+    worldPos: Vec2,
+    getSiblings: () => SiblingTiles,
+    charAt: (x: number, y: number) => string,
+  ): CompList<Comp> | void;
+}

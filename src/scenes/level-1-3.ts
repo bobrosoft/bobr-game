@@ -1,9 +1,7 @@
 import {addBackground} from '../components/addBackground';
 import {addLevel} from '../components/addLevel';
 import {BumblebeeEntity} from '../entities/bumblebee';
-import {ExitEntity} from '../entities/exit';
 import {GopherEntity} from '../entities/gopher';
-import {MapItemEntity} from '../entities/map-item';
 import {OldBobrEntity} from '../entities/old-bobr';
 import {KCtx} from '../kaplay';
 import {bgMusicManager, gsm} from '../main';
@@ -21,30 +19,6 @@ import {tileTree} from './tiles/tileTree';
 export const sceneLevel_1_3 = async (k: KCtx) => {
   const {player, level} = await addLevel(k, map, {
     preloadResources: async (k: KCtx) => {
-      // Preload assets
-      await Promise.all([
-        k.loadSprite('tile-ground', 'sprites/tiles/ground.png'),
-        k.loadSprite('tile-grass-ground', 'sprites/tiles/grass-ground.png'),
-        k.loadSprite('tile-grass-ground-air', 'sprites/tiles/grass-ground-air.png'),
-        k.loadSprite('tile-grass-ground-air-left', 'sprites/tiles/grass-ground-air-left.png'),
-        k.loadSprite('tile-grass-ground-air-right', 'sprites/tiles/grass-ground-air-right.png'),
-        k.loadSprite('tile-grass-ground-inclined-left-1', 'sprites/tiles/grass-ground-inclined-left-1.png'),
-        k.loadSprite('tile-grass-ground-inclined-left-2', 'sprites/tiles/grass-ground-inclined-left-2.png'),
-        k.loadSprite('tile-grass-ground-inclined-left-3', 'sprites/tiles/grass-ground-inclined-left-3.png'),
-        k.loadSprite('tile-grass-1', 'sprites/tiles/grass-1.png'),
-        k.loadSprite('tile-grass-2', 'sprites/tiles/grass-2.png'),
-        k.loadSprite('tile-grass-3', 'sprites/tiles/grass-3.png'),
-        k.loadSprite('tile-tree-1', 'sprites/tiles/tree-1.png'),
-        k.loadSprite('tile-tree-2', 'sprites/tiles/tree-2.png'),
-        k.loadSprite('rock', 'sprites/tiles/rock.png'),
-
-        ExitEntity.loadResources(k),
-        GopherEntity.loadResources(k),
-        BumblebeeEntity.loadResources(k),
-        OldBobrEntity.loadResources(k),
-        MapItemEntity.loadResources(k),
-      ]);
-
       // Define music
       bgMusicManager.loadMusic('start-location', 'music/start-location.mp3');
     },
@@ -59,17 +33,23 @@ export const sceneLevel_1_3 = async (k: KCtx) => {
       '\\': tileGroundGrassInclinedRight,
       t: tileTree,
       r: tileRock,
-      G: (tilePos, worldPos) => {
-        // Gopher enemy
-        GopherEntity.spawn(k, worldPos);
+      G: {
+        loadResources: GopherEntity.loadResources,
+        factory: (k, tilePos, worldPos) => {
+          GopherEntity.spawn(k, worldPos);
+        },
       },
-      F: (tilePos, worldPos) => {
-        // Bumblebee enemy
-        BumblebeeEntity.spawn(k, worldPos);
+      F: {
+        loadResources: BumblebeeEntity.loadResources,
+        factory: (k, tilePos, worldPos) => {
+          BumblebeeEntity.spawn(k, worldPos);
+        },
       },
-      B: (tilePos, worldPos) => {
-        // Old Bobr
-        OldBobrEntity.spawn(k, worldPos, {flipX: true});
+      B: {
+        loadResources: OldBobrEntity.loadResources,
+        factory: (k, tilePos, worldPos) => {
+          OldBobrEntity.spawn(k, worldPos, {flipX: true});
+        },
       },
       // '1': (tilePos, worldPos) => {
       //   addFurnitureItem(k, {
