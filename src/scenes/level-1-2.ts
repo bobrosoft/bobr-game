@@ -10,6 +10,8 @@ import {bgMusicManager} from '../main';
 import {sceneLevel_1_1} from './level-1-1';
 import {sceneLevel_1_3} from './level-1-3';
 import map from './maps/level-1-2.txt?raw';
+import {tileDirectionSignLeft} from './tiles/tileDirectionSignLeft';
+import {tileDirectionSignRight} from './tiles/tileDirectionSignRight';
 import {tileGrass} from './tiles/tileGrass';
 import {tileGround} from './tiles/tileGround';
 import {tileGroundGrass} from './tiles/tileGroundGrass';
@@ -28,6 +30,8 @@ export const sceneLevel_1_2 = async (k: KCtx) => {
     tileWidth: 32,
     tileHeight: 32,
     tiles: {
+      '>': tileDirectionSignRight,
+      '<': tileDirectionSignLeft,
       '=': tileGroundGrass,
       '-': tileGroundGrassAir,
       '.': tileGround,

@@ -7,6 +7,8 @@ import {KCtx} from '../kaplay';
 import {bgMusicManager, gsm} from '../main';
 import {sceneLevel_1_2} from './level-1-2';
 import map from './maps/level-1-3.txt?raw';
+import {tileDirectionSignLeft} from './tiles/tileDirectionSignLeft';
+import {tileDirectionSignRight} from './tiles/tileDirectionSignRight';
 import {tileGrass} from './tiles/tileGrass';
 import {tileGround} from './tiles/tileGround';
 import {tileGroundGrass} from './tiles/tileGroundGrass';
@@ -25,6 +27,8 @@ export const sceneLevel_1_3 = async (k: KCtx) => {
     tileWidth: 32,
     tileHeight: 32,
     tiles: {
+      '>': tileDirectionSignRight,
+      '<': tileDirectionSignLeft,
       '=': tileGroundGrass,
       '-': tileGroundGrassAir,
       '.': tileGround,
