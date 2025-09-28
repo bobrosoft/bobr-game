@@ -65,8 +65,8 @@ export const sceneLevel_1_2 = async (k: KCtx) => {
         },
         factory: (k, tilePos, worldPos) => {
           addFurnitureItem(k, {
-            itemId: 'home-kitchen-chair-left',
-            sprite: 'home-kitchen-chair-left',
+            itemId: 'home-kitchen-chair-right',
+            sprite: 'home-kitchen-chair-right',
             worldPos,
           });
         },
