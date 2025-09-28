@@ -147,7 +147,8 @@ export const HomeEntity: GameEntity<Config> = {
       outside.animation.seek(0);
       outside.animate('opacity', [1, 0], {duration: 1, loops: 1});
 
-      if (C.isEveningTime) {
+      // Play music if player has any items in inventory
+      if (gsm.state.persistent.player.inventory.length > 0) {
         bgMusicManager.playMusic('home');
       }
     });
