@@ -353,7 +353,12 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
         });
 
         // Knockback effect
-        player.applyImpulse(k.vec2(Math.sign(player.pos.x - enemy.pos.x) * 150, -230));
+        player.applyImpulse(
+          k.vec2(
+            Math.sign(player.pos.x - enemy.pos.x) * (enemy.config.knockbackPower?.x ?? 150),
+            player.vel.y > -50 ? (enemy.config.knockbackPower?.y ?? -230) : 0, // condition to prevent "rocket jump" knockback
+          ),
+        );
         k.shake(4);
         k.play('player-attack');
 

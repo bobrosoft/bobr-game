@@ -1,5 +1,6 @@
 import {addBackground} from '../components/addBackground';
 import {addLevel} from '../components/addLevel';
+import {BoarEntity} from '../entities/boar';
 import {BumblebeeEntity} from '../entities/bumblebee';
 import {GopherEntity} from '../entities/gopher';
 import {OldBobrEntity} from '../entities/old-bobr';
@@ -53,6 +54,12 @@ export const sceneLevel_1_3 = async (k: KCtx) => {
         loadResources: OldBobrEntity.loadResources,
         factory: (k, tilePos, worldPos) => {
           OldBobrEntity.spawn(k, worldPos, {flipX: true});
+        },
+      },
+      H: {
+        loadResources: BoarEntity.loadResources,
+        factory: (k, tilePos, worldPos) => {
+          BoarEntity.spawn(k, worldPos);
         },
       },
       // '1': (tilePos, worldPos) => {
