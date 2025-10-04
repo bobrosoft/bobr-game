@@ -61,6 +61,7 @@ export const BoarEntity: GameEntity<Config, EnemyComp> = {
 
     let direction = -1; // 1 for right, -1 for left
     let currentSpeed = 0;
+    let player: PlayerComp | null = null;
 
     const mainObj = k.add([
       'boar',
@@ -83,9 +84,16 @@ export const BoarEntity: GameEntity<Config, EnemyComp> = {
       },
     ]);
 
+    function getPlayer(): PlayerComp | null {
+      if (player) return player;
+
+      player = k.get('player')[0] as PlayerComp | undefined;
+      return player;
+    }
+
     // Helper function to find player
     function detectPlayer(): PlayerComp | null {
-      const player = k.get('player')[0] as PlayerComp | undefined;
+      const player = getPlayer();
       if (!player) return null;
 
       const distance = mainObj.pos.dist(player.pos);
@@ -148,15 +156,11 @@ export const BoarEntity: GameEntity<Config, EnemyComp> = {
 
     mainObj.onFixedUpdate(() => {
       if (mainObj.state === State.RUN) {
-        const player = detectPlayer();
-
         // Check if reached target
-        if (player) {
-          const deltaX = player.pos.x - mainObj.pos.x;
-          if ((direction > 0 && deltaX < 5) || (direction < 0 && deltaX > -5)) {
-            mainObj.enterState(State.BREAK);
-            return;
-          }
+        const deltaX = player.pos.x - mainObj.pos.x;
+        if ((direction > 0 && deltaX < 5) || (direction < 0 && deltaX > -5)) {
+          mainObj.enterState(State.BREAK);
+          return;
         }
 
         // Accelerate towards target
