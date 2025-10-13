@@ -1,4 +1,5 @@
 import {addBackground} from '../components/addBackground';
+import {addFurnitureItem} from '../components/addFurnitureItem';
 import {addLevel} from '../components/addLevel';
 import {BoarEntity} from '../entities/boar';
 import {BumblebeeEntity} from '../entities/bumblebee';
@@ -62,20 +63,18 @@ export const sceneLevel_1_3 = async (k: KCtx) => {
           BoarEntity.spawn(k, worldPos);
         },
       },
-      // '1': (tilePos, worldPos) => {
-      //   addFurnitureItem(k, {
-      //     itemId: 'home-kitchen-chair-right',
-      //     sprite: 'home-kitchen-chair-right',
-      //     worldPos,
-      //   });
-      // },
-      // '2': (tilePos, worldPos) => {
-      //   addFurnitureItem(k, {
-      //     itemId: 'home-kitchen-table',
-      //     sprite: 'home-kitchen-table',
-      //     worldPos,
-      //   });
-      // },
+      '1': {
+        loadResources: async (k: KCtx) => {
+          await k.loadSprite('home-bed', 'sprites/home/home-bed.png');
+        },
+        factory: (k, tilePos, worldPos) => {
+          addFurnitureItem(k, {
+            itemId: 'home-bed',
+            sprite: 'home-bed',
+            worldPos,
+          });
+        },
+      },
     },
     exitPoints: [
       {

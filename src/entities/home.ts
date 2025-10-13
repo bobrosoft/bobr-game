@@ -24,6 +24,7 @@ export const HomeEntity: GameEntity<Config> = {
     await k.loadSprite('home-kitchen-table', 'sprites/home/home-kitchen-table.png');
     await k.loadSprite('home-kitchen-chair-left', 'sprites/home/home-kitchen-chair-left.png');
     await k.loadSprite('home-kitchen-chair-right', 'sprites/home/home-kitchen-chair-right.png');
+    await k.loadSprite('home-bed', 'sprites/home/home-bed.png');
 
     // Define music
     bgMusicManager.loadMusic('home', 'music/home.mp3');
@@ -104,6 +105,20 @@ export const HomeEntity: GameEntity<Config> = {
     ]);
     kitchenChairRight.hidden = true;
 
+    /// Add furniture to second floor
+    const bed = container.add([
+      //
+      'home-bed',
+      k.sprite('home-bed', {flipX: true}),
+      k.anchor('bot'),
+      k.pos(129, -65),
+      k.area(),
+      interactable(async player => {
+        await showDialogSeries(k, player, player, [t(k.choose(['home.bedRepeat1']))]);
+      }),
+    ]);
+    bed.hidden = true;
+
     // Add home outside
     const outside = container.add([
       //
@@ -120,10 +135,12 @@ export const HomeEntity: GameEntity<Config> = {
       const hasTable = gsm.getIsPlayerHasItem('home-kitchen-table');
       const hasChairLeft = gsm.getIsPlayerHasItem('home-kitchen-chair-left');
       const hasChairRight = gsm.getIsPlayerHasItem('home-kitchen-chair-right');
+      const hasBed = gsm.getIsPlayerHasItem('home-bed');
 
       kitchenTable.hidden = !hasTable;
       kitchenChairLeft.hidden = !hasChairLeft;
       kitchenChairRight.hidden = !hasChairRight;
+      bed.hidden = !hasBed;
     }
 
     container.onStateEnter(State.OUTSIDE, () => {
@@ -181,6 +198,8 @@ export const HomeEntity: GameEntity<Config> = {
         container.enterState(State.OUTSIDE);
       }
     });
+
+    updateFurnitureVisibility();
 
     return container;
   },
