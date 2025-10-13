@@ -193,7 +193,13 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
       ]);
 
       interactionHitbox.onCollide('interactable', async (obj: GameObj<InteractableComp>) => {
+        // Prevent multiple interactions
         if (isInteractableObjectDetected) {
+          return;
+        }
+
+        // Interact only if object is not hidden
+        if (obj.hidden) {
           return;
         }
 
