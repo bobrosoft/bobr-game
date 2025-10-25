@@ -34,6 +34,10 @@ export const BoarEntity: GameEntity<Config, EnemyComp> = {
         break: {from: 6, to: 6},
       },
     });
+    await k.loadSprite('particle-ground', 'sprites/particles/ground.png', {
+      sliceX: 2,
+      sliceY: 1,
+    });
 
     await k.loadSound('boar-alarm', 'sounds/boar-squeal.mp3');
     await k.loadSound('boar-break', 'sounds/boar-break.mp3');
@@ -82,6 +86,28 @@ export const BoarEntity: GameEntity<Config, EnemyComp> = {
         },
         config: C,
       },
+    ]);
+
+    // Add particles generator for clumps of dirt
+    const particlesEmitter = mainObj.add([
+      k.particles(
+        {
+          max: 20,
+          speed: [100, 60],
+          lifeTime: [0.75, 1.0],
+          angle: [0, 360],
+          angularVelocity: [0, 30],
+          opacities: [1.0, 1.0, 0.0],
+          texture: k.getSprite('particle-ground').data.tex, // texture of a sprite
+          quads: k.getSprite('particle-ground').data.frames, // frames of a sprite
+        },
+        {
+          // rate: 5,
+          position: k.vec2(0, 0),
+          direction: -15,
+          spread: 15,
+        },
+      ),
     ]);
 
     function getPlayer(): PlayerComp | null {
@@ -136,11 +162,13 @@ export const BoarEntity: GameEntity<Config, EnemyComp> = {
 
     mainObj.onStateEnter(State.RUN, () => {
       mainObj.play('run');
+      particlesEmitter.emitter.direction = direction < 0 ? -15 : 180 + 15;
     });
 
     mainObj.onStateEnter(State.BREAK, async () => {
       mainObj.play('break');
       k.play('boar-break');
+
       await mainObj.wait(C.breakDuration);
 
       if (!mainObj.dead) {
@@ -170,11 +198,24 @@ export const BoarEntity: GameEntity<Config, EnemyComp> = {
         } else {
           mainObj.move(direction * C.maxSpeed, 0);
         }
+
+        // Emit particles only when boar runs fast enough
+        if (currentSpeed > C.maxSpeed / 5) {
+          // Rhythmically emit particles, not on every frame
+          if (Math.round(k.time() * 10) % 4 === 0) {
+            particlesEmitter.emit(1);
+          }
+        }
       } else if (mainObj.state === State.BREAK || mainObj.state === State.DEAD) {
         // Decelerate to zero
         if (currentSpeed > 0) {
           currentSpeed = k.clamp(currentSpeed - C.deceleration * k.dt(), 0, C.maxSpeed);
           mainObj.move(direction * currentSpeed, 0);
+
+          // Emit particles only when boar breaks with enough speed
+          if (currentSpeed > C.maxSpeed / 10) {
+            particlesEmitter.emit(1);
+          }
         }
       }
     });
