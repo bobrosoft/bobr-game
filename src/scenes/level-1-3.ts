@@ -60,7 +60,18 @@ export const sceneLevel_1_3 = async (k: KCtx) => {
       H: {
         loadResources: BoarEntity.loadResources,
         factory: (k, tilePos, worldPos) => {
-          BoarEntity.spawn(k, worldPos);
+          BoarEntity.spawn(k, worldPos, {
+            isAlreadyDead: gsm.state.persistent.level1.isBoarDead,
+            onDeath: () => {
+              gsm.update({
+                persistent: {
+                  level1: {
+                    isBoarDead: true,
+                  },
+                },
+              });
+            },
+          });
         },
       },
       '1': {

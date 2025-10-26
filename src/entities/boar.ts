@@ -20,6 +20,8 @@ interface Config extends EnemyConfig {
   maxSpeed: number; // maximum running speed
   acceleration: number; // acceleration rate when running
   deceleration: number; // deceleration rate when breaking
+  isAlreadyDead?: boolean; // spawn as already dead
+  onDeath?: () => void;
 }
 
 export const BoarEntity: GameEntity<Config, EnemyComp> = {
@@ -45,7 +47,7 @@ export const BoarEntity: GameEntity<Config, EnemyComp> = {
 
   spawn(k: KCtx, posXY: Vec2 = k.vec2(100, 100), config?: Partial<Config>): EnemyComp {
     const C: Config = {
-      health: 5,
+      health: config?.isAlreadyDead ? 0 : 5,
       attackPower: 1,
       knockbackPower: k.vec2(250, -230),
       detectionRange: 150,
@@ -54,6 +56,7 @@ export const BoarEntity: GameEntity<Config, EnemyComp> = {
       maxSpeed: 220, // max horizontal speed
       acceleration: 400, // pixels per second squared
       deceleration: 300, // pixels per second squared
+      isAlreadyDead: false,
 
       // For debugging
       // ...{
@@ -229,7 +232,13 @@ export const BoarEntity: GameEntity<Config, EnemyComp> = {
 
     mainObj.onDeath(() => {
       mainObj.enterState(State.DEAD);
+      config.onDeath?.();
     });
+
+    // Init
+    if (config.isAlreadyDead) {
+      mainObj.enterState(State.DEAD);
+    }
 
     return mainObj;
   },

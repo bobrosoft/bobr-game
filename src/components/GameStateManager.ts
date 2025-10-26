@@ -14,6 +14,9 @@ export interface GameState {
       isIntroSaid?: boolean;
       isRespawnInfoSaid?: boolean;
     };
+    level1: {
+      isBoarDead?: boolean;
+    };
   };
   temp: {
     player: {
@@ -227,7 +230,7 @@ export class GameStateManager {
   }
 
   protected getClearState(): GameState {
-    const initialPersistentState = {
+    const initialPersistentState: GameState['persistent'] = {
       currentLevel: undefined,
       player: {
         deaths: 0,
@@ -236,6 +239,9 @@ export class GameStateManager {
       },
       oldBobr: {
         isIntroSaid: false,
+      },
+      level1: {
+        isBoarDead: false,
       },
     };
 
