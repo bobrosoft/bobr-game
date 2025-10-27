@@ -6,6 +6,7 @@ import {KCtx} from '../kaplay';
 import {bgMusicManager, gsm} from '../main';
 import {defaultFriction} from '../misc/defaults';
 import {GameEntity} from './generic/entity';
+import {ITEM_ID} from './generic/item-id';
 
 enum State {
   INSIDE = 'INSIDE',
@@ -132,10 +133,10 @@ export const HomeEntity: GameEntity<Config> = {
     addCollisionWalls(k, container);
 
     function updateFurnitureVisibility() {
-      const hasTable = gsm.getIsPlayerHasItem('home-kitchen-table');
-      const hasChairLeft = gsm.getIsPlayerHasItem('home-kitchen-chair-left');
-      const hasChairRight = gsm.getIsPlayerHasItem('home-kitchen-chair-right');
-      const hasBed = gsm.getIsPlayerHasItem('home-bed');
+      const hasTable = gsm.getIsPlayerHasItem(ITEM_ID.HOME_KITCHEN_TABLE);
+      const hasChairLeft = gsm.getIsPlayerHasItem(ITEM_ID.HOME_KITCHEN_CHAIR_LEFT);
+      const hasChairRight = gsm.getIsPlayerHasItem(ITEM_ID.HOME_KITCHEN_CHAIR_RIGHT);
+      const hasBed = gsm.getIsPlayerHasItem(ITEM_ID.HOME_BED);
 
       kitchenTable.hidden = !hasTable;
       kitchenChairLeft.hidden = !hasChairLeft;

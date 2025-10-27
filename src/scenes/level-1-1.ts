@@ -2,6 +2,7 @@ import {addBackground} from '../components/addBackground';
 import {addFurnitureItem} from '../components/addFurnitureItem';
 import {addLevel} from '../components/addLevel';
 import {BumblebeeEntity} from '../entities/bumblebee';
+import {ITEM_ID} from '../entities/generic/item-id';
 import {GopherEntity} from '../entities/gopher';
 import {HomeEntity} from '../entities/home';
 import {MapItemEntity} from '../entities/map-item';
@@ -69,7 +70,7 @@ export const sceneLevel_1_1 = async (k: KCtx) => {
         loadResources: MapItemEntity.loadResources,
         factory: (k, tilePos, worldPos) => {
           addFurnitureItem(k, {
-            itemId: 'home-kitchen-chair-left',
+            itemId: ITEM_ID.HOME_KITCHEN_CHAIR_LEFT,
             sprite: 'home-kitchen-chair-left',
             worldPos,
           });
@@ -79,7 +80,7 @@ export const sceneLevel_1_1 = async (k: KCtx) => {
         loadResources: MapItemEntity.loadResources,
         factory: (k, tilePos, worldPos) => {
           addFurnitureItem(k, {
-            itemId: 'home-kitchen-table',
+            itemId: ITEM_ID.HOME_KITCHEN_TABLE,
             sprite: 'home-kitchen-table',
             worldPos,
           });

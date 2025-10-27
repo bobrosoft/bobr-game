@@ -1,4 +1,5 @@
 import {Vec2} from 'kaplay';
+import {ITEM_ID} from '../entities/generic/item-id';
 import {MapItemEntity, MapItemGameObj} from '../entities/map-item';
 import {KCtx} from '../kaplay';
 import {gsm} from '../main';
@@ -8,7 +9,7 @@ import {gsm} from '../main';
  * @param k
  * @param options
  */
-export function addFurnitureItem(k: KCtx, options: {itemId: string; sprite: string; worldPos: Vec2}): MapItemGameObj {
+export function addFurnitureItem(k: KCtx, options: {itemId: ITEM_ID; sprite: string; worldPos: Vec2}): MapItemGameObj {
   if (gsm.getIsPlayerHasItem(options.itemId)) {
     return;
   }

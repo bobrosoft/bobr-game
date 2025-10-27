@@ -3,6 +3,7 @@ import {addFurnitureItem} from '../components/addFurnitureItem';
 import {addLevel} from '../components/addLevel';
 import {BoarEntity} from '../entities/boar';
 import {BumblebeeEntity} from '../entities/bumblebee';
+import {ITEM_ID} from '../entities/generic/item-id';
 import {GopherEntity} from '../entities/gopher';
 import {OldBobrEntity} from '../entities/old-bobr';
 import {KCtx} from '../kaplay';
@@ -80,7 +81,7 @@ export const sceneLevel_1_3 = async (k: KCtx) => {
         },
         factory: (k, tilePos, worldPos) => {
           addFurnitureItem(k, {
-            itemId: 'home-bed',
+            itemId: ITEM_ID.HOME_BED,
             sprite: 'home-bed',
             worldPos,
           });

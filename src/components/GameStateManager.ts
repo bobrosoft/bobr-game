@@ -1,3 +1,4 @@
+import {ITEM_ID} from '../entities/generic/item-id';
 import {Helpers} from '../misc/Helpers';
 
 export interface GameState {
@@ -8,7 +9,7 @@ export interface GameState {
     player: {
       deaths: number;
       hasLuckyCharm: boolean;
-      inventory: string[]; // list of item IDs
+      inventory: ITEM_ID[]; // list of item IDs
     };
     oldBobr: {
       isIntroSaid?: boolean;
@@ -21,7 +22,7 @@ export interface GameState {
   temp: {
     player: {
       health: number;
-      tempInventory: string[];
+      tempInventory: ITEM_ID[];
     };
   };
 }
@@ -138,13 +139,13 @@ export class GameStateManager {
     });
   }
 
-  getIsPlayerHasItem(itemId: string): boolean {
+  getIsPlayerHasItem(itemId: ITEM_ID): boolean {
     return (
       this._state.persistent.player.inventory.includes(itemId) || this._state.temp.player.tempInventory.includes(itemId)
     );
   }
 
-  addToPersistentInventory(itemId: string): void {
+  addToPersistentInventory(itemId: ITEM_ID): void {
     if (this.getIsPlayerHasItem(itemId)) {
       return;
     }
@@ -158,7 +159,7 @@ export class GameStateManager {
     });
   }
 
-  addToTempInventory(itemId: string): void {
+  addToTempInventory(itemId: ITEM_ID): void {
     if (this.getIsPlayerHasItem(itemId)) {
       return;
     }

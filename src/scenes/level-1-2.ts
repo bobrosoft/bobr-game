@@ -2,6 +2,7 @@ import {addBackground} from '../components/addBackground';
 import {addFurnitureItem} from '../components/addFurnitureItem';
 import {addLevel} from '../components/addLevel';
 import {BumblebeeEntity} from '../entities/bumblebee';
+import {ITEM_ID} from '../entities/generic/item-id';
 import {GopherEntity} from '../entities/gopher';
 import {MapItemEntity} from '../entities/map-item';
 import {OldBobrEntity} from '../entities/old-bobr';
@@ -65,7 +66,7 @@ export const sceneLevel_1_2 = async (k: KCtx) => {
         },
         factory: (k, tilePos, worldPos) => {
           addFurnitureItem(k, {
-            itemId: 'home-kitchen-chair-right',
+            itemId: ITEM_ID.HOME_KITCHEN_CHAIR_RIGHT,
             sprite: 'home-kitchen-chair-right',
             worldPos,
           });
