@@ -11,15 +11,17 @@ enum State {
 }
 
 export const GopherEntity: GameEntity<EnemyConfig, EnemyComp> = {
-  async loadResources(k: KCtx): Promise<void> {
-    await k.loadSprite('gopher', 'sprites/enemies/gopher.gif', {
-      sliceX: 4,
-      sliceY: 1,
-      anims: {
-        idle: {from: 0, to: 0, loop: false},
-        walk: {from: 0, to: 3, speed: 10, loop: true},
-      },
-    });
+  async loadResources(k: KCtx): Promise<any> {
+    return Promise.all([
+      k.loadSprite('gopher', 'sprites/enemies/gopher.gif', {
+        sliceX: 4,
+        sliceY: 1,
+        anims: {
+          idle: {from: 0, to: 0, loop: false},
+          walk: {from: 0, to: 3, speed: 10, loop: true},
+        },
+      }),
+    ]);
   },
 
   spawn(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: Partial<EnemyConfig>): EnemyComp {

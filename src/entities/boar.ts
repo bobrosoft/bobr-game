@@ -25,24 +25,25 @@ interface Config extends EnemyConfig {
 }
 
 export const BoarEntity: GameEntity<Config, EnemyComp> = {
-  async loadResources(k: KCtx): Promise<void> {
-    await k.loadSprite('boar', 'sprites/enemies/boar.gif', {
-      sliceX: 2,
-      sliceY: 4,
-      anims: {
-        idle: {from: 0, to: 0},
-        alarm: {from: 2, to: 2},
-        run: {from: 4, to: 5, speed: 12, loop: true},
-        break: {from: 6, to: 6},
-      },
-    });
-    await k.loadSprite('particle-ground', 'sprites/particles/ground.png', {
-      sliceX: 2,
-      sliceY: 1,
-    });
-
-    await k.loadSound('boar-alarm', 'sounds/boar-squeal.mp3');
-    await k.loadSound('boar-break', 'sounds/boar-break.mp3');
+  async loadResources(k: KCtx): Promise<any> {
+    return Promise.all([
+      k.loadSprite('boar', 'sprites/enemies/boar.gif', {
+        sliceX: 2,
+        sliceY: 4,
+        anims: {
+          idle: {from: 0, to: 0},
+          alarm: {from: 2, to: 2},
+          run: {from: 4, to: 5, speed: 12, loop: true},
+          break: {from: 6, to: 6},
+        },
+      }),
+      k.loadSprite('particle-ground', 'sprites/particles/ground.png', {
+        sliceX: 2,
+        sliceY: 1,
+      }),
+      k.loadSound('boar-alarm', 'sounds/boar-squeal.mp3'),
+      k.loadSound('boar-break', 'sounds/boar-break.mp3'),
+    ]);
   },
 
   spawn(k: KCtx, posXY: Vec2 = k.vec2(100, 100), config?: Partial<Config>): EnemyComp {

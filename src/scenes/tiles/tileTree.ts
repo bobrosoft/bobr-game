@@ -3,9 +3,11 @@ import {SiblingTiles, TileEntity} from '../../components/addLevel';
 import {KCtx} from '../../kaplay';
 
 export const tileTree: TileEntity = {
-  async loadResources(k: KCtx): Promise<void> {
-    await k.loadSprite('tile-tree-1', 'sprites/tiles/tree-1.png');
-    await k.loadSprite('tile-tree-2', 'sprites/tiles/tree-2.png');
+  async loadResources(k: KCtx): Promise<any> {
+    return Promise.all([
+      k.loadSprite('tile-tree-1', 'sprites/tiles/tree-1.png'),
+      k.loadSprite('tile-tree-2', 'sprites/tiles/tree-2.png'),
+    ]);
   },
 
   factory(

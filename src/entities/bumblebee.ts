@@ -15,15 +15,17 @@ interface Config extends EnemyConfig {
 }
 
 export const BumblebeeEntity: GameEntity<Config, EnemyComp> = {
-  async loadResources(k: KCtx): Promise<void> {
-    await k.loadSprite('bumblebee', 'sprites/enemies/bumblebee.gif', {
-      sliceX: 2,
-      sliceY: 1,
-      anims: {
-        idle: {from: 0, to: 1, speed: 20, loop: true},
-        fly: {from: 0, to: 1, speed: 20, loop: true},
-      },
-    });
+  async loadResources(k: KCtx): Promise<any> {
+    return Promise.all([
+      k.loadSprite('bumblebee', 'sprites/enemies/bumblebee.gif', {
+        sliceX: 2,
+        sliceY: 1,
+        anims: {
+          idle: {from: 0, to: 1, speed: 20, loop: true},
+          fly: {from: 0, to: 1, speed: 20, loop: true},
+        },
+      }),
+    ]);
   },
 
   spawn(k: KCtx, posXY: Vec2 = k.vec2(200, 80), config?: Partial<Config>): EnemyComp {

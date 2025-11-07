@@ -4,9 +4,11 @@ import {KCtx} from '../../kaplay';
 import {defaultFriction} from '../../misc/defaults';
 
 export const tileGroundGrassInclinedRight: TileEntity = {
-  async loadResources(k: KCtx): Promise<void> {
-    await k.loadSprite('tile-grass-ground-inclined-left-2', 'sprites/tiles/grass-ground-inclined-left-2.png');
-    await k.loadSprite('tile-grass-ground-inclined-left-3', 'sprites/tiles/grass-ground-inclined-left-3.png');
+  async loadResources(k: KCtx): Promise<any> {
+    return Promise.all([
+      k.loadSprite('tile-grass-ground-inclined-left-2', 'sprites/tiles/grass-ground-inclined-left-2.png'),
+      k.loadSprite('tile-grass-ground-inclined-left-3', 'sprites/tiles/grass-ground-inclined-left-3.png'),
+    ]);
   },
 
   factory(

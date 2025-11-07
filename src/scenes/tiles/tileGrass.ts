@@ -3,10 +3,12 @@ import {SiblingTiles, TileEntity} from '../../components/addLevel';
 import {KCtx} from '../../kaplay';
 
 export const tileGrass: TileEntity = {
-  async loadResources(k: KCtx): Promise<void> {
-    await k.loadSprite('tile-grass-1', 'sprites/tiles/grass-1.png');
-    await k.loadSprite('tile-grass-2', 'sprites/tiles/grass-2.png');
-    await k.loadSprite('tile-grass-3', 'sprites/tiles/grass-3.png');
+  async loadResources(k: KCtx): Promise<any> {
+    return Promise.all([
+      k.loadSprite('tile-grass-1', 'sprites/tiles/grass-1.png'),
+      k.loadSprite('tile-grass-2', 'sprites/tiles/grass-2.png'),
+      k.loadSprite('tile-grass-3', 'sprites/tiles/grass-3.png'),
+    ]);
   },
 
   factory(

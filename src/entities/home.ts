@@ -18,17 +18,19 @@ interface Config {
 }
 
 export const HomeEntity: GameEntity<Config> = {
-  async loadResources(k: KCtx): Promise<void> {
-    await k.loadSprite('home-outside', 'sprites/home/home-outside.png');
-    await k.loadSprite('home-inside', 'sprites/home/home-inside.png');
-    await k.loadSprite('home-fence', 'sprites/home/home-fence.png');
-    await k.loadSprite('home-kitchen-table', 'sprites/home/home-kitchen-table.png');
-    await k.loadSprite('home-kitchen-chair-left', 'sprites/home/home-kitchen-chair-left.png');
-    await k.loadSprite('home-kitchen-chair-right', 'sprites/home/home-kitchen-chair-right.png');
-    await k.loadSprite('home-bed', 'sprites/home/home-bed.png');
-
+  async loadResources(k: KCtx): Promise<any> {
     // Define music
     bgMusicManager.loadMusic('home', 'music/home.mp3');
+
+    return Promise.all([
+      k.loadSprite('home-outside', 'sprites/home/home-outside.png'),
+      k.loadSprite('home-inside', 'sprites/home/home-inside.png'),
+      k.loadSprite('home-fence', 'sprites/home/home-fence.png'),
+      k.loadSprite('home-kitchen-table', 'sprites/home/home-kitchen-table.png'),
+      k.loadSprite('home-kitchen-chair-left', 'sprites/home/home-kitchen-chair-left.png'),
+      k.loadSprite('home-kitchen-chair-right', 'sprites/home/home-kitchen-chair-right.png'),
+      k.loadSprite('home-bed', 'sprites/home/home-bed.png'),
+    ]);
   },
 
   spawn(k: KCtx, posXY: Vec2, config?: Partial<Config>): GameObj {

@@ -56,23 +56,24 @@ enum State {
 }
 
 export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
-  async loadResources(k: KCtx): Promise<void> {
-    await k.loadSprite('player', 'sprites/characters/bobr.gif', {
-      sliceX: 5,
-      sliceY: 4,
-      anims: {
-        idle: {from: 0, to: 1, speed: 3, loop: true},
-        walk: {from: 5, to: 8, speed: 10, loop: true}, // speed here is frames per second
-        jump: {from: 10, to: 10},
-        fall: {from: 10, to: 10},
-        attack: {from: 15, to: 19, speed: 20, loop: false},
-      },
-    });
-    await k.loadSprite('player-hit-wave', 'sprites/characters/bobr-hit-wave.png');
-
-    await k.loadSound('player-attack', 'sounds/bobr-attack.mp3');
-    await k.loadSound('player-take-item', 'sounds/bobr-take-item.mp3');
-    await k.loadSound('player-take-key', 'sounds/bobr-take-key.mp3');
+  async loadResources(k: KCtx): Promise<any> {
+    return Promise.all([
+      k.loadSprite('player', 'sprites/characters/bobr.gif', {
+        sliceX: 5,
+        sliceY: 4,
+        anims: {
+          idle: {from: 0, to: 1, speed: 3, loop: true},
+          walk: {from: 5, to: 8, speed: 10, loop: true}, // speed here is frames per second
+          jump: {from: 10, to: 10},
+          fall: {from: 10, to: 10},
+          attack: {from: 15, to: 19, speed: 20, loop: false},
+        },
+      }),
+      k.loadSprite('player-hit-wave', 'sprites/characters/bobr-hit-wave.png'),
+      k.loadSound('player-attack', 'sounds/bobr-attack.mp3'),
+      k.loadSound('player-take-item', 'sounds/bobr-take-item.mp3'),
+      k.loadSound('player-take-key', 'sounds/bobr-take-key.mp3'),
+    ]);
   },
 
   spawn(k: KCtx, posXY: Vec2 = k.vec2(100, 100), config?: Partial<PlayerConfig>): PlayerComp {

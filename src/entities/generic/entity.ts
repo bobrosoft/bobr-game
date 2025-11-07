@@ -6,7 +6,7 @@ export interface GameEntity<C, R = GameObj> {
    * Load all resources required for this entity
    * @param k
    */
-  loadResources(k: KCtx): Promise<void>;
+  loadResources(k: KCtx): Promise<any>;
 
   /**
    * Spawn the entity in the game world

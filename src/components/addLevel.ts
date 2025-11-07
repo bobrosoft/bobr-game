@@ -169,7 +169,7 @@ export interface TileEntity {
    * Load all resources required for this tile definition
    * @param k
    */
-  loadResources(k: KCtx): Promise<void>;
+  loadResources(k: KCtx): Promise<any>;
 
   factory(
     k: KCtx,

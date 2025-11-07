@@ -4,10 +4,12 @@ import {KCtx} from '../../kaplay';
 import {defaultFriction} from '../../misc/defaults';
 
 export const tileGroundGrassAir: TileEntity = {
-  async loadResources(k: KCtx): Promise<void> {
-    await k.loadSprite('tile-grass-ground-air', 'sprites/tiles/grass-ground-air.png');
-    await k.loadSprite('tile-grass-ground-air-left', 'sprites/tiles/grass-ground-air-left.png');
-    await k.loadSprite('tile-grass-ground-air-right', 'sprites/tiles/grass-ground-air-right.png');
+  async loadResources(k: KCtx): Promise<any> {
+    return Promise.all([
+      k.loadSprite('tile-grass-ground-air', 'sprites/tiles/grass-ground-air.png'),
+      k.loadSprite('tile-grass-ground-air-left', 'sprites/tiles/grass-ground-air-left.png'),
+      k.loadSprite('tile-grass-ground-air-right', 'sprites/tiles/grass-ground-air-right.png'),
+    ]);
   },
 
   factory(

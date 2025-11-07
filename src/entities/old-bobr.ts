@@ -17,17 +17,18 @@ enum State {
 }
 
 export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
-  async loadResources(k: KCtx): Promise<void> {
-    await k.loadSprite('old-bobr', 'sprites/characters/old-bobr.gif', {
-      sliceX: 2,
-      sliceY: 1,
-      anims: {
-        idle: {from: 0, to: 1, speed: 1.5, loop: true},
-      },
-    });
-
-    await k.loadSound('old-bobr-kurwa-1', 'sounds/old-bobr-kurwa-1.mp3');
-    await k.loadSound('old-bobr-kurwa-2', 'sounds/old-bobr-kurwa-2.mp3');
+  async loadResources(k: KCtx): Promise<any> {
+    return Promise.all([
+      k.loadSprite('old-bobr', 'sprites/characters/old-bobr.gif', {
+        sliceX: 2,
+        sliceY: 1,
+        anims: {
+          idle: {from: 0, to: 1, speed: 1.5, loop: true},
+        },
+      }),
+      k.loadSound('old-bobr-kurwa-1', 'sounds/old-bobr-kurwa-1.mp3'),
+      k.loadSound('old-bobr-kurwa-2', 'sounds/old-bobr-kurwa-2.mp3'),
+    ]);
   },
 
   spawn(k: KCtx, posXY: Vec2 = k.vec2(100, 100), config?: Partial<NpcConfig>): NpcComp {
