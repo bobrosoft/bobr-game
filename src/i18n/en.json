@@ -2,7 +2,8 @@
   "common": {
     "loading": "Loading...",
     "rotateDevice": "Rotate your device",
-    "howToInstall": "How to install to the home screen?"
+    "howToInstall": "How to install to the home screen?",
+    "notAllItemsFound": "Looks like I haven't collected everything yet..."
   },
   "oldBobr": {
     "intro1": "Hello, grandson! You finally bought your own hut... Even if it's with a mortgage, you're still doing great!",

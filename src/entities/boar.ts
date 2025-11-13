@@ -117,7 +117,7 @@ export const BoarEntity: GameEntity<Config, EnemyComp> = {
     function getPlayer(): PlayerComp | null {
       if (player) return player;
 
-      player = k.get('player')[0] as PlayerComp | undefined;
+      player = getPlayer();
       return player;
     }
 

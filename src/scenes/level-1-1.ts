@@ -1,3 +1,4 @@
+import {t} from 'i18next';
 import {addBackground} from '../components/addBackground';
 import {addFurnitureItem} from '../components/addFurnitureItem';
 import {addLevel} from '../components/addLevel';
@@ -7,8 +8,9 @@ import {GopherEntity} from '../entities/gopher';
 import {HomeEntity} from '../entities/home';
 import {MapItemEntity} from '../entities/map-item';
 import {OldBobrEntity} from '../entities/old-bobr';
+import {getPlayer} from '../entities/player';
 import {KCtx} from '../kaplay';
-import {bgMusicManager} from '../main';
+import {bgMusicManager, gsm} from '../main';
 import {sceneLevel_1_2} from './level-1-2';
 import map from './maps/level-1-1.txt?raw';
 import {tileDirectionSignLeft} from './tiles/tileDirectionSignLeft';
@@ -91,8 +93,26 @@ export const sceneLevel_1_1 = async (k: KCtx) => {
       {
         currentMapExitIndex: 0,
         spawnOffsetTiles: k.vec2(-2, 0),
-        destLevel: sceneLevel_1_2.id,
-        destLevelExitIndex: 0,
+        getDestLevelParamsUponUse: () => {
+          const requiredItems = [
+            //
+            ITEM_ID.HOME_KITCHEN_CHAIR_LEFT,
+            ITEM_ID.HOME_KITCHEN_TABLE,
+          ];
+
+          // Check if there's any required item missing
+          if (requiredItems.some(itemId => !gsm.getIsPlayerHasItem(itemId))) {
+            getPlayer(k)
+              .showDialogSeries([t('common.notAllItemsFound')])
+              .then();
+            return;
+          }
+
+          return {
+            destLevel: sceneLevel_1_2.id,
+            destLevelExitIndex: 0,
+          };
+        },
       },
     ],
   });

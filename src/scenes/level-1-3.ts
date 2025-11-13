@@ -1,3 +1,4 @@
+import {t} from 'i18next';
 import {addBackground} from '../components/addBackground';
 import {addFurnitureItem} from '../components/addFurnitureItem';
 import {addLevel} from '../components/addLevel';
@@ -6,6 +7,7 @@ import {BumblebeeEntity} from '../entities/bumblebee';
 import {ITEM_ID} from '../entities/generic/item-id';
 import {GopherEntity} from '../entities/gopher';
 import {OldBobrEntity} from '../entities/old-bobr';
+import {getPlayer} from '../entities/player';
 import {KCtx} from '../kaplay';
 import {bgMusicManager, gsm} from '../main';
 import {sceneLevel_1_2} from './level-1-2';
@@ -92,8 +94,27 @@ export const sceneLevel_1_3 = async (k: KCtx) => {
       {
         currentMapExitIndex: 0,
         spawnOffsetTiles: k.vec2(2, 0),
-        destLevel: sceneLevel_1_2.id,
-        destLevelExitIndex: 1,
+        getDestLevelParamsUponUse: () => {
+          if (gsm.state.persistent.level1.isBoarDead) {
+            const requiredItems = [
+              //
+              ITEM_ID.HOME_BED,
+            ];
+
+            // Check if there's any required item missing
+            if (requiredItems.some(itemId => !gsm.getIsPlayerHasItem(itemId))) {
+              getPlayer(k)
+                .showDialogSeries([t('common.notAllItemsFound')])
+                .then();
+              return;
+            }
+          }
+
+          return {
+            destLevel: sceneLevel_1_2.id,
+            destLevelExitIndex: 1,
+          };
+        },
       },
     ],
   });

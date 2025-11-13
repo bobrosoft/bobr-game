@@ -9,11 +9,11 @@ export interface ExitConfig {
   /** Offset to apply to player spawn position on current map */
   spawnOffsetTiles: Vec2;
 
-  /** Destination level name to go to */
-  destLevel: string;
-
-  /** Destination level exit index */
-  destLevelExitIndex: number;
+  /**
+   * Returns destination level ID and exit index to use when player uses this exit
+   * If undefined, exit will not function. It may be used to check exit conditions before exit.
+   */
+  getDestLevelParamsUponUse: () => {destLevel: string; destLevelExitIndex: number} | undefined;
 }
 
 export interface ExitGameObj extends GameObj<PosComp | AreaComp> {}
@@ -33,10 +33,16 @@ export const ExitEntity: GameEntity<ExitConfig, ExitGameObj> = {
     ]);
 
     mainObj.onCollide('player', () => {
+      // Get dest level params
+      const destParams = config.getDestLevelParamsUponUse();
+      if (!destParams) {
+        return;
+      }
+
       // Switch level
-      changeScene(k, config.destLevel, {
+      changeScene(k, destParams.destLevel, {
         isGameLevel: true,
-        spawnAtExitIndex: config.destLevelExitIndex,
+        spawnAtExitIndex: destParams.destLevelExitIndex,
         quickSwitch: true,
       }).then();
     });

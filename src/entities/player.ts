@@ -1,4 +1,5 @@
 import {AreaComp, BodyComp, GameObj, LevelComp, PosComp, SpriteComp, TimerComp, TimerController, Vec2} from 'kaplay';
+import {showDialogSeries as _showDialogSeries} from '../components/showDialog';
 import {KCtx} from '../kaplay';
 import {gsm} from '../main';
 import {changeScene} from '../misc/changeScene';
@@ -22,7 +23,11 @@ export interface PlayerConfig {
 export interface PlayerComp extends GameObj<string | SpriteComp | PosComp | AreaComp | BodyComp | TimerComp> {
   vx: number; // horizontal velocity
   config: PlayerConfig; // player configuration
-  waitForActionButton: () => Promise<void>; // function to wait for action button press
+
+  /** Function to wait for action button press */
+  waitForActionButton: () => Promise<void>;
+
+  /** Function to make camera follow player with optional level bounds offsets */
   setCamFollowPlayer: (
     level: GameObj<PosComp | LevelComp>,
     options?: {
@@ -32,6 +37,14 @@ export interface PlayerComp extends GameObj<string | SpriteComp | PosComp | Area
       bottomTilesPadding?: number;
     },
   ) => void;
+
+  /** Function to show a series of dialog boxes. Player stays idle during the process. */
+  showDialogSeries: (
+    texts: string[],
+    cfg?: {
+      speed?: number;
+    },
+  ) => Promise<void>;
 }
 
 const DEFAULTS: PlayerConfig = {
@@ -98,6 +111,7 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
         config: C,
         waitForActionButton,
         setCamFollowPlayer,
+        showDialogSeries,
       },
     ]);
 
@@ -166,6 +180,12 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
         const y = k.clamp(player.pos.y - kHeight / 4, topLimit, bottomLimit);
         k.setCamPos(x, y);
       });
+    }
+
+    async function showDialogSeries(texts: string[], cfg?: {speed?: number}): Promise<void> {
+      player.enterState(State.INTERACT);
+      await _showDialogSeries(k, player, player, texts, cfg);
+      player.enterState(State.IDLE);
     }
 
     player.onButtonPress('jump', () => {
@@ -396,6 +416,15 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
     return player;
   },
 };
+
+/**
+ * Returns the player object from the scene, if any
+ * @param k
+ */
+export function getPlayer(k: KCtx): PlayerComp | undefined {
+  const players = k.get<PlayerComp>('player');
+  return players.length > 0 ? players[0] : undefined;
+}
 
 function moveTowards(current: number, target: number, increment: number): number {
   const diff = target - current;
