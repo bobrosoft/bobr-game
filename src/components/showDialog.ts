@@ -77,7 +77,7 @@ export function showDialog(
     const x = k.clamp(
       initialPos.x,
       camPos.x - screenWidth / 2 + width / 2 + (hasNotch ? 26 : 0),
-      camPos.x + screenWidth - width / 2 - (hasNotch ? 26 : 0),
+      camPos.x + screenWidth / 2 - width / 2 - (hasNotch ? 26 : 0),
     );
     const y = initialPos.y;
 
