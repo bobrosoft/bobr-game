@@ -1,4 +1,5 @@
 import {t} from 'i18next';
+import {OffScreenComp} from 'kaplay';
 import {addBackground} from '../components/addBackground';
 import {addFurnitureItem} from '../components/addFurnitureItem';
 import {addLevel} from '../components/addLevel';
@@ -28,6 +29,7 @@ export const sceneLevel_1_3 = async (k: KCtx) => {
     preloadResources: async (k: KCtx) => {
       // Define music
       bgMusicManager.loadMusic('start-location', 'music/start-location.mp3');
+      bgMusicManager.loadMusic('boar-boss-fight', 'music/boar-boss-fight.mp3');
     },
     tileWidth: 32,
     tileHeight: 32,
@@ -66,13 +68,7 @@ export const sceneLevel_1_3 = async (k: KCtx) => {
           BoarEntity.spawn(k, worldPos, {
             isAlreadyDead: gsm.state.persistent.level1.isBoarDead,
             onDeath: () => {
-              gsm.update({
-                persistent: {
-                  level1: {
-                    isBoarDead: true,
-                  },
-                },
-              });
+              onBoarDeath();
             },
           });
         },
@@ -122,13 +118,39 @@ export const sceneLevel_1_3 = async (k: KCtx) => {
   await k.loadSprite('bg-home-day', 'sprites/backgrounds/home-day.png');
   addBackground(k, 'bg-home-day', player, {offsetY: 40});
 
-  bgMusicManager.playMusic('start-location');
-
   player.setCamFollowPlayer(level, {
     leftTilesPadding: 2, // to hide wall on the left and exit collision box
     rightTilesPadding: 2, // to hide wall on the right
     topTilesPadding: -5, // so we can see more on top
   });
+
+  // Handle boar boss music
+  if (!gsm.state.persistent.level1.isBoarDead) {
+    if (bgMusicManager.getCurrentMusicName() !== 'boar-boss-fight') {
+      bgMusicManager.stopMusic();
+    }
+
+    k.get<OffScreenComp>('boar')[0].onEnterScreen(() => {
+      if (!gsm.state.persistent.level1.isBoarDead) {
+        bgMusicManager.playMusic('boar-boss-fight');
+      }
+    });
+  } else {
+    bgMusicManager.playMusic('start-location');
+  }
+
+  function onBoarDeath() {
+    gsm.update({
+      persistent: {
+        level1: {
+          isBoarDead: true,
+        },
+      },
+    });
+
+    // Switch back to normal music
+    bgMusicManager.playMusic('start-location');
+  }
 };
 
 sceneLevel_1_3.id = 'level-1-3';

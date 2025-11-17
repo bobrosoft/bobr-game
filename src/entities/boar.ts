@@ -3,7 +3,7 @@ import {KCtx} from '../kaplay';
 import {defaultFriction} from '../misc/defaults';
 import {EnemyComp, EnemyConfig} from './generic/enemy';
 import {GameEntity} from './generic/entity';
-import {PlayerComp} from './player';
+import {getPlayer, PlayerComp} from './player';
 
 enum State {
   IDLE = 'IDLE',
@@ -114,16 +114,16 @@ export const BoarEntity: GameEntity<Config, EnemyComp> = {
       ),
     ]);
 
-    function getPlayer(): PlayerComp | null {
+    function getPlayerInternal(): PlayerComp | null {
       if (player) return player;
 
-      player = getPlayer();
+      player = getPlayer(k);
       return player;
     }
 
     // Helper function to find player
     function detectPlayer(): PlayerComp | null {
-      const player = getPlayer();
+      const player = getPlayerInternal();
       if (!player) return null;
 
       const distance = mainObj.pos.dist(player.pos);

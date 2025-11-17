@@ -29,6 +29,13 @@ export class BgMusicManager {
   }
 
   /**
+   * Returns the name of the currently playing music track, or undefined if no music is playing.
+   */
+  getCurrentMusicName(): string | undefined {
+    return this.currentMusicName;
+  }
+
+  /**
    * Defines music track. No preloading happens, just registers the track.
    * @param name
    * @param musicUrl
@@ -56,12 +63,12 @@ export class BgMusicManager {
 
       await this.fadeOutCurrentMusic(options?.fadeOutDuration);
 
+      this.currentMusicName = name;
       this.currentMusic = this.k.play(name, {
         loop: true,
         volume: this.config.volume,
         ...options,
       });
-      this.currentMusicName = name;
     })();
   }
 
