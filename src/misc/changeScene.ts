@@ -32,7 +32,7 @@ export async function changeScene(
   if (!isUsingQuickSwitch) {
     hudManager.hide();
   }
-  await fadeManager.showOverlay(0.3);
+  await fadeManager.fadeToBlack(0.3, {showLoadingIfSlow: true});
   k.go(newSceneName);
 
   // The rest happens in sceneWrapper
@@ -54,9 +54,9 @@ export function sceneWrapper(k: KCtx, sceneFunc: (k: KCtx) => Promise<void>) {
 
     if (isUsingQuickSwitch) {
       hudManager.show();
-      await fadeManager.hideOverlay(0.5);
+      await fadeManager.fadeFromBlack(0.5);
     } else {
-      await fadeManager.hideOverlay(1);
+      await fadeManager.fadeFromBlack(1);
       hudManager.show();
     }
   };
