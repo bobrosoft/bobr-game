@@ -84,6 +84,8 @@ export const GopherEntity: GameEntity<EnemyConfig, EnemyComp> = {
       mainObj.paused = true;
       mainObj.collisionIgnore = ['*'];
       mainObj.use(k.rotate(mainObj.flipX ? 10 : -10));
+
+      k.shake(2);
     });
 
     mainObj.onExitScreen(() => {

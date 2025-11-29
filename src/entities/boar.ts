@@ -232,6 +232,8 @@ export const BoarEntity: GameEntity<Config, EnemyComp> = {
     });
 
     mainObj.onDeath(() => {
+      k.shake(3);
+
       mainObj.enterState(State.DEAD);
       config.onDeath?.();
     });
