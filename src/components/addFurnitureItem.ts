@@ -7,19 +7,30 @@ import {gsm} from '../main';
 /**
  * Helper to add a furniture item to the map
  * @param k
- * @param options
+ * @param config
  */
-export function addFurnitureItem(k: KCtx, options: {itemId: ITEM_ID; sprite: string; worldPos: Vec2}): MapItemGameObj {
-  if (gsm.getIsPlayerHasItem(options.itemId)) {
+export function addFurnitureItem(
+  k: KCtx,
+  config: {
+    itemId: ITEM_ID;
+    sprite: string;
+    worldPos: Vec2;
+    preInteractAction?: () => Promise<boolean>; // you can return false to prevent interaction
+    postInteractAction?: () => Promise<void>;
+  },
+): MapItemGameObj {
+  if (gsm.getIsPlayerHasItem(config.itemId)) {
     return;
   }
 
-  return MapItemEntity.spawn(k, options.worldPos, {
-    sprite: options.sprite,
+  return MapItemEntity.spawn(k, config.worldPos, {
+    sprite: config.sprite,
     levitate: true,
     interact: async player => {
-      gsm.addToTempInventory(options.itemId);
+      gsm.addToTempInventory(config.itemId);
     },
     shouldPickupOnInteract: true,
+    preInteractAction: config.preInteractAction,
+    postInteractAction: config.postInteractAction,
   });
 }

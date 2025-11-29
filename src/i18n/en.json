@@ -5,23 +5,28 @@
     "howToInstall": "How to install to the home screen?",
     "notAllItemsFound": "Looks like I haven't collected everything yet..."
   },
-  "oldBobr": {
-    "intro1": "Hello, grandson! You finally bought your own hut... Even if it's with a mortgage, you're still doing great!",
-    "intro2": "It's a bit empty inside... But I saw some furniture nearby while I was walking here. You can look for it.",
-    "introRepeat1": "I saw some furniture nearby while I was walking here. You can look for it.",
-    "introRepeat2": "It's a nice day for a walk, don't you think?",
-    "introRepeat3": "The house won't furnish itself... Time to get to work!",
-    "giveLuckyCharm1": "Oh, I barely dragged you here... Are you okay?..",
-    "giveLuckyCharm2": "Ou, I almost forgot! Here, take this for good luck...",
-    "giveLuckyCharm3": "It's my lucky charm. May it protect you as it once protected me.",
-    "respawnInfo1": "If something happens to you, I'll always help you get back home.",
-    "respawnInfo2": "And don't worry about the things you've already collected – they won't disappear!"
-  },
   "home": {
     "kitchenTableRepeat1": "Hmm, who would throw away such a gorgeous table?..",
     "kitchenTableRepeat2": "Mmm, it smells so good...",
     "kitchenTableRepeat3": "Mmm, it looks so tasty... but I still need it.",
     "kitchenChairRepeat1": "Why is it so small?.. Oh well, I don't have much choice.",
     "bedRepeat1": "I'll sleep when I finish everything..."
+  },
+  "level1": {
+    "bobr": {
+      "afterBedPickup": "Great. I have the minimum to spend the night. Time to head back home."
+    },
+    "oldBobr": {
+      "intro1": "Hello, grandson! You finally bought your own hut... Even if it's with a mortgage, you're still doing great!",
+      "intro2": "It's a bit empty inside... But I saw some furniture nearby while I was walking here. You can look for it.",
+      "introRepeat1": "I saw some furniture nearby while I was walking here. You can look for it.",
+      "introRepeat2": "It's a nice day for a walk, don't you think?",
+      "introRepeat3": "The house won't furnish itself... Time to get to work!",
+      "giveLuckyCharm1": "Oh, I barely dragged you here... Are you okay?..",
+      "giveLuckyCharm2": "Ou, I almost forgot! Here, take this for good luck...",
+      "giveLuckyCharm3": "It's my lucky charm. May it protect you as it once protected me.",
+      "respawnInfo1": "If something happens to you, I'll always help you get back home.",
+      "respawnInfo2": "And don't worry about the things you've already collected – they won't disappear!"
+    }
   }
 }

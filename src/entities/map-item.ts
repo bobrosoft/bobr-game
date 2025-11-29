@@ -9,6 +9,8 @@ export interface MapItemConfig {
   levitate?: boolean;
   interact?: (player: PlayerComp) => Promise<void>;
   shouldPickupOnInteract?: boolean;
+  preInteractAction?: () => Promise<boolean>; // you can return false to prevent interaction
+  postInteractAction?: () => Promise<void>;
 }
 
 export interface MapItemGameObj extends GameObj<PosComp | AnimateComp | AreaComp | ScaleComp | InteractableComp> {
@@ -36,11 +38,22 @@ export const MapItemEntity: GameEntity<MapItemConfig, MapItemGameObj> = {
       ...(config?.interact
         ? [
             interactable(async player => {
+              if (config.preInteractAction) {
+                const canInteract = await config.preInteractAction();
+                if (!canInteract) {
+                  return;
+                }
+              }
+
               await config.interact?.(player);
 
               if (config.shouldPickupOnInteract !== false) {
                 k.play('player-take-item');
                 mainObj.animatePickupAndDestroy(player);
+              }
+
+              if (config.postInteractAction) {
+                await config.postInteractAction();
               }
             }),
           ]

@@ -124,8 +124,8 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
             player,
             [
               //
-              t('oldBobr.intro1'),
-              t('oldBobr.intro2'),
+              t('level1.oldBobr.intro1'),
+              t('level1.oldBobr.intro2'),
             ],
             {unskippable: true},
           );
@@ -142,7 +142,7 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
         case InteractionType.SAY_INTRO_REPEAT:
           await showDialogSeries(k, mainObj, player, [
             //
-            t(k.choose(['oldBobr.introRepeat1', 'oldBobr.introRepeat2', 'oldBobr.introRepeat3'])),
+            t(k.choose(['level1.oldBobr.introRepeat1', 'level1.oldBobr.introRepeat2', 'level1.oldBobr.introRepeat3'])),
           ]);
           break;
 
@@ -153,9 +153,9 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
             player,
             [
               //
-              t('oldBobr.giveLuckyCharm1'),
-              t('oldBobr.giveLuckyCharm2'),
-              t('oldBobr.giveLuckyCharm3'),
+              t('level1.oldBobr.giveLuckyCharm1'),
+              t('level1.oldBobr.giveLuckyCharm2'),
+              t('level1.oldBobr.giveLuckyCharm3'),
             ],
             {unskippable: true},
           );
@@ -178,8 +178,8 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
         case InteractionType.SAY_RESPAWN_INFO:
           await showDialogSeries(k, mainObj, player, [
             //
-            t('oldBobr.respawnInfo1'),
-            t('oldBobr.respawnInfo2'),
+            t('level1.oldBobr.respawnInfo1'),
+            t('level1.oldBobr.respawnInfo2'),
           ]);
 
           gsm.update({
