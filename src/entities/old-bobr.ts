@@ -155,7 +155,6 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
               //
               t('level1.oldBobr.giveLuckyCharm1'),
               t('level1.oldBobr.giveLuckyCharm2'),
-              t('level1.oldBobr.giveLuckyCharm3'),
             ],
             {unskippable: true},
           );
@@ -172,6 +171,18 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
               },
             },
           });
+          await k.wait(3.5); // sync with HUD animation
+
+          await showDialogSeries(
+            k,
+            mainObj,
+            player,
+            [
+              //
+              t('level1.oldBobr.giveLuckyCharm3'),
+            ],
+            {unskippable: true},
+          );
 
           break;
 
