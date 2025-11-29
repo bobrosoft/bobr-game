@@ -49,7 +49,7 @@ export const BumblebeeEntity: GameEntity<Config, EnemyComp> = {
       k.health(C.health, C.health),
       k.timer(),
       k.pos(posXY),
-      k.area({...defaultFriction, collisionIgnore: ['obstacle']}),
+      k.area({...defaultFriction, collisionIgnore: ['obstacle', 'enemy'], shape: new k.Rect(k.vec2(0, -2), 16, 14)}),
       k.body({gravityScale: 0}),
       k.anchor('center'),
       k.offscreen({pause: true, unpause: true, hide: true}),
