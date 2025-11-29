@@ -24,6 +24,14 @@ export class Helpers {
   }
 
   /**
+   * Check if the app is running in PWA (Progressive Web App) mode.
+   * @returns True if the app is in PWA mode, false otherwise.
+   */
+  static isInPWAMode(): boolean {
+    return window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone === true;
+  }
+
+  /**
    * Check if the device has a notch (currently only checks for iPhones).
    * @returns True if the device has a notch, false otherwise.
    */
@@ -50,5 +58,19 @@ export class Helpers {
    */
   static mergeDeep<T>(target: T, ...sources: T[]): T {
     return deepmerge.all([target, ...sources], {arrayMerge: (_, source) => source});
+  }
+
+  static requestFullscreen() {
+    try {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement
+          .requestFullscreen({
+            navigationUI: 'hide',
+          })
+          .then();
+      }
+    } catch (err) {
+      console.warn('Fullscreen request failed:', err);
+    }
   }
 }

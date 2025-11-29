@@ -1,6 +1,6 @@
+import {KCtx} from '../kaplay';
 import {gsm} from '../main';
 import {changeScene} from '../misc/changeScene';
-import {KCtx} from '../kaplay';
 import {sceneLevel_1_1} from './level-1-1';
 
 export const sceneMenu = (k: KCtx) => {

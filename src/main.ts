@@ -89,3 +89,13 @@ export let fadeManager: FadeManager;
   // }, 1000);
   // k.debug.inspect = true;
 })();
+
+// Request fullscreen on first user interaction
+(() => {
+  const callback = () => {
+    Helpers.requestFullscreen();
+    // document.querySelector('body').removeEventListener('touchstart', callback);
+  };
+
+  document.documentElement.addEventListener('pointerup', callback);
+})();
