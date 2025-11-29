@@ -2,9 +2,11 @@
   "compilerOptions": {
     "noEmit": true,
     "target": "esnext",
+    "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "types": ["vite/client"]
   },
   "include": [
     "src/**/*.ts"

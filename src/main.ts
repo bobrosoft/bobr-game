@@ -92,6 +92,10 @@ export let fadeManager: FadeManager;
 
 // Request fullscreen on first user interaction
 (() => {
+  if (import.meta.env.DEV) {
+    return; // do not request fullscreen in dev mode
+  }
+
   const callback = () => {
     Helpers.requestFullscreen();
     document.documentElement.removeEventListener('pointerup', callback);
