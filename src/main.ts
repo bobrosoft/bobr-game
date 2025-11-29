@@ -94,7 +94,7 @@ export let fadeManager: FadeManager;
 (() => {
   const callback = () => {
     Helpers.requestFullscreen();
-    // document.querySelector('body').removeEventListener('touchstart', callback);
+    document.documentElement.removeEventListener('pointerup', callback);
   };
 
   document.documentElement.addEventListener('pointerup', callback);
