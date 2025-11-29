@@ -14,13 +14,9 @@ export function showDialog(
   k: KCtx,
   targetObj: GameObj<PosComp | SpriteComp>,
   text: string,
-  cfg?: {speed?: number},
+  cfg?: {speed?: number; onFinish?: () => void},
 ): GameObj {
-  cfg = {
-    speed: 0.05, // default typing speed
-    ...cfg,
-  };
-
+  const speed = cfg?.speed ?? 0.05; // default speed
   const hasNotch = Helpers.hasNotch(); // later will need to adjust for notch
   const width = k.width() / 2;
   const padding = 5; // padding around text
@@ -56,13 +52,14 @@ export function showDialog(
 
     if (!isDone) {
       timer += k.dt();
-      if (timer >= cfg.speed) {
+      if (timer >= speed) {
         timer = 0;
         currentText += text[charIndex];
         textBox.text = currentText;
         charIndex++;
         if (charIndex >= text.length) {
           isDone = true;
+          cfg?.onFinish?.();
         }
       }
     }
@@ -100,14 +97,30 @@ export function showDialogSeries(
   targetObj: GameObj<PosComp | SpriteComp>,
   player: PlayerComp,
   texts: string[],
-  cfg?: {speed?: number},
+  cfg?: {speed?: number; unskippable?: boolean},
 ): Promise<void> {
   return new Promise(resolve => {
     let currentIndex = 0;
 
     async function showNextDialog() {
       if (currentIndex < texts.length) {
-        const dialog = showDialog(k, targetObj, texts[currentIndex], cfg);
+        let dialog: GameObj;
+
+        if (cfg?.unskippable) {
+          await new Promise<void>(res => {
+            dialog = showDialog(k, targetObj, texts[currentIndex], {
+              speed: cfg?.speed,
+              onFinish: () => {
+                res();
+              },
+            });
+          });
+        } else {
+          dialog = showDialog(k, targetObj, texts[currentIndex], {
+            speed: cfg?.speed,
+          });
+        }
+
         await player.waitForActionButton();
         dialog.destroy();
         currentIndex++;

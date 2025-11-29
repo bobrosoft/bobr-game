@@ -116,15 +116,19 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
     }
 
     async function performInteraction(type: InteractionType, player: PlayerComp) {
-      const gameState = gsm.state;
-
       switch (type) {
         case InteractionType.SAY_INTRO:
-          await showDialogSeries(k, mainObj, player, [
-            //
-            t('oldBobr.intro1'),
-            t('oldBobr.intro2'),
-          ]);
+          await showDialogSeries(
+            k,
+            mainObj,
+            player,
+            [
+              //
+              t('oldBobr.intro1'),
+              t('oldBobr.intro2'),
+            ],
+            {unskippable: true},
+          );
 
           gsm.update({
             persistent: {
@@ -143,12 +147,18 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
           break;
 
         case InteractionType.GIVE_LUCKY_CHARM:
-          await showDialogSeries(k, mainObj, player, [
-            //
-            t('oldBobr.giveLuckyCharm1'),
-            t('oldBobr.giveLuckyCharm2'),
-            t('oldBobr.giveLuckyCharm3'),
-          ]);
+          await showDialogSeries(
+            k,
+            mainObj,
+            player,
+            [
+              //
+              t('oldBobr.giveLuckyCharm1'),
+              t('oldBobr.giveLuckyCharm2'),
+              t('oldBobr.giveLuckyCharm3'),
+            ],
+            {unskippable: true},
+          );
 
           gsm.update({
             persistent: {
