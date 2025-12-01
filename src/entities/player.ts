@@ -1,4 +1,15 @@
-import {AreaComp, BodyComp, GameObj, LevelComp, PosComp, SpriteComp, TimerComp, TimerController, Vec2} from 'kaplay';
+import {
+  AreaComp,
+  BodyComp,
+  GameObj,
+  LevelComp,
+  OpacityComp,
+  PosComp,
+  SpriteComp,
+  TimerComp,
+  TimerController,
+  Vec2,
+} from 'kaplay';
 import {showDialogSeries as _showDialogSeries} from '../components/showDialog';
 import {KCtx} from '../kaplay';
 import {gsm} from '../main';
@@ -115,7 +126,7 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
       },
     ]);
 
-    let hitbox: GameObj<AreaComp>;
+    let hitbox: GameObj<AreaComp | PosComp | OpacityComp>;
     let invincibleTimer: TimerController;
 
     function doJump() {
@@ -292,15 +303,27 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
         // Check that we're on the right animation frame to trigger the hitbox
         if (player.getCurAnim()?.frameIndex === 2) {
           if (!hitbox) {
+            const initialPosX = player.flipX ? -16 : 16;
+            const finalPosX = player.flipX ? -26 : 26;
+
             hitbox = player.add([
               'player.hitbox',
-              k.pos(k.vec2(player.flipX ? -16 : 16, 0)),
+              k.pos(k.vec2(initialPosX, 0)),
               k.area(),
               k.sprite('player-hit-wave', {flipX: player.flipX}), // 20x20
               k.anchor('bot'),
-              k.opacity(1), // required for k.lifespan
-              k.lifespan(0, {fade: 0.15}),
+              k.opacity(1),
             ]);
+
+            // Animate hitbox moving forward and fading out
+            k.tween(0, 1, 0.15, value => {
+              if (hitbox) {
+                hitbox.pos.x = k.lerp(initialPosX, finalPosX, value);
+                hitbox.opacity = k.lerp(1, 0, value);
+              }
+            }).then(() => {
+              hitbox?.destroy();
+            });
 
             hitbox.onCollide('enemy', (enemy: EnemyComp) => {
               enemy.registerHit(player);
