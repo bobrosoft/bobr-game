@@ -122,11 +122,12 @@ export const sceneLevel_1_3 = async (k: KCtx) => {
   await k.loadSprite('bg-home-day', 'sprites/backgrounds/home-day.png');
   addBackground(k, 'bg-home-day', player, {offsetY: 40});
 
-  player.setCamFollowPlayer(level, {
+  player.setCamConstraintsForLevel(level, {
     leftTilesPadding: 2, // to hide wall on the left and exit collision box
     rightTilesPadding: 2, // to hide wall on the right
     topTilesPadding: -5, // so we can see more on top
   });
+  player.setCamFollowPlayer(true);
 
   // Handle boar boss music
   if (!gsm.state.persistent.level1.isBoarDead) {

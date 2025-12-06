@@ -122,10 +122,11 @@ export const sceneLevel_1_1 = async (k: KCtx) => {
 
   bgMusicManager.playMusic('start-location');
 
-  player.setCamFollowPlayer(level, {
+  player.setCamConstraintsForLevel(level, {
     rightTilesPadding: 2, // to hide wall on the right and exit collision box
     topTilesPadding: -5, // so we can see more on top
   });
+  player.setCamFollowPlayer(true);
 };
 
 sceneLevel_1_1.id = 'level-1-1';

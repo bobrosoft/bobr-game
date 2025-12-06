@@ -32,14 +32,13 @@ export interface PlayerConfig {
 }
 
 export interface PlayerComp extends GameObj<string | SpriteComp | PosComp | AreaComp | BodyComp | TimerComp> {
-  vx: number; // horizontal velocity
   config: PlayerConfig; // player configuration
 
   /** Function to wait for action button press */
   waitForActionButton: () => Promise<void>;
 
-  /** Function to make camera follow player with optional level bounds offsets */
-  setCamFollowPlayer: (
+  /** Function to set camera constraints based on level size */
+  setCamConstraintsForLevel: (
     level: GameObj<PosComp | LevelComp>,
     options?: {
       leftTilesPadding?: number;
@@ -48,6 +47,9 @@ export interface PlayerComp extends GameObj<string | SpriteComp | PosComp | Area
       bottomTilesPadding?: number;
     },
   ) => void;
+
+  /** Function to enable/disable camera following the player */
+  setCamFollowPlayer: (enabled: boolean) => void;
 
   /** Function to show a series of dialog boxes. Player stays idle during the process. */
   showDialogSeries: (
@@ -118,16 +120,27 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
       k.state<State>(State.IDLE, [State.IDLE, State.WALK, State.JUMP, State.FALL, State.ATTACK, State.INTERACT]),
       k.timer(),
       {
-        vx: 0, // horizontal velocity
         config: C,
         waitForActionButton,
+        setCamConstraintsForLevel,
         setCamFollowPlayer,
         showDialogSeries,
       },
     ]);
 
+    let vx = 0;
     let hitbox: GameObj<AreaComp | PosComp | OpacityComp>;
     let invincibleTimer: TimerController;
+    let camConstraints: {
+      kHeight: number;
+      leftLimit?: number;
+      rightLimit?: number;
+      topLimit?: number;
+      bottomLimit?: number;
+    } = {
+      kHeight: k.height(),
+    };
+    let isCamFollowing = true;
 
     function doJump() {
       player.jump(C.jumpForce);
@@ -158,7 +171,7 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
      * @param level
      * @param options
      */
-    function setCamFollowPlayer(
+    function setCamConstraintsForLevel(
       level: GameObj<PosComp | LevelComp>,
       options?: {
         leftTilesPadding?: number;
@@ -181,16 +194,17 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
       const topLimit = level.pos.y + topPadding + k.height() / 2;
       const bottomLimit = level.pos.y + levelHeight - bottomPadding - k.height() / 2;
 
-      // Make camera follow the player
-      player.onUpdate(() => {
-        if (!player) {
-          return;
-        }
+      camConstraints = {
+        kHeight,
+        leftLimit,
+        rightLimit,
+        topLimit,
+        bottomLimit,
+      };
+    }
 
-        const x = k.clamp(player.pos.x, leftLimit, rightLimit);
-        const y = k.clamp(player.pos.y - kHeight / 4, topLimit, bottomLimit);
-        k.setCamPos(x, y);
-      });
+    function setCamFollowPlayer(enabled: boolean): void {
+      isCamFollowing = enabled;
     }
 
     async function showDialogSeries(texts: string[], cfg?: {speed?: number}): Promise<void> {
@@ -279,20 +293,20 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
         let accel = onGround ? C.accelGround : C.accelAir;
 
         // If direction is opposite to current velocity, need to change acceleration
-        if (Math.sign(movementDirection) !== Math.sign(player.vx)) {
+        if (Math.sign(movementDirection) !== Math.sign(vx)) {
           accel += onGround ? C.decelGround : C.decelAir; // add deceleration to acceleration
         }
 
-        player.vx = moveTowards(player.vx, movementDirection * C.maxRunSpeed, accel * dt);
+        vx = moveTowards(vx, movementDirection * C.maxRunSpeed, accel * dt);
       } else {
         const accel = onGround ? C.decelGround : C.decelAir;
-        const mag = Math.max(0, Math.abs(player.vx) - accel * dt);
-        player.vx = mag * Math.sign(player.vx);
+        const mag = Math.max(0, Math.abs(vx) - accel * dt);
+        vx = mag * Math.sign(vx);
       }
 
       // apply velocity to pos (Kaplay's body() already applies gravity to vy;
       // vx is usually read by you / set on obj; if your Kaplay build needs a different prop, adapt here)
-      player.move(player.vx, 0);
+      player.move(vx, 0);
 
       // Set face direction based on direction of movement
       player.flipX = movementDirection < 0 ? true : movementDirection > 0 ? false : player.flipX;
@@ -345,7 +359,7 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
             player.enterState(State.FALL);
           }
         } else {
-          if (Math.abs(player.vx) > 5) {
+          if (Math.abs(vx) > 5) {
             player.enterState(State.WALK);
           } else {
             player.enterState(State.IDLE);
@@ -372,7 +386,7 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
     player.onStateUpdate(State.WALK, () => {
       setAnim('walk');
 
-      const t = k.clamp(Math.abs(player.vx) / C.maxRunSpeed, 0, 1);
+      const t = k.clamp(Math.abs(vx) / C.maxRunSpeed, 0, 1);
       player.animSpeed = k.lerp(C.minRunAnimSpeed, C.maxRunAnimSpeed, t);
     });
 
@@ -389,6 +403,25 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
         player.enterState(State.IDLE); // return to idle after attack
       });
       player.animSpeed = 1;
+    });
+
+    player.onUpdate(() => {
+      if (!player) {
+        return;
+      }
+
+      let {x: newX, y: newY} = k.getCamPos();
+
+      // Make camera follow the player
+      if (isCamFollowing) {
+        newX = player.pos.x;
+        newY = player.pos.y - camConstraints.kHeight / 4; // offset a bit upwards for better view
+      }
+
+      k.setCamPos(
+        k.clamp(newX, camConstraints.leftLimit ?? -Infinity, camConstraints.rightLimit ?? Infinity),
+        k.clamp(newY, camConstraints.topLimit ?? -Infinity, camConstraints.bottomLimit ?? Infinity),
+      );
     });
 
     player.onCollideUpdate('enemy', (enemy: EnemyComp) => {
@@ -422,11 +455,14 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
     });
 
     const gsmOnDeathSub = gsm.onDeath(() => {
+      isCamFollowing = false; // stop camera following on death, looks better
+
+      // Restart level on death
       changeScene(k, gsm.state.persistent.currentLevel, {
         isGameLevel: true,
         spawnAtExitIndex: gsm.state.persistent.spawnAtExitIndex,
         quickSwitch: false,
-      }).then(); // restart level on death
+      }).then();
     });
 
     player.onDestroy(() => {
