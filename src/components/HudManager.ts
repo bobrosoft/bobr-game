@@ -6,12 +6,7 @@ import {Helpers} from '../misc/Helpers';
 import {sceneLevel_1_1} from '../scenes/level-1-1';
 import {addJoystick, JoystickGameObj} from './addJoystick';
 import {GameState} from './GameStateManager';
-import {hud} from './HudComp';
-
-interface HudComp {
-  shouldBeShown: boolean;
-  targetOpacity?: number;
-}
+import {hud, HudComp} from './HudComp';
 
 export class HudManager {
   protected isShown = false;

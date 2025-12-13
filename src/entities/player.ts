@@ -1,8 +1,8 @@
 import {
+  //
   AreaComp,
   BodyComp,
   GameObj,
-  LevelComp,
   OpacityComp,
   PosComp,
   SpriteComp,
@@ -12,7 +12,7 @@ import {
 } from 'kaplay';
 import {showDialogSeries as _showDialogSeries} from '../components/showDialog';
 import {KCtx} from '../kaplay';
-import {gsm} from '../main';
+import {camManager, gsm} from '../main';
 import {changeScene} from '../misc/changeScene';
 import {defaultFriction} from '../misc/defaults';
 import {EnemyComp} from './generic/enemy';
@@ -36,20 +36,6 @@ export interface PlayerComp extends GameObj<string | SpriteComp | PosComp | Area
 
   /** Function to wait for action button press */
   waitForActionButton: () => Promise<void>;
-
-  /** Function to set camera constraints based on level size */
-  setCamConstraintsForLevel: (
-    level: GameObj<PosComp | LevelComp>,
-    options?: {
-      leftTilesPadding?: number;
-      rightTilesPadding?: number;
-      topTilesPadding?: number;
-      bottomTilesPadding?: number;
-    },
-  ) => void;
-
-  /** Function to enable/disable camera following the player */
-  setCamFollowPlayer: (enabled: boolean) => void;
 
   /** Function to show a series of dialog boxes. Player stays idle during the process. */
   showDialogSeries: (
@@ -122,8 +108,6 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
       {
         config: C,
         waitForActionButton,
-        setCamConstraintsForLevel,
-        setCamFollowPlayer,
         showDialogSeries,
       },
     ]);
@@ -131,16 +115,6 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
     let vx = 0;
     let hitbox: GameObj<AreaComp | PosComp | OpacityComp>;
     let invincibleTimer: TimerController;
-    let camConstraints: {
-      kHeight: number;
-      leftLimit?: number;
-      rightLimit?: number;
-      topLimit?: number;
-      bottomLimit?: number;
-    } = {
-      kHeight: k.height(),
-    };
-    let isCamFollowing = true;
 
     function doJump() {
       player.jump(C.jumpForce);
@@ -164,47 +138,6 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
           resolve();
         });
       });
-    }
-
-    /**
-     * Make the camera follow the player, with optional level bounds offsets
-     * @param level
-     * @param options
-     */
-    function setCamConstraintsForLevel(
-      level: GameObj<PosComp | LevelComp>,
-      options?: {
-        leftTilesPadding?: number;
-        rightTilesPadding?: number;
-        topTilesPadding?: number;
-        bottomTilesPadding?: number;
-      },
-    ) {
-      const levelWidth = level.levelWidth() - level.tileWidth() / 2;
-      const levelHeight = level.levelHeight() - level.tileHeight() / 2;
-      const kHeight = k.height();
-
-      const leftPadding = (options.leftTilesPadding ?? 0) * level.tileWidth();
-      const rightPadding = (options.rightTilesPadding ?? 0) * level.tileWidth();
-      const topPadding = (options.topTilesPadding ?? 0) * level.tileHeight();
-      const bottomPadding = (options.bottomTilesPadding ?? 0) * level.tileHeight();
-
-      const leftLimit = level.pos.x + leftPadding + k.width() / 2;
-      const rightLimit = level.pos.x + levelWidth - rightPadding - k.width() / 2;
-      const topLimit = level.pos.y + topPadding + k.height() / 2;
-      const bottomLimit = level.pos.y + levelHeight - bottomPadding - k.height() / 2;
-
-      camConstraints = {
-        kHeight,
-        leftLimit,
-        rightLimit,
-        topLimit,
-        bottomLimit,
-      };
-    }
-
-    function setCamFollowPlayer(enabled: boolean): void {
-      isCamFollowing = enabled;
     }
 
     async function showDialogSeries(texts: string[], cfg?: {speed?: number}): Promise<void> {
@@ -405,25 +338,6 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
       player.animSpeed = 1;
     });
 
-    player.onUpdate(() => {
-      if (!player) {
-        return;
-      }
-
-      let {x: newX, y: newY} = k.getCamPos();
-
-      // Make camera follow the player
-      if (isCamFollowing) {
-        newX = player.pos.x;
-        newY = player.pos.y - camConstraints.kHeight / 4; // offset a bit upwards for better view
-      }
-
-      k.setCamPos(
-        k.clamp(newX, camConstraints.leftLimit ?? -Infinity, camConstraints.rightLimit ?? Infinity),
-        k.clamp(newY, camConstraints.topLimit ?? -Infinity, camConstraints.bottomLimit ?? Infinity),
-      );
-    });
-
     player.onCollideUpdate('enemy', (enemy: EnemyComp) => {
       if (!getIsInvincible() && player.state !== State.ATTACK && !enemy.dead && enemy.config.attackPower) {
         // Update player health
@@ -455,7 +369,7 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
     });
 
     const gsmOnDeathSub = gsm.onDeath(() => {
-      isCamFollowing = false; // stop camera following on death, looks better
+      camManager.setCamFollowPlayer(false); // stop camera following on death, looks better
 
       // Restart level on death
       changeScene(k, gsm.state.persistent.currentLevel, {

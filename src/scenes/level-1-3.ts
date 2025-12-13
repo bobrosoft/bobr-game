@@ -11,7 +11,7 @@ import {GopherEntity} from '../entities/gopher';
 import {OldBobrEntity} from '../entities/old-bobr';
 import {getPlayer} from '../entities/player';
 import {KCtx} from '../kaplay';
-import {bgMusicManager, gsm} from '../main';
+import {bgMusicManager, camManager, gsm} from '../main';
 import {sceneLevel_1_2} from './level-1-2';
 import map from './maps/level-1-3.txt?raw';
 import {tileDirectionSignLeft} from './tiles/tileDirectionSignLeft';
@@ -122,12 +122,12 @@ export const sceneLevel_1_3 = async (k: KCtx) => {
   await k.loadSprite('bg-home-day', 'sprites/backgrounds/home-day.png');
   addBackground(k, 'bg-home-day', player, {offsetY: 40});
 
-  player.setCamConstraintsForLevel(level, {
+  camManager.setCamConstraintsForLevel(level, {
     leftTilesPadding: 2, // to hide wall on the left and exit collision box
     rightTilesPadding: 2, // to hide wall on the right
     topTilesPadding: -5, // so we can see more on top
   });
-  player.setCamFollowPlayer(true);
+  camManager.setCamFollowPlayer(true, player);
 
   // Handle boar boss music
   if (!gsm.state.persistent.level1.isBoarDead) {

@@ -9,7 +9,7 @@ import {MapItemEntity} from '../entities/map-item';
 import {OldBobrEntity} from '../entities/old-bobr';
 import {getPlayer} from '../entities/player';
 import {KCtx} from '../kaplay';
-import {bgMusicManager, gsm} from '../main';
+import {bgMusicManager, camManager, gsm} from '../main';
 import {sceneLevel_1_1} from './level-1-1';
 import {sceneLevel_1_3} from './level-1-3';
 import map from './maps/level-1-2.txt?raw';
@@ -122,12 +122,12 @@ export const sceneLevel_1_2 = async (k: KCtx) => {
 
   bgMusicManager.playMusic('start-location');
 
-  player.setCamConstraintsForLevel(level, {
+  camManager.setCamConstraintsForLevel(level, {
     leftTilesPadding: 2, // to hide wall on the left and exit collision box
     rightTilesPadding: 2, // to hide wall on the right
     topTilesPadding: -5, // so we can see more on top
   });
-  player.setCamFollowPlayer(true);
+  camManager.setCamFollowPlayer(true, player);
 };
 
 sceneLevel_1_2.id = 'level-1-2';
