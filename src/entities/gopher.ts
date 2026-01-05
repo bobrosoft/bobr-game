@@ -15,10 +15,10 @@ export const GopherEntity: GameEntity<EnemyConfig, EnemyComp> = {
     return Promise.all([
       k.loadSprite('gopher', 'sprites/enemies/gopher.gif', {
         sliceX: 4,
-        sliceY: 1,
+        sliceY: 2,
         anims: {
-          idle: {from: 0, to: 0, loop: false},
-          walk: {from: 0, to: 3, speed: 10, loop: true},
+          idle: {from: 0, to: 1, speed: 3, loop: true},
+          walk: {from: 4, to: 7, speed: 10, loop: true},
         },
       }),
     ]);
