@@ -118,7 +118,7 @@ export const sceneLevel_1_2 = async (k: KCtx) => {
   });
 
   await k.loadSprite('bg-home-day', 'sprites/backgrounds/home-day.png');
-  addBackground(k, 'bg-home-day', player, {offsetY: 40});
+  addBackground(k, 'bg-home-day', {offsetY: 40});
 
   bgMusicManager.playMusic('start-location');
 

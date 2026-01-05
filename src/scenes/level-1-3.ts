@@ -120,7 +120,7 @@ export const sceneLevel_1_3 = async (k: KCtx) => {
   });
 
   await k.loadSprite('bg-home-day', 'sprites/backgrounds/home-day.png');
-  addBackground(k, 'bg-home-day', player, {offsetY: 40});
+  addBackground(k, 'bg-home-day', {offsetY: 40});
 
   camManager.setCamConstraintsForLevel(level, {
     leftTilesPadding: 2, // to hide wall on the left and exit collision box

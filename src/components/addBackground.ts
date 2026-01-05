@@ -1,12 +1,11 @@
 import {GameObj} from 'kaplay';
-import {PlayerComp} from '../entities/player';
 import {KCtx} from '../kaplay';
 
 interface Options {
   offsetY?: number;
 }
 
-export function addBackground(k: KCtx, spriteName: string, player: PlayerComp, options?: Options): GameObj {
+export function addBackground(k: KCtx, spriteName: string, options?: Options): GameObj {
   const background = k.add([
     //
     k.sprite(spriteName, {
@@ -21,8 +20,10 @@ export function addBackground(k: KCtx, spriteName: string, player: PlayerComp, o
   ]);
 
   background.onUpdate(() => {
-    background.pos.x = k.width() / 2 + -k.getCamPos().x / 50;
-    background.pos.y = k.height() / 2 + (options?.offsetY || 0) - k.getCamPos().y / 25;
+    background.pos = k.vec2(
+      k.width() / 2 + -k.getCamPos().x / 50,
+      k.height() / 2 + (options?.offsetY || 0) - k.getCamPos().y / 25,
+    );
   });
 
   return background;
