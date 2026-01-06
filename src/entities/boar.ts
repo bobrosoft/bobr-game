@@ -29,12 +29,13 @@ export const BoarEntity: GameEntity<Config, EnemyComp> = {
     return Promise.all([
       k.loadSprite('boar', 'sprites/enemies/boar.gif', {
         sliceX: 2,
-        sliceY: 4,
+        sliceY: 5,
         anims: {
           idle: {from: 0, to: 0},
           alarm: {from: 2, to: 2},
           run: {from: 4, to: 5, speed: 12, loop: true},
           break: {from: 6, to: 6},
+          dead: {from: 8, to: 8},
         },
       }),
       k.loadSprite('particle-ground', 'sprites/particles/ground.png', {
@@ -183,7 +184,7 @@ export const BoarEntity: GameEntity<Config, EnemyComp> = {
     mainObj.onStateUpdate(State.DEAD, () => {
       // In DEAD state boar becomes a rock which player can move :)
       mainObj.untag('enemy'); // to prevent player from damage
-      mainObj.play('break');
+      mainObj.play('dead');
     });
 
     mainObj.onFixedUpdate(() => {
