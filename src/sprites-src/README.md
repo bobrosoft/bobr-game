@@ -8,3 +8,4 @@ Commands used:
 ./script/gen-spritesheet.js ./src/sprites-src/bumblebee.gif -o ./public/sprites/enemies/bumblebee.gif
 ./script/gen-spritesheet.js ./src/sprites-src/lucky-charm.gif -o ./public/sprites/icons/lucky-charm.gif
 ./script/gen-spritesheet.js ./src/sprites-src/boar-*.gif -o ./public/sprites/enemies/boar.gif
+./script/gen-spritesheet.js ./src/sprites-src/home-stove-*.gif -o ./public/sprites/home/home-stove.gif

@@ -30,6 +30,14 @@ export const HomeEntity: GameEntity<Config> = {
       k.loadSprite('home-kitchen-chair-left', 'sprites/home/home-kitchen-chair-left.png'),
       k.loadSprite('home-kitchen-chair-right', 'sprites/home/home-kitchen-chair-right.png'),
       k.loadSprite('home-bed', 'sprites/home/home-bed.png'),
+      k.loadSprite('home-stove', 'sprites/home/home-stove.gif', {
+        sliceX: 6,
+        sliceY: 2,
+        anims: {
+          idle: {from: 0, to: 0},
+          burn: {from: 6, to: 11},
+        },
+      }),
     ]);
   },
 

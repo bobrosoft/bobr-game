@@ -74,13 +74,26 @@ export const sceneLevel_1_2 = async (k: KCtx) => {
           });
         },
       },
-      // '2': (tilePos, worldPos) => {
-      //   addFurnitureItem(k, {
-      //     itemId: 'home-kitchen-table',
-      //     sprite: 'home-kitchen-table',
-      //     worldPos,
-      //   });
-      // },
+      '2': {
+        loadResources: async k => {
+          await MapItemEntity.loadResources(k);
+          await k.loadSprite('home-stove', 'sprites/home/home-stove.gif', {
+            sliceX: 6,
+            sliceY: 2,
+            anims: {
+              idle: {from: 0, to: 0},
+              burn: {from: 6, to: 11},
+            },
+          });
+        },
+        factory: (k, tilePos, worldPos) => {
+          addFurnitureItem(k, {
+            itemId: ITEM_ID.HOME_STOVE,
+            sprite: 'home-stove',
+            worldPos,
+          });
+        },
+      },
     },
     exitPoints: [
       {
