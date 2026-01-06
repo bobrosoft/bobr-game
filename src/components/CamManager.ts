@@ -1,4 +1,4 @@
-import {GameObj, KEventController, LevelComp, PosComp} from 'kaplay';
+import {EaseFuncs, GameObj, KEventController, LevelComp, PosComp, TweenController} from 'kaplay';
 import {PlayerComp} from '../entities/player';
 import {KCtx} from '../kaplay';
 
@@ -13,6 +13,10 @@ export class CamManager {
 
   protected lastPlayerInstance?: PlayerComp;
   protected playerUpdateListener?: KEventController;
+
+  get isCamFollowingPlayer(): boolean {
+    return !!this.playerUpdateListener;
+  }
 
   constructor(protected k: KCtx) {
     this.camConstraints = {kHeight: k.height()};
@@ -69,6 +73,34 @@ export class CamManager {
       this.playerUpdateListener?.cancel();
       this.playerUpdateListener = undefined;
     }
+  }
+
+  /**
+   * Moves cam to obj position
+   * @param obj
+   * @param options
+   */
+  moveCamToObj(
+    obj: GameObj<PosComp>,
+    options: {
+      duration: number; // in seconds
+      easing?: EaseFuncs;
+    },
+  ): TweenController {
+    this.setCamFollowPlayer(false);
+
+    const initialPos = this.k.getCamPos().clone();
+
+    // Move cam
+    return this.k.tween(
+      0,
+      1,
+      options.duration,
+      time => {
+        this.setNewCamPos(this.k.lerp(initialPos.x, obj.pos.x, time), this.k.lerp(initialPos.y, obj.pos.y, time));
+      },
+      this.k.easings[options.easing || 'easeInOutCubic'],
+    );
   }
 
   protected onPlayerUpdate(): void {
