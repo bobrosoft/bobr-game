@@ -35,7 +35,7 @@ export const HomeEntity: GameEntity<Config> = {
         sliceY: 2,
         anims: {
           idle: {from: 0, to: 0},
-          burn: {from: 6, to: 11},
+          burn: {from: 6, to: 11, loop: true},
         },
       }),
     ]);
@@ -116,6 +116,16 @@ export const HomeEntity: GameEntity<Config> = {
     ]);
     kitchenChairRight.hidden = true;
 
+    const stove = container.add([
+      //
+      'home-stove',
+      k.sprite('home-stove'),
+      k.anchor('bot'),
+      k.pos(160, 0),
+      k.area(),
+    ]);
+    stove.hidden = true;
+
     /// Add furniture to second floor
     const bed = container.add([
       //
@@ -147,11 +157,20 @@ export const HomeEntity: GameEntity<Config> = {
       const hasChairLeft = gsm.getIsPlayerHasItem(ITEM_ID.HOME_KITCHEN_CHAIR_LEFT);
       const hasChairRight = gsm.getIsPlayerHasItem(ITEM_ID.HOME_KITCHEN_CHAIR_RIGHT);
       const hasBed = gsm.getIsPlayerHasItem(ITEM_ID.HOME_BED);
+      const hasStove = gsm.getIsPlayerHasItem(ITEM_ID.HOME_STOVE);
 
       kitchenTable.hidden = !hasTable;
       kitchenChairLeft.hidden = !hasChairLeft;
       kitchenChairRight.hidden = !hasChairRight;
       bed.hidden = !hasBed;
+
+      if (hasStove) {
+        stove.hidden = false;
+        stove.play('burn');
+      } else {
+        stove.hidden = true;
+        stove.play('idle');
+      }
     }
 
     container.onStateEnter(State.OUTSIDE, () => {
