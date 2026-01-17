@@ -80,7 +80,7 @@ export const HomeEntity: GameEntity<Config> = {
       k.sprite('home-kitchen-chair-left'),
       k.anchor('bot'),
       k.pos(64, 0),
-      k.area(),
+      k.area({isSensor: true}),
       interactable(async player => {
         await showDialogSeries(k, player, player, [t(k.choose(['home.kitchenChairRepeat1']))]);
       }),
@@ -93,7 +93,7 @@ export const HomeEntity: GameEntity<Config> = {
       k.sprite('home-kitchen-table'),
       k.anchor('bot'),
       k.pos(92, 0),
-      k.area(),
+      k.area({isSensor: true}),
       k.z(1),
       interactable(async player => {
         await showDialogSeries(k, player, player, [
@@ -109,7 +109,7 @@ export const HomeEntity: GameEntity<Config> = {
       k.sprite('home-kitchen-chair-right'),
       k.anchor('bot'),
       k.pos(120, 0),
-      k.area(),
+      k.area({isSensor: true}),
       interactable(async player => {
         await showDialogSeries(k, player, player, [t(k.choose(['home.kitchenChairRepeat1']))]);
       }),
@@ -122,7 +122,7 @@ export const HomeEntity: GameEntity<Config> = {
       k.sprite('home-stove'),
       k.anchor('bot'),
       k.pos(160, 0),
-      k.area(),
+      k.area({isSensor: true}),
     ]);
     stove.hidden = true;
 
@@ -133,7 +133,7 @@ export const HomeEntity: GameEntity<Config> = {
       k.sprite('home-bed', {flipX: true}),
       k.anchor('bot'),
       k.pos(129, -65),
-      k.area(),
+      k.area({isSensor: true}),
       interactable(async player => {
         await showDialogSeries(k, player, player, [t(k.choose(['home.bedRepeat1']))]);
       }),
@@ -207,7 +207,7 @@ export const HomeEntity: GameEntity<Config> = {
       k.rect(20, 38, {fill: false}),
       k.pos(125, 0),
       k.anchor('botleft'),
-      k.area(),
+      k.area({isSensor: true}),
     ]);
     entrance.onCollide('player', () => {
       if (container.state !== State.INSIDE) {
@@ -221,7 +221,7 @@ export const HomeEntity: GameEntity<Config> = {
       k.rect(20, 38, {fill: false}),
       k.pos(214, 0),
       k.anchor('botleft'),
-      k.area(),
+      k.area({isSensor: true}),
     ]);
     exit.onCollide('player', () => {
       if (container.state !== State.OUTSIDE) {

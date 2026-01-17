@@ -165,7 +165,7 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
       const interactionHitbox = player.add([
         'player.interaction-hitbox',
         k.pos(player.flipX ? -14 : 14, 0), // offset to
-        k.area({shape: new k.Rect(k.vec2(1, 0), 16, player.height)}), // small area in front of player
+        k.area({shape: new k.Rect(k.vec2(1, 0), 16, player.height), isSensor: true}), // small area in front of player
         k.rect(20, 20, {fill: false}),
         k.anchor('bot'),
         k.opacity(0),
@@ -256,7 +256,7 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
             hitbox = player.add([
               'player.hitbox',
               k.pos(k.vec2(initialPosX, 0)),
-              k.area(),
+              k.area({isSensor: true}),
               k.sprite('player-hit-wave', {flipX: player.flipX}), // 20x20
               k.anchor('bot'),
               k.opacity(1),

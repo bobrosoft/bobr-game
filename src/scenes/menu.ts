@@ -16,7 +16,7 @@ export const sceneMenu = (k: KCtx) => {
     k.fixed(),
   ]);
 
-  playButton.onClick(() => {
+  playButton.onMousePress(() => {
     changeScene(k, gsm.state.persistent.currentLevel || sceneLevel_1_1.id, {
       isGameLevel: true,
       spawnAtExitIndex: gsm.state.persistent.spawnAtExitIndex,

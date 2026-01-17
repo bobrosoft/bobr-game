@@ -31,7 +31,7 @@ export const MapItemEntity: GameEntity<MapItemConfig, MapItemGameObj> = {
       k.pos(posXY),
       k.sprite(config.sprite, {flipX: config.flipX || false}),
       k.anchor('bot'),
-      k.area(),
+      k.area({isSensor: true}),
       k.scale(),
       k.animate(),
       k.offscreen({hide: true}),

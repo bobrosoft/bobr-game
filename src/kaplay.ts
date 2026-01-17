@@ -31,7 +31,7 @@ export const k = kaplay({
       gamepad: ['east'],
     },
   },
-}) as KAPLAYCtx<{}, string>;
+}) as KAPLAYCtx;
 
 function determineWidthAndHeight(): {width: number; height: number} {
   // Calculate responsive width and height based on window size
