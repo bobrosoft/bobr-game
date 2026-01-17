@@ -37,7 +37,8 @@ export class CamManager {
     },
   ) {
     const levelWidth = level.levelWidth() - level.tileWidth() / 2;
-    const levelHeight = level.levelHeight() - level.tileHeight() / 2;
+    const levelHeight = level.levelHeight() - level.tileHeight();
+    const kWidth = this.k.width();
     const kHeight = this.k.height();
 
     const leftPadding = (options.leftTilesPadding ?? 0) * level.tileWidth();
@@ -45,10 +46,11 @@ export class CamManager {
     const topPadding = (options.topTilesPadding ?? 0) * level.tileHeight();
     const bottomPadding = (options.bottomTilesPadding ?? 0) * level.tileHeight();
 
-    const leftLimit = level.pos.x + leftPadding + this.k.width() / 2;
-    const rightLimit = level.pos.x + levelWidth - rightPadding - this.k.width() / 2;
-    const topLimit = level.pos.y + topPadding + this.k.height() / 2;
-    const bottomLimit = level.pos.y + levelHeight - bottomPadding - this.k.height() / 2;
+    const leftLimit = level.pos.x + leftPadding + kWidth / 2;
+    const rightLimit = level.pos.x + levelWidth - rightPadding - kWidth / 2;
+    const topLimit = level.pos.y + topPadding + kHeight / 2;
+    // Note: additionally subtract tileWidth/2 to avoid showing empty space under the level in some situations
+    const bottomLimit = level.pos.y + levelHeight - bottomPadding - kHeight / 2 - level.tileWidth() / 2;
 
     this.camConstraints = {
       kHeight,
@@ -109,7 +111,7 @@ export class CamManager {
     }
 
     const newX = this.lastPlayerInstance.pos.x;
-    const newY = this.lastPlayerInstance.pos.y - this.camConstraints.kHeight / 4; // offset a bit upwards for better view
+    const newY = this.lastPlayerInstance.pos.y; // - this.camConstraints.kHeight / 4; // offset a bit upwards for better view
 
     this.setNewCamPos(newX, newY);
   }
