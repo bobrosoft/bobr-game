@@ -2,36 +2,35 @@
 
 import yargs from 'yargs';
 import {hideBin} from 'yargs/helpers';
-import gifFrames from 'gif-frames';
-import {Jimp} from 'jimp';
+import {parseGIF, decompressFrames} from 'gifuct-js';
+import sharp from 'sharp';
 import * as fs from 'fs';
 import * as glob from 'glob';
 
-async function streamToBuffer(stream) {
-  return new Promise((resolve, reject) => {
-    const chunks = [];
-    stream.on('data', (chunk) => chunks.push(chunk));
-    stream.on('end', () => resolve(Buffer.concat(chunks)));
-    stream.on('error', (err) => reject(err));
-  });
-}
-
 async function extractFrames(gifPath) {
-  const frameData = await gifFrames({
-    url: gifPath,
-    frames: 'all',
-    outputType: 'png',
-    cumulative: false,
-  });
+  const gifData = fs.readFileSync(gifPath);
+  const gif = parseGIF(gifData);
+  const frames = decompressFrames(gif, true);
 
-  const frames = [];
-  for (const frame of frameData) {
-    const imgStream = frame.getImage();
-    const buffer = await streamToBuffer(imgStream);
-    const image = await Jimp.read(buffer);
-    frames.push(image);
+  const pngFrames = [];
+  for (const frame of frames) {
+    const {width, height} = frame.dims;
+    const {patch} = frame;
+
+    // Convert RGBA Uint8ClampedArray to PNG buffer using sharp
+    const buffer = await sharp(Buffer.from(patch), {
+      raw: {
+        width,
+        height,
+        channels: 4
+      }
+    })
+      .png()
+      .toBuffer();
+
+    pngFrames.push({buffer, width, height});
   }
-  return frames;
+  return pngFrames;
 }
 
 async function generateSpriteSheet(inputGifs, outputPath) {
@@ -50,27 +49,44 @@ async function generateSpriteSheet(inputGifs, outputPath) {
   const rowHeights = [];
 
   for (const frames of rows) {
-    const rowWidth = frames.reduce((sum, img) => sum + img.bitmap.width, 0);
-    const rowHeight = frames.reduce((max, img) => Math.max(max, img.bitmap.height), 0);
+    const rowWidth = frames.reduce((sum, img) => sum + img.width, 0);
+    const rowHeight = frames.reduce((max, img) => Math.max(max, img.height), 0);
     sheetWidth = Math.max(sheetWidth, rowWidth);
     sheetHeight += rowHeight;
     rowHeights.push(rowHeight);
   }
 
-  const sheet = new Jimp({width: sheetWidth, height: sheetHeight, color: 0x00000000});
-
+  // Prepare composite input for sharp
+  const compositeInputs = [];
   let yOffset = 0;
+
   for (let r = 0; r < rows.length; r++) {
     const frames = rows[r];
     let xOffset = 0;
     for (const img of frames) {
-      sheet.composite(img, xOffset, yOffset);
-      xOffset += img.bitmap.width;
+      compositeInputs.push({
+        input: img.buffer,
+        top: yOffset,
+        left: xOffset,
+      });
+      xOffset += img.width;
     }
     yOffset += rowHeights[r];
   }
 
-  await sheet.write(outputPath);
+  // Create a transparent background and composite all frames
+  await sharp({
+    create: {
+      width: sheetWidth,
+      height: sheetHeight,
+      channels: 4,
+      background: {r: 0, g: 0, b: 0, alpha: 0}
+    }
+  })
+    .composite(compositeInputs)
+    .gif()
+    .toFile(outputPath);
+
   console.log(`Sprite sheet generated at ${outputPath}`);
 }
 
