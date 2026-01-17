@@ -14,11 +14,17 @@ import {KCtx} from '../kaplay';
 
 export class FadeManager {
   protected fadeOverlay: GameObj<LayerComp | RectComp | ColorComp | OpacityComp | PosComp | FixedComp | AnchorComp>;
+  protected letterboxTop: GameObj<LayerComp | RectComp | PosComp | ColorComp | AnchorComp | FixedComp>;
+  protected letterboxBottom: GameObj<LayerComp | RectComp | PosComp | ColorComp | AnchorComp | FixedComp>;
   protected loadingLabel: GameObj<LayerComp | PosComp | FixedComp | AnchorComp | OpacityComp | ColorComp | AnimateComp>;
   protected loadingIndicatorTimeout: any;
 
   get isOverlayVisible(): boolean {
     return this.fadeOverlay.opacity > 0;
+  }
+
+  get isLetterboxVisible(): boolean {
+    return this.letterboxTop.pos.y > 0.01;
   }
 
   constructor(
@@ -35,6 +41,28 @@ export class FadeManager {
       k.fixed(),
       k.anchor('topleft'),
       k.opacity(0),
+      k.stay(),
+    ]);
+
+    this.letterboxTop = k.add([
+      'fade-letterbox-top',
+      k.layer(layer),
+      k.rect(k.width(), k.height() / 2),
+      k.color(0, 0, 0),
+      k.pos(0, 0),
+      k.anchor('botleft'),
+      k.fixed(),
+      k.stay(),
+    ]);
+
+    this.letterboxBottom = k.add([
+      'fade-letterbox-bottom',
+      k.layer(layer),
+      k.rect(k.width(), k.height() / 2),
+      k.color(0, 0, 0),
+      k.pos(0, k.height()),
+      k.anchor('topleft'),
+      k.fixed(),
       k.stay(),
     ]);
 
@@ -79,6 +107,31 @@ export class FadeManager {
     this.loadingLabel.opacity = 0;
 
     await this.fadeTo(1, 0, duration);
+  }
+
+  async showLetterbox(duration: number = this.defaultDuration * 2): Promise<void> {
+    const stripesWidth = 30;
+
+    return this.k.tween(
+      0,
+      1,
+      duration,
+      value => {
+        this.letterboxTop.pos = this.k.vec2(0, stripesWidth * value);
+        this.letterboxBottom.pos = this.k.vec2(0, this.k.height() - stripesWidth * value);
+      },
+      this.k.easings['easeOutSine'],
+    );
+  }
+
+  async hideLetterbox(duration: number = this.defaultDuration * 1.5): Promise<void> {
+    const initialLetterboxTopY = this.letterboxTop.pos.y;
+    const initialLetterboxBottomY = this.letterboxBottom.pos.y;
+
+    return this.k.tween(0, 1, duration, value => {
+      this.letterboxTop.pos = this.k.vec2(0, initialLetterboxTopY * (1 - value));
+      this.letterboxBottom.pos = this.k.vec2(0, this.k.lerp(initialLetterboxBottomY, this.k.height(), value));
+    });
   }
 
   protected async fadeTo(from: number, to: number, duration: number = 1): Promise<void> {
