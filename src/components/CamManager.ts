@@ -63,18 +63,20 @@ export class CamManager {
 
   /**
    * Make the camera follow the player
-   * @param enabled
    * @param player
    */
-  setCamFollowPlayer(enabled: boolean, player?: PlayerComp): void {
-    if (enabled) {
-      this.lastPlayerInstance = player;
-      this.playerUpdateListener?.cancel();
-      this.playerUpdateListener = player.onUpdate(this.onPlayerUpdate.bind(this));
-    } else {
-      this.playerUpdateListener?.cancel();
-      this.playerUpdateListener = undefined;
-    }
+  enableCamFollowPlayer(player: PlayerComp): void {
+    this.lastPlayerInstance = player;
+    this.playerUpdateListener?.cancel();
+    this.playerUpdateListener = player.onUpdate(this.onPlayerUpdate.bind(this));
+  }
+
+  /**
+   * Stop camera following the player
+   */
+  disableCamFollowPlayer(): void {
+    this.playerUpdateListener?.cancel();
+    this.playerUpdateListener = undefined;
   }
 
   /**
@@ -89,7 +91,7 @@ export class CamManager {
       easing?: EaseFuncs;
     },
   ): TweenController {
-    this.setCamFollowPlayer(false);
+    this.disableCamFollowPlayer();
 
     const initialPos = this.k.getCamPos().clone();
 

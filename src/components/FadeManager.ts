@@ -124,7 +124,7 @@ export class FadeManager {
     );
   }
 
-  async hideLetterbox(duration: number = this.defaultDuration * 1.5): Promise<void> {
+  async hideLetterbox(duration: number = this.defaultDuration): Promise<void> {
     const initialLetterboxTopY = this.letterboxTop.pos.y;
     const initialLetterboxBottomY = this.letterboxBottom.pos.y;
 

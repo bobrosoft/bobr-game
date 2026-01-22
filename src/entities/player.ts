@@ -6,13 +6,14 @@ import {
   OpacityComp,
   PosComp,
   SpriteComp,
+  StateComp,
   TimerComp,
   TimerController,
   Vec2,
 } from 'kaplay';
 import {showDialogSeries as _showDialogSeries} from '../components/showDialog';
 import {KCtx} from '../kaplay';
-import {camManager, gsm} from '../main';
+import {camManager, fadeManager, gsm} from '../main';
 import {changeScene} from '../misc/changeScene';
 import {defaultFriction} from '../misc/defaults';
 import {EnemyComp} from './generic/enemy';
@@ -31,7 +32,8 @@ export interface PlayerConfig {
   attackPower: number;
 }
 
-export interface PlayerComp extends GameObj<string | SpriteComp | PosComp | AreaComp | BodyComp | TimerComp> {
+export interface PlayerComp
+  extends GameObj<string | SpriteComp | PosComp | AreaComp | BodyComp | TimerComp | StateComp<State>> {
   config: PlayerConfig; // player configuration
 
   /** Function to wait for action button press */
@@ -44,6 +46,12 @@ export interface PlayerComp extends GameObj<string | SpriteComp | PosComp | Area
       speed?: number;
     },
   ) => Promise<void>;
+
+  /** Function to begin a cutscene - player control is disabled */
+  beginCutscene: () => Promise<void>;
+
+  /** Function to end a cutscene - player control is re-enabled */
+  endCutscene: (options: {moveCamToPlayer: boolean}) => Promise<void>;
 }
 
 const DEFAULTS: PlayerConfig = {
@@ -109,6 +117,8 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
         config: C,
         waitForActionButton,
         showDialogSeries,
+        beginCutscene,
+        endCutscene,
       },
     ]);
 
@@ -143,6 +153,21 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
     async function showDialogSeries(texts: string[], cfg?: {speed?: number}): Promise<void> {
       player.enterState(State.INTERACT);
       await _showDialogSeries(k, player, player, texts, cfg);
+      player.enterState(State.IDLE);
+    }
+
+    async function beginCutscene(): Promise<void> {
+      player.enterState(State.INTERACT);
+      return fadeManager.showLetterbox();
+    }
+
+    async function endCutscene(options: {moveCamToPlayer: boolean}): Promise<void> {
+      if (options.moveCamToPlayer) {
+        await camManager.moveCamToObj(player, {duration: 1});
+        camManager.enableCamFollowPlayer(player);
+      }
+
+      fadeManager.hideLetterbox().then(); // no need to await here, looks better
       player.enterState(State.IDLE);
     }
 
@@ -369,7 +394,7 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
     });
 
     const gsmOnDeathSub = gsm.onDeath(() => {
-      camManager.setCamFollowPlayer(false); // stop camera following on death, looks better
+      camManager.disableCamFollowPlayer();
 
       // Restart level on death
       changeScene(k, gsm.state.persistent.currentLevel, {

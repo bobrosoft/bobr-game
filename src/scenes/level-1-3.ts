@@ -127,12 +127,12 @@ export const sceneLevel_1_3 = async (k: KCtx) => {
     rightTilesPadding: 2, // to hide wall on the right
     topTilesPadding: -5, // so we can see more on top
   });
-  camManager.setCamFollowPlayer(true, player);
+  camManager.enableCamFollowPlayer(player);
 
   // Handle boar boss music
   if (!gsm.state.persistent.level1.isBoarDead) {
     if (bgMusicManager.getCurrentMusicName() !== 'boar-boss-fight') {
-      bgMusicManager.stopMusic();
+      bgMusicManager.stopMusic(1.5);
     }
 
     k.get<OffScreenComp>('boar')[0].onEnterScreen(() => {

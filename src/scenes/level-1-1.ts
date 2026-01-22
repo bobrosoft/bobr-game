@@ -10,7 +10,7 @@ import {MapItemEntity} from '../entities/map-item';
 import {OldBobrEntity} from '../entities/old-bobr';
 import {getPlayer} from '../entities/player';
 import {KCtx} from '../kaplay';
-import {bgMusicManager, camManager, gsm} from '../main';
+import {bgMusicManager, camManager, fadeManager, gsm} from '../main';
 import {sceneLevel_1_2} from './level-1-2';
 import map from './maps/level-1-1.txt?raw';
 import {tileDirectionSignLeft} from './tiles/tileDirectionSignLeft';
@@ -126,7 +126,7 @@ export const sceneLevel_1_1 = async (k: KCtx) => {
     rightTilesPadding: 2, // to hide wall on the right and exit collision box
     topTilesPadding: -5, // so we can see more on top
   });
-  camManager.setCamFollowPlayer(true, player);
+  camManager.enableCamFollowPlayer(player);
 };
 
 sceneLevel_1_1.id = 'level-1-1';

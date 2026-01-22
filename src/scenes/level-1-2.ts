@@ -140,7 +140,7 @@ export const sceneLevel_1_2 = async (k: KCtx) => {
     rightTilesPadding: 2, // to hide wall on the right
     topTilesPadding: -5, // so we can see more on top
   });
-  camManager.setCamFollowPlayer(true, player);
+  camManager.enableCamFollowPlayer(player);
 };
 
 sceneLevel_1_2.id = 'level-1-2';
