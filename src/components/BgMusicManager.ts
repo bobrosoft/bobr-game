@@ -17,6 +17,7 @@ export class BgMusicManager {
   protected currentMusicName?: string;
   protected isFirstPlay: boolean = true;
   protected pendingMusic?: {name: string; options?: BgMusicManagerPlayOptions}; // queued music to play after user interaction
+  protected gainNode?: GainNode; // gain node for smooth volume control, especially for Safari
 
   constructor(
     protected k: KCtx,
@@ -74,9 +75,18 @@ export class BgMusicManager {
         this.currentMusicName = name;
         this.currentMusic = this.k.play(name, {
           loop: true,
-          volume: this.config.volume,
+          volume: 1, // Keep at max, we'll control volume via gainNode
           ...options,
         });
+
+        // Create and connect gain node for volume control
+        const audioCtx = this.k.audioCtx;
+        if (audioCtx && this.currentMusic) {
+          this.gainNode = audioCtx.createGain();
+          this.gainNode.gain.value = this.config.volume;
+          this.currentMusic.connect(this.gainNode);
+          this.gainNode.connect(audioCtx.destination);
+        }
 
         // Check if play was successful
         if (this.currentMusic && this.currentMusic.paused) {
@@ -99,8 +109,8 @@ export class BgMusicManager {
    */
   setVolume(volume: number) {
     this.config.volume = volume;
-    if (this.currentMusic) {
-      this.currentMusic.volume = volume;
+    if (this.gainNode) {
+      this.gainNode.gain.value = volume;
     }
   }
 
@@ -112,6 +122,7 @@ export class BgMusicManager {
     this.fadeOutCurrentMusic(fadeOutDuration).then(() => {
       this.currentMusic = undefined;
       this.currentMusicName = undefined;
+      this.gainNode = undefined;
     });
   }
 
@@ -137,9 +148,10 @@ export class BgMusicManager {
     fadeOutDuration = fadeOutDuration ?? this.config.fadeOutDuration + 0.000001; // to avoid division by zero
 
     if (this.currentMusic && !this.currentMusic.paused) {
-      await this.k.tween(this.currentMusic.volume, 0, fadeOutDuration, v => {
-        if (this.currentMusic) {
-          this.currentMusic.volume = v;
+      const startVolume = this.gainNode?.gain.value ?? this.config.volume;
+      await this.k.tween(startVolume, 0, fadeOutDuration, v => {
+        if (this.gainNode) {
+          this.gainNode.gain.value = v;
         }
       });
       this.currentMusic.stop();
