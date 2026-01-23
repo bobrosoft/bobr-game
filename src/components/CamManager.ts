@@ -94,6 +94,7 @@ export class CamManager {
     this.disableCamFollowPlayer();
 
     const initialPos = this.k.getCamPos().clone();
+    const objHeight = (obj as any).height || 0;
 
     // Move cam
     return this.k.tween(
@@ -101,7 +102,10 @@ export class CamManager {
       1,
       options.duration,
       time => {
-        this.setNewCamPos(this.k.lerp(initialPos.x, obj.pos.x, time), this.k.lerp(initialPos.y, obj.pos.y, time));
+        this.setNewCamPos(
+          this.k.lerp(initialPos.x, obj.pos.x, time),
+          this.k.lerp(initialPos.y, obj.pos.y - objHeight / 2, time),
+        );
       },
       this.k.easings[options.easing || 'easeInOutCubic'],
     );
@@ -113,7 +117,7 @@ export class CamManager {
     }
 
     const newX = this.lastPlayerInstance.pos.x;
-    const newY = this.lastPlayerInstance.pos.y; // - this.camConstraints.kHeight / 4; // offset a bit upwards for better view
+    const newY = this.lastPlayerInstance.pos.y - 20; // compensate player height
 
     this.setNewCamPos(newX, newY);
   }
