@@ -5,6 +5,10 @@
     "howToInstall": "Как установить на домашний экран?",
     "notAllItemsFound": "Кажется, я ещё не всё собрал..."
   },
+  "menu": {
+    "attackControl": "J или Z для атаки",
+    "jumpControl": "K, X или Пробел для прыжка"
+  },
   "home": {
     "kitchenTableRepeat1": "Хм, кто выбросил такой шикарный стол?..",
     "kitchenTableRepeat2": "Ммм, вкусно пахнет деревом...",

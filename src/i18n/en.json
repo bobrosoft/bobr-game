@@ -5,6 +5,10 @@
     "howToInstall": "How to install to the home screen?",
     "notAllItemsFound": "Looks like I haven't collected everything yet..."
   },
+  "menu": {
+    "attackControl": "J or Z to Attack",
+    "jumpControl": "K, X or Space to Jump"
+  },
   "home": {
     "kitchenTableRepeat1": "Hmm, who would throw away such a gorgeous table?..",
     "kitchenTableRepeat2": "Mmm, it smells so good...",

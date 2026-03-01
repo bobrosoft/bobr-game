@@ -1,6 +1,8 @@
+import {t} from 'i18next';
 import {KCtx} from '../kaplay';
 import {gsm} from '../main';
 import {changeScene} from '../misc/changeScene';
+import {Helpers} from '../misc/Helpers';
 import {sceneLevel_1_1} from './level-1-1';
 
 export const sceneMenu = (k: KCtx) => {
@@ -22,4 +24,25 @@ export const sceneMenu = (k: KCtx) => {
       spawnAtExitIndex: gsm.state.persistent.spawnAtExitIndex,
     }).then();
   });
+
+  // Add keyboard control labels for non-touch devices
+  if (!Helpers.isTouchDevice()) {
+    // Attack control label (left side)
+    k.add([
+      k.layer('menu'),
+      k.text(t('menu.attackControl'), {size: 8, font: 'pixel'}),
+      k.pos(10, k.height() - 10),
+      k.anchor('botleft'),
+      k.fixed(),
+    ]);
+
+    // Jump control label (right side)
+    k.add([
+      k.layer('menu'),
+      k.text(t('menu.jumpControl'), {size: 8, font: 'pixel'}),
+      k.pos(k.width() - 10, k.height() - 10),
+      k.anchor('botright'),
+      k.fixed(),
+    ]);
+  }
 };
