@@ -15,6 +15,8 @@ enum State {
 
 interface Config {
   isEveningTime: boolean;
+  onEnter?: () => void;
+  onExit?: () => void;
 }
 
 export const HomeEntity: GameEntity<Config> = {
@@ -184,6 +186,9 @@ export const HomeEntity: GameEntity<Config> = {
       outside.animate('opacity', [0, 1], {duration: 1, loops: 1});
 
       bgMusicManager.playMusic('start-location');
+
+      // Call onExit callback when leaving home
+      C.onExit?.();
     });
 
     container.onStateEnter(State.INSIDE, () => {
@@ -198,6 +203,9 @@ export const HomeEntity: GameEntity<Config> = {
       if (gsm.state.persistent.player.inventory.length > 0) {
         bgMusicManager.playMusic('home');
       }
+
+      // Call onEnter callback when entering home
+      C.onEnter?.();
     });
 
     // 180, 25x38

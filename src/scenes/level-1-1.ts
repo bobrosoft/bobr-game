@@ -59,7 +59,16 @@ export const sceneLevel_1_1 = async (k: KCtx) => {
       H: {
         loadResources: HomeEntity.loadResources,
         factory: (k, tilePos, worldPos) => {
-          HomeEntity.spawn(k, worldPos);
+          HomeEntity.spawn(k, worldPos, {
+            onEnter: () => {
+              // Need to reset spawn point when entering home
+              gsm.update({
+                persistent: {
+                  spawnAtExitIndex: undefined,
+                },
+              });
+            },
+          });
         },
       },
       B: {
