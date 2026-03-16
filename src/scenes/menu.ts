@@ -25,13 +25,23 @@ export const sceneMenu = (k: KCtx) => {
     }).then();
   });
 
+  // Version label (bottom-right)
+  k.add([
+    k.layer('menu'),
+    k.text(__APP_VERSION__, {size: 4, font: 'pixel'}),
+    k.pos(k.width() - 6, k.height() - 6),
+    k.anchor('botright'),
+    k.fixed(),
+    k.opacity(0.5),
+  ]);
+
   // Add keyboard control labels for non-touch devices
   if (!Helpers.isTouchDevice()) {
     // Attack control label (left side)
     k.add([
       k.layer('menu'),
       k.text(t('menu.attackControl'), {size: 8, font: 'pixel'}),
-      k.pos(10, k.height() - 10),
+      k.pos(15, k.height() - 25),
       k.anchor('botleft'),
       k.fixed(),
     ]);
@@ -40,7 +50,7 @@ export const sceneMenu = (k: KCtx) => {
     k.add([
       k.layer('menu'),
       k.text(t('menu.jumpControl'), {size: 8, font: 'pixel'}),
-      k.pos(k.width() - 10, k.height() - 10),
+      k.pos(k.width() - 15, k.height() - 25),
       k.anchor('botright'),
       k.fixed(),
     ]);
