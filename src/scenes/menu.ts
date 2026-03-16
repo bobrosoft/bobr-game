@@ -28,7 +28,7 @@ export const sceneMenu = (k: KCtx) => {
   // Version label (bottom-right)
   k.add([
     k.layer('menu'),
-    k.text(__APP_VERSION__, {size: 4, font: 'pixel'}),
+    k.text('v' + __APP_VERSION__, {size: 4, font: 'pixel'}),
     k.pos(k.width() - 6, k.height() - 6),
     k.anchor('botright'),
     k.fixed(),
