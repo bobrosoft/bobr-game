@@ -1,4 +1,4 @@
-import {defineConfig} from "vite";
+import {defineConfig} from 'vite';
 import checker from 'vite-plugin-checker';
 import {execSync} from 'child_process';
 
@@ -10,7 +10,7 @@ export default defineConfig(() => {
 
   return {
     // index.html out file will start with a relative path for script
-    base: "./",
+    base: './',
     define: {
       __APP_VERSION__: JSON.stringify(appVersion),
     },
@@ -21,8 +21,10 @@ export default defineConfig(() => {
       sourcemap: false,
       rollupOptions: {
         output: {
-          manualChunks: {
-            kaplay: ["kaplay"],
+          manualChunks: (id) => {
+            if (id.includes('node_modules/kaplay')) {
+              return 'kaplay';
+            }
           },
         },
       },
