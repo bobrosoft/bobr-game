@@ -103,8 +103,8 @@ export const BoarEntity: GameEntity<Config, EnemyComp> = {
           angle: [0, 360],
           angularVelocity: [0, 30],
           opacities: [1.0, 1.0, 0.0],
-          texture: k.getSprite('particle-ground').data.tex, // texture of a sprite
-          quads: k.getSprite('particle-ground').data.frames, // frames of a sprite
+          texture: k.getSprite('particle-ground').data.frames[0].tex, // texture of a sprite
+          quads: [k.getSprite('particle-ground').data.frames[0].q], // frames of a sprite
         },
         {
           // rate: 5,

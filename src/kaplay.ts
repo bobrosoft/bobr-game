@@ -31,6 +31,8 @@ export const k = kaplay({
       gamepad: ['east'],
     },
   },
+  narrowPhaseCollisionAlgorithm: 'gjk', // FIXME: that's temp solution, normally should be removed
+  broadPhaseCollisionAlgorithm: 'grid', // FIXME: that's temp solution, normally should be removed
 }) as KAPLAYCtx;
 
 function determineWidthAndHeight(): {width: number; height: number} {
