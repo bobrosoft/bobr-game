@@ -14,12 +14,12 @@ enum State {
 }
 
 interface Config extends EnemyConfig {
-  detectionRange: number; // distance to detect player
-  alarmDuration: number; // seconds in alarm state
-  breakDuration: number; // seconds in break state
-  maxSpeed: number; // maximum running speed
-  acceleration: number; // acceleration rate when running
-  deceleration: number; // deceleration rate when breaking
+  detectionRange?: number; // distance to detect player
+  alarmDuration?: number; // seconds in alarm state
+  breakDuration?: number; // seconds in break state
+  maxSpeed?: number; // maximum running speed
+  acceleration?: number; // acceleration rate when running
+  deceleration?: number; // deceleration rate when breaking
   isAlreadyDead?: boolean; // spawn as already dead
   onDeath?: () => void;
 }
@@ -47,7 +47,7 @@ export const BoarEntity: GameEntity<Config, EnemyComp> = {
     ]);
   },
 
-  spawn(k: KCtx, posXY: Vec2 = k.vec2(100, 100), config?: Partial<Config>): EnemyComp {
+  spawn(k: KCtx, posXY: Vec2 = k.vec2(100, 100), config?: Config): EnemyComp {
     const C: Config = {
       health: config?.isAlreadyDead ? 0 : 5,
       attackPower: 1,

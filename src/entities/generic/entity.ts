@@ -14,5 +14,5 @@ export interface GameEntity<C, R = GameObj> {
    * @param posXY
    * @param config
    */
-  spawn(k: KCtx, posXY: Vec2, config?: Partial<C>): R;
+  spawn(k: KCtx, posXY: Vec2, config?: C): R;
 }

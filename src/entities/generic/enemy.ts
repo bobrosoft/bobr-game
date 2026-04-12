@@ -4,7 +4,7 @@ import {PlayerComp} from '../player';
 // List generic types for the enemy game object
 
 export interface EnemyConfig {
-  health: number; // hit points
+  health?: number; // hit points
   speedX?: number; // px/s
   attackPower?: number; // power of the attack
   knockbackPower?: Vec2; // power of the knockback

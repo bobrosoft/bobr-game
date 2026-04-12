@@ -25,6 +25,8 @@ export const MapItemEntity: GameEntity<MapItemConfig, MapItemGameObj> = {
   },
 
   spawn(k, posXY, config) {
+    if (!config) throw new Error('MapItemEntity.spawn: config is required');
+
     const mainObj = k.add([
       //
       'map-item',

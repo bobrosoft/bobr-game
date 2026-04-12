@@ -14,7 +14,7 @@ enum State {
 }
 
 interface Config {
-  isEveningTime: boolean;
+  isEveningTime?: boolean;
   onEnter?: () => void;
   onExit?: () => void;
 }
@@ -43,7 +43,7 @@ export const HomeEntity: GameEntity<Config> = {
     ]);
   },
 
-  spawn(k: KCtx, posXY: Vec2, config?: Partial<Config>): GameObj {
+  spawn(k: KCtx, posXY: Vec2, config?: Config): GameObj {
     const C: Config = {
       isEveningTime: false,
       ...config,

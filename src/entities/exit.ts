@@ -22,6 +22,8 @@ export const ExitEntity: GameEntity<ExitConfig, ExitGameObj> = {
   async loadResources(k): Promise<void> {},
 
   spawn(k, posXY, config) {
+    if (!config) throw new Error('ExitEntity.spawn: config is required');
+
     const mainObj = k.add([
       //
       'exit',

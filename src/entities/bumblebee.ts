@@ -11,7 +11,7 @@ enum State {
 }
 
 interface Config extends EnemyConfig {
-  flyDuration: number; // seconds
+  flyDuration?: number; // seconds
 }
 
 export const BumblebeeEntity: GameEntity<Config, EnemyComp> = {
@@ -28,7 +28,7 @@ export const BumblebeeEntity: GameEntity<Config, EnemyComp> = {
     ]);
   },
 
-  spawn(k: KCtx, posXY: Vec2 = k.vec2(200, 80), config?: Partial<Config>): EnemyComp {
+  spawn(k: KCtx, posXY: Vec2 = k.vec2(200, 80), config?: Config): EnemyComp {
     const C: Config = {
       health: 1,
       attackPower: 1,
