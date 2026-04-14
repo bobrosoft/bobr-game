@@ -13,7 +13,7 @@ import {
 } from 'kaplay';
 import {showDialogSeries as _showDialogSeries} from '../components/showDialog';
 import {KCtx} from '../kaplay';
-import {camManager, fadeManager, gsm} from '../main';
+import {camManager, fadeManager, gsm, hudManager} from '../main';
 import {changeScene} from '../misc/changeScene';
 import {defaultFriction} from '../misc/defaults';
 import {EnemyComp} from './generic/enemy';
@@ -158,6 +158,7 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
 
     async function beginCutscene(): Promise<void> {
       player.enterState(State.INTERACT);
+      hudManager.hide();
       return fadeManager.showLetterbox();
     }
 
@@ -167,6 +168,7 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
         camManager.enableCamFollowPlayer(player);
       }
 
+      hudManager.show();
       fadeManager.hideLetterbox().then(); // no need to await here, looks better
       player.enterState(State.IDLE);
     }
