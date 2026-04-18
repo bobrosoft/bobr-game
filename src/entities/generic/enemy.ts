@@ -10,7 +10,7 @@ export interface EnemyConfig {
   knockbackPower?: Vec2; // power of the knockback
 }
 
-export interface EnemyComp extends GameObj<string | HealthComp | SpriteComp | PosComp | AreaComp> {
+export interface EnemyObj extends GameObj<string | HealthComp | SpriteComp | PosComp | AreaComp> {
   config: EnemyConfig;
   registerHit: (player: PlayerComp) => void;
 }

@@ -1,7 +1,7 @@
 import {Vec2} from 'kaplay';
 import {KCtx} from '../kaplay';
 import {defaultFriction} from '../misc/defaults';
-import {EnemyComp, EnemyConfig} from './generic/enemy';
+import {EnemyObj, EnemyConfig} from './generic/enemy';
 import {GameEntity} from './generic/entity';
 import {PlayerComp} from './player';
 
@@ -10,7 +10,7 @@ enum State {
   WALK = 'WALK',
 }
 
-export const GopherEntity: GameEntity<EnemyConfig, EnemyComp> = {
+export const GopherEntity: GameEntity<EnemyConfig, EnemyObj> = {
   async loadResources(k: KCtx): Promise<any> {
     return Promise.all([
       k.loadSprite('gopher', 'sprites/enemies/gopher.gif', {
@@ -24,7 +24,7 @@ export const GopherEntity: GameEntity<EnemyConfig, EnemyComp> = {
     ]);
   },
 
-  spawn(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: EnemyConfig): EnemyComp {
+  spawn(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: EnemyConfig): EnemyObj {
     const C: EnemyConfig = {
       health: 2,
       attackPower: 1,

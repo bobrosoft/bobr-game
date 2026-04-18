@@ -1,7 +1,7 @@
 import {Vec2} from 'kaplay';
 import {KCtx} from '../kaplay';
 import {defaultFriction} from '../misc/defaults';
-import {EnemyComp, EnemyConfig} from './generic/enemy';
+import {EnemyObj, EnemyConfig} from './generic/enemy';
 import {GameEntity} from './generic/entity';
 import {getPlayer, PlayerComp} from './player';
 
@@ -24,7 +24,7 @@ interface Config extends EnemyConfig {
   onDeath?: () => void;
 }
 
-export const BoarEntity: GameEntity<Config, EnemyComp> = {
+export const BoarEntity: GameEntity<Config, EnemyObj> = {
   async loadResources(k: KCtx): Promise<any> {
     return Promise.all([
       k.loadSprite('boar', 'sprites/enemies/boar.gif', {
@@ -47,7 +47,7 @@ export const BoarEntity: GameEntity<Config, EnemyComp> = {
     ]);
   },
 
-  spawn(k: KCtx, posXY: Vec2 = k.vec2(100, 100), config?: Config): EnemyComp {
+  spawn(k: KCtx, posXY: Vec2 = k.vec2(100, 100), config?: Config): EnemyObj {
     const C: Config = {
       health: config?.isAlreadyDead ? 0 : 5,
       attackPower: 1,

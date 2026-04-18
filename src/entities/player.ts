@@ -16,7 +16,7 @@ import {KCtx} from '../kaplay';
 import {camManager, fadeManager, gsm, hudManager} from '../main';
 import {changeScene} from '../misc/changeScene';
 import {defaultFriction} from '../misc/defaults';
-import {EnemyComp} from './generic/enemy';
+import {EnemyObj} from './generic/enemy';
 import {GameEntity} from './generic/entity';
 import {InteractableComp} from '../components/InteractableComp';
 
@@ -299,7 +299,7 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
               hitbox?.destroy();
             });
 
-            hitbox.onCollide('enemy', (enemy: EnemyComp) => {
+            hitbox.onCollide('enemy', (enemy: EnemyObj) => {
               enemy.registerHit(player);
               k.play('player-attack');
             });
@@ -365,7 +365,7 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
       player.animSpeed = 1;
     });
 
-    player.onCollideUpdate('enemy', (enemy: EnemyComp) => {
+    player.onCollideUpdate('enemy', (enemy: EnemyObj) => {
       if (!getIsInvincible() && player.state !== State.ATTACK && !enemy.dead && enemy.config.attackPower) {
         // Update player health
         gsm.update({

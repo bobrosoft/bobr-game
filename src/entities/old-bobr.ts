@@ -8,7 +8,7 @@ import {gsm} from '../main';
 import {defaultFriction} from '../misc/defaults';
 import {sceneLevel_1_2} from '../scenes/level-1-2';
 import {GameEntity} from './generic/entity';
-import {NpcComp, NpcConfig} from './generic/npc';
+import {NpcObj, NpcConfig} from './generic/npc';
 import {PlayerComp} from './player';
 
 enum State {
@@ -16,7 +16,7 @@ enum State {
   INTERACTING = 'INTERACTING',
 }
 
-export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
+export const OldBobrEntity: GameEntity<NpcConfig, NpcObj> = {
   async loadResources(k: KCtx): Promise<any> {
     return Promise.all([
       k.loadSprite('old-bobr', 'sprites/characters/old-bobr.gif', {
@@ -31,7 +31,7 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcComp> = {
     ]);
   },
 
-  spawn(k: KCtx, posXY: Vec2 = k.vec2(100, 100), config?: NpcConfig): NpcComp {
+  spawn(k: KCtx, posXY: Vec2 = k.vec2(100, 100), config?: NpcConfig): NpcObj {
     const C: NpcConfig = {
       ...config,
     };
