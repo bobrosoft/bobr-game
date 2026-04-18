@@ -17,6 +17,7 @@ export interface GameState {
     };
     level1: {
       isBoarDead?: boolean;
+      isMissBobrCutsceneShown?: boolean;
     };
   };
   temp: {
