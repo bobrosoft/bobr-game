@@ -78,6 +78,10 @@ export class BgMusicManager {
           ...options,
         });
 
+        if (options?.seek) {
+          this.currentMusic.seek(options?.seek ?? 0); // seek is not working in k.play
+        }
+
         // Check if play was successful
         if (this.currentMusic && this.currentMusic.paused) {
           // Audio might be blocked, queue it for later
