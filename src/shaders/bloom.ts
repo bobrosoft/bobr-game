@@ -1,5 +1,3 @@
-// Bloom shader
-// bloomStrength: 0.0 = no bloom, 1.0 = full bloom
 import {KCtx} from '../kaplay';
 
 export function loadBloomShader(k: KCtx) {
@@ -7,7 +5,7 @@ export function loadBloomShader(k: KCtx) {
     'bloom',
     null,
     `
-    uniform float bloomStrength;   // 0.0 – 1.0
+    uniform float bloomStrength;   // 0.0 = no bloom, 1.0 = full bloom
     uniform float canvasWidth;
     uniform float canvasHeight;
 
