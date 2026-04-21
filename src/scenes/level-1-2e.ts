@@ -9,6 +9,7 @@ import {OldBobrEntity} from '../entities/old-bobr';
 import {TriggerEntity} from '../entities/trigger';
 import {KCtx} from '../kaplay';
 import {bgMusicManager, camManager, gsm} from '../main';
+import {loadBloomShader} from '../shaders/bloom';
 import {sceneLevel_1_1} from './level-1-1';
 import {sceneLevel_1_3} from './level-1-3';
 import map from './maps/level-1-2e.txt?raw';
@@ -29,6 +30,8 @@ export const sceneLevel_1_2e = async (k: KCtx) => {
       // Define music
       bgMusicManager.loadMusic('start-location', 'music/start-location.mp3');
       bgMusicManager.loadMusic('love-theme-short', 'music/love-theme-short.mp3');
+
+      loadBloomShader(k);
     },
     tileWidth: 32,
     tileHeight: 32,
@@ -85,15 +88,38 @@ export const sceneLevel_1_2e = async (k: KCtx) => {
 
               bgMusicManager.playMusic('love-theme-short');
               player.beginCutscene().then();
-              await camManager.moveCamToObj(missBobr, {
+              camManager.moveCamToObj(missBobr, {
                 duration: 4,
               });
 
-              await k.wait(2.5);
+              // Wait before applying bloom
+              await k.wait(2);
+
+              // Apply bloom gradually
+              let bloomStrength = 0;
+              k.usePostEffect('bloom', () => ({
+                bloomStrength,
+                canvasWidth: k.width(),
+                canvasHeight: k.height(),
+              }));
+              k.tween(0, 1, 2, v => {
+                bloomStrength = v;
+              });
+
+              await k.wait(4.5);
               missBobr.walkToPosition(new k.Vec2(missBobr.pos.x - 300, missBobr.pos.y));
 
               await k.wait(4);
+
+              // Remove bloom gradually
+              k.tween(1, 0, 1, v => {
+                bloomStrength = v;
+              }).then(() => {
+                k.usePostEffect(null);
+              });
+
               await player.endCutscene({moveCamToPlayer: true});
+              missBobr.destroy();
               bgMusicManager.playMusic('start-location');
             },
           });
