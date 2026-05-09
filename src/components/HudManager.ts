@@ -34,14 +34,21 @@ export class HudManager {
       this.joystick = addJoystick(this.k, {size: Math.min(window.innerWidth / 15, 60)});
     }
 
-    // Add reload button to the top right corner
+    // Add reload button to the top left corner
     this.k.loadSprite('reload-button', 'sprites/icons/reload.png');
     this.reloadButton = this.k.add([
       'reload-button',
       hud({shouldBeShown: true}),
-      this.k.sprite('reload-button'),
+      this.k.rect(26, 26, {fill: false}),
       this.k.area(),
-      this.k.pos(10, 10),
+      this.k.pos(5, 7),
+      this.k.anchor('topleft'),
+    ]);
+    this.reloadButton.add([
+      //
+      hud({shouldBeShown: true}),
+      this.k.sprite('reload-button'),
+      this.k.pos(6, 5),
       this.k.anchor('topleft'),
     ]);
     this.reloadButton.onClick(() => {
@@ -76,7 +83,7 @@ export class HudManager {
   }
 
   show() {
-    this.k.get('hud').forEach(o => {
+    this.k.get('hud', {recursive: true}).forEach(o => {
       if (!o.shouldBeShown) {
         return;
       }
@@ -90,7 +97,7 @@ export class HudManager {
   }
 
   hide() {
-    this.k.get('hud').forEach(o => {
+    this.k.get('hud', {recursive: true}).forEach(o => {
       o.opacity = 0;
       o.paused = true;
     });
