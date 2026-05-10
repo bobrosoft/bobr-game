@@ -5,6 +5,7 @@ import {CamManager} from './components/CamManager';
 import {FadeManager} from './components/FadeManager';
 import {GameStateManager} from './components/GameStateManager';
 import {HudManager} from './components/HudManager';
+import {ShaderManager} from './components/ShaderManager';
 import {sceneWrapper} from './misc/changeScene';
 import translationsEN from './i18n/en.json';
 import translationsRU from './i18n/ru.json';
@@ -22,6 +23,7 @@ export const bgMusicManager: BgMusicManager = new BgMusicManager(k);
 export let hudManager: HudManager; // need to create it later because layers not yet defined
 export let fadeManager: FadeManager;
 export let camManager: CamManager;
+export let shaderManager: ShaderManager;
 
 (async () => {
   // Init i18n (without await it will not work)
@@ -52,10 +54,11 @@ export let camManager: CamManager;
     k.stay(),
   ]);
 
-  k.setVolume(0.5); // Set default volume for all sounds
+  k.setVolume(1); // Set default volume for all sounds
   hudManager = new HudManager(k);
   fadeManager = new FadeManager(k);
   camManager = new CamManager(k);
+  shaderManager = new ShaderManager(k);
 
   k.scene('menu', () => sceneMenu(k));
   k.scene('rotate-device', () => sceneRotateDevice(k));

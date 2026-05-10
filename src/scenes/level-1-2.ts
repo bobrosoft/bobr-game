@@ -9,7 +9,7 @@ import {MapItemEntity} from '../entities/map-item';
 import {OldBobrEntity} from '../entities/old-bobr';
 import {getPlayer} from '../entities/player';
 import {KCtx} from '../kaplay';
-import {bgMusicManager, camManager, gsm} from '../main';
+import {bgMusicManager, camManager, gsm, shaderManager} from '../main';
 import {sceneLevel_1_1} from './level-1-1';
 import {sceneLevel_1_3} from './level-1-3';
 import map from './maps/level-1-2.txt?raw';
@@ -132,6 +132,7 @@ export const sceneLevel_1_2 = async (k: KCtx) => {
 
   await k.loadSprite('bg-home-day', 'sprites/backgrounds/home-day.png');
   addBackground(k, 'bg-home-day', {offsetY: 40});
+  shaderManager.enableDefaultShader();
 
   bgMusicManager.playMusic('start-location');
 
