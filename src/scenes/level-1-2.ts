@@ -111,6 +111,7 @@ export const sceneLevel_1_2 = async (k: KCtx) => {
           const requiredItems = [
             //
             ITEM_ID.HOME_KITCHEN_CHAIR_RIGHT,
+            ITEM_ID.HOME_STOVE,
           ];
 
           // Check if there's any required item missing
