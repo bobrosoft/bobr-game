@@ -6,7 +6,7 @@ let isUsingQuickSwitch = false;
 
 /**
  * Change to a new scene with a fade out and fade in effect.
- * NOTE: That function assumes that the target scene is wrapped with sceneTransitionWrapper
+ * NOTE: That function assumes that the target scene is wrapped with sceneWrapper
  * @param k
  * @param newSceneName
  * @param options
