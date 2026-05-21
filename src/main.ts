@@ -47,7 +47,7 @@ export let shaderManager: ShaderManager;
   k.add([
     k.layer('bg'),
     k.rect(k.width(), k.height()),
-    k.color('#74dcf6' as any),
+    k.color('#74dcf6'),
     k.pos(0, 0),
     k.anchor('topleft'),
     k.fixed(),

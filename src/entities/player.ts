@@ -123,8 +123,8 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
     ]);
 
     let vx = 0;
-    let hitbox: GameObj<AreaComp | PosComp | OpacityComp>;
     let invincibleTimer: TimerController;
+    let wasHitboxCreated = false;
 
     function doJump() {
       player.jump(C.jumpForce);
@@ -192,7 +192,7 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
       const interactionHitbox = player.add([
         'player.interaction-hitbox',
         k.pos(player.flipX ? -14 : 14, 0), // offset to
-        k.area({shape: new k.Rect(k.vec2(1, 0), 16, player.height)}), // small area in front of player
+        k.area({shape: new k.Rect(k.vec2(1, 0), 16, player.height), isSensor: true}), // small area in front of player
         k.rect(20, 20, {fill: false}),
         k.anchor('bot'),
         k.opacity(0),
@@ -276,14 +276,20 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
       if (player.state === State.ATTACK) {
         // Check that we're on the right animation frame to trigger the hitbox
         if (player.getCurAnim()?.frameIndex === 2) {
-          if (!hitbox) {
+          // Need to check if we didn't create hitbox during that attack state.
+          // NOTE: this part of code may execute several times because required animation frame can be rendered
+          // several times due to animation speed and frame rate, but we want to create hitbox only once per attack state.
+          if (!wasHitboxCreated) {
+            wasHitboxCreated = true;
+
             const initialPosX = player.flipX ? -16 : 16;
             const finalPosX = player.flipX ? -26 : 26;
+            const hitEnemies = new Set<EnemyObj>();
 
-            hitbox = player.add([
+            const hitbox = player.add([
               'player.hitbox',
               k.pos(k.vec2(initialPosX, 0)),
-              k.area(),
+              k.area({isSensor: true}),
               k.sprite('player-hit-wave', {flipX: player.flipX}), // 20x20
               k.anchor('bot'),
               k.opacity(1),
@@ -300,12 +306,13 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
             });
 
             hitbox.onCollide('enemy', (enemy: EnemyObj) => {
-              enemy.registerHit(player);
-              k.play('player-attack');
-            });
+              // Check if we already hit that enemy before
+              if (hitEnemies.has(enemy)) return;
 
-            hitbox.onDestroy(() => {
-              hitbox = undefined; // reset hitbox reference
+              hitEnemies.add(enemy);
+              enemy.registerHit(player);
+
+              k.play('player-attack');
             });
           }
         }
@@ -359,6 +366,8 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
     });
 
     player.onStateEnter(State.ATTACK, () => {
+      wasHitboxCreated = false;
+
       setAnim('attack', () => {
         player.enterState(State.IDLE); // return to idle after attack
       });
