@@ -1,7 +1,7 @@
 import {AnchorComp, AnimateComp, Comp, GameObj, PosComp, SpriteComp} from 'kaplay';
 import {k} from '../kaplay';
 
-interface InfoIconComp extends Comp {}
+type InfoIconComp = Comp | {};
 
 const COMPONENT_ID = 'info-icon-comp';
 
