@@ -1,5 +1,6 @@
 import {t} from 'i18next';
 import {addBackground} from '../components/addBackground';
+import {addFlyingLeafs} from '../components/addFlyingLeafs';
 import {addFurnitureItem} from '../components/addFurnitureItem';
 import {addLevel} from '../components/addLevel';
 import {BumblebeeEntity} from '../entities/bumblebee';
@@ -128,6 +129,7 @@ export const sceneLevel_1_1 = async (k: KCtx) => {
 
   await k.loadSprite('bg-home-day', 'sprites/backgrounds/home-day.png');
   addBackground(k, 'bg-home-day', {offsetY: 40});
+  addFlyingLeafs(k, {intensity: 2});
   shaderManager.enableDefaultShader();
 
   bgMusicManager.playMusic('start-location');

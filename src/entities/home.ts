@@ -1,5 +1,6 @@
 import {t} from 'i18next';
 import {GameObj, Vec2} from 'kaplay';
+import {getLeafsGenerator} from '../components/addFlyingLeafs';
 import {interactable} from '../components/InteractableComp';
 import {showDialogSeries} from '../components/showDialog';
 import {KCtx} from '../kaplay';
@@ -187,6 +188,9 @@ export const HomeEntity: GameEntity<Config> = {
 
       bgMusicManager.playMusic('start-location');
 
+      // Enable leafs effect
+      getLeafsGenerator(k)?.unpause();
+
       // Call onExit callback when leaving home
       C.onExit?.();
     });
@@ -203,6 +207,9 @@ export const HomeEntity: GameEntity<Config> = {
       if (gsm.state.persistent.player.inventory.length > 0) {
         bgMusicManager.playMusic('home');
       }
+
+      // Disable leafs effect
+      getLeafsGenerator(k)?.pause();
 
       // Call onEnter callback when entering home
       C.onEnter?.();

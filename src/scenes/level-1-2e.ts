@@ -1,4 +1,5 @@
 import {addBackground} from '../components/addBackground';
+import {addFlyingLeafs, getLeafsGenerator} from '../components/addFlyingLeafs';
 import {addLevel} from '../components/addLevel';
 import {BumblebeeEntity} from '../entities/bumblebee';
 import {NpcObj} from '../entities/generic/npc';
@@ -80,8 +81,11 @@ export const sceneLevel_1_2e = async (k: KCtx) => {
               });
 
               const missBobr = k.get<NpcObj>('miss-bobr').at(0);
+              const leafsGenerator = getLeafsGenerator(k);
 
               bgMusicManager.playMusic('love-theme-short');
+              leafsGenerator?.pause();
+
               player.beginCutscene().then();
               camManager.moveCamToObj(missBobr, {
                 duration: 4,
@@ -94,9 +98,21 @@ export const sceneLevel_1_2e = async (k: KCtx) => {
               // Apply bloom shader
               shaderManager.enableShader('bloom', {duration: 2});
 
-              await k.wait(4.5);
+              // Wait before leafs spray
+              await k.wait(2.5);
+
+              // Spawn some leafs for cinematic effect
+              leafsGenerator?.spawnLeaf();
+              k.wait(0.1).then(() => leafsGenerator?.spawnLeaf());
+              k.wait(0.4).then(() => leafsGenerator?.spawnLeaf());
+              k.wait(0.6).then(() => leafsGenerator?.spawnLeaf());
+              k.wait(0.9).then(() => leafsGenerator?.spawnLeaf());
+
+              // Wait before walk
+              await k.wait(2);
               missBobr.walkToPosition(new k.Vec2(missBobr.pos.x - 300, missBobr.pos.y));
 
+              // Wait before cutscene end
               await k.wait(4);
 
               // Remove bloom shader
@@ -104,7 +120,9 @@ export const sceneLevel_1_2e = async (k: KCtx) => {
 
               await player.endCutscene({moveCamToPlayer: true});
               missBobr.destroy();
+
               bgMusicManager.playMusic('start-location');
+              leafsGenerator?.unpause();
             },
           });
         },
@@ -132,6 +150,7 @@ export const sceneLevel_1_2e = async (k: KCtx) => {
 
   await k.loadSprite('bg-home-day', 'sprites/backgrounds/home-day.png');
   addBackground(k, 'bg-home-day', {offsetY: 40});
+  addFlyingLeafs(k, {intensity: 2});
   shaderManager.enableDefaultShader();
 
   bgMusicManager.playMusic('start-location');
