@@ -1,3 +1,4 @@
+import {t} from 'i18next';
 import {addBackground} from '../components/addBackground';
 import {addFlyingLeafs, getLeafsGenerator} from '../components/addFlyingLeafs';
 import {addLevel} from '../components/addLevel';
@@ -9,7 +10,6 @@ import {TriggerEntity} from '../entities/trigger';
 import {KCtx} from '../kaplay';
 import {bgMusicManager, camManager, gsm, shaderManager} from '../main';
 import {sceneLevel_1_1} from './level-1-1';
-import {sceneLevel_1_3} from './level-1-3';
 import map from './maps/level-1-2e.txt?raw';
 import {tileDirectionSignLeft} from './tiles/tileDirectionSignLeft';
 import {tileDirectionSignRight} from './tiles/tileDirectionSignRight';
@@ -140,10 +140,10 @@ export const sceneLevel_1_2e = async (k: KCtx) => {
       {
         currentMapExitIndex: 1,
         spawnOffsetTiles: k.vec2(-2, 0),
-        getDestLevelParamsUponUse: () => ({
-          destLevel: sceneLevel_1_3.id,
-          destLevelExitIndex: 0,
-        }),
+        getDestLevelParamsUponUse: () => {
+          player.showDialogSeries([t('common.noNeedToGoThereAnymore')]);
+          return undefined;
+        },
       },
     ],
   });

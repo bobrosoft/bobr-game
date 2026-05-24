@@ -3,7 +3,8 @@
     "loading": "Загрузка...",
     "rotateDevice": "Поверните устройство",
     "howToInstall": "Как установить на домашний экран?",
-    "notAllItemsFound": "Кажется, я ещё не всё собрал..."
+    "notAllItemsFound": "Кажется, я ещё не всё собрал...",
+    "noNeedToGoThereAnymore": "Там больше ничего нет, нет смысла туда идти..."
   },
   "menu": {
     "attackControl": "J или Z для атаки",

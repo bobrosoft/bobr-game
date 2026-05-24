@@ -3,7 +3,8 @@
     "loading": "Loading...",
     "rotateDevice": "Rotate your device",
     "howToInstall": "How to install to the home screen?",
-    "notAllItemsFound": "Looks like I haven't collected everything yet..."
+    "notAllItemsFound": "Looks like I haven't collected everything yet...",
+    "noNeedToGoThereAnymore": "There's nothing else there, no need to go there anymore..."
   },
   "menu": {
     "attackControl": "J or Z to Attack",
