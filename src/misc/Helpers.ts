@@ -32,11 +32,11 @@ export class Helpers {
   }
 
   /**
-   * Check if the device has a notch (currently only checks for iPhones).
+   * Check if the device has a notch (currently applies to all touch devices).
    * @returns True if the device has a notch, false otherwise.
    */
   static hasNotch(): boolean {
-    return !!navigator.userAgent.match(/iPhone/);
+    return this.isTouchDevice();
   }
 
   /**
