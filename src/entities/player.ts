@@ -44,6 +44,7 @@ export interface PlayerComp
     texts: string[],
     cfg?: {
       speed?: number;
+      unskippable?: boolean;
     },
   ) => Promise<void>;
 
@@ -150,7 +151,7 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
       });
     }
 
-    async function showDialogSeries(texts: string[], cfg?: {speed?: number}): Promise<void> {
+    async function showDialogSeries(texts: string[], cfg?: {speed?: number; unskippable?: boolean}): Promise<void> {
       player.enterState(State.INTERACT);
       await _showDialogSeries(k, player, player, texts, cfg);
       player.enterState(State.IDLE);

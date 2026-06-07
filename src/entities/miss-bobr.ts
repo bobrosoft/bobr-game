@@ -1,8 +1,6 @@
-import {t} from 'i18next';
 import {Vec2} from 'kaplay';
 import {infoIcon} from '../components/InfoIconComp';
 import {interactable} from '../components/InteractableComp';
-import {showDialogSeries} from '../components/showDialog';
 import {KCtx} from '../kaplay';
 import {gsm} from '../main';
 import {defaultFriction} from '../misc/defaults';
@@ -19,14 +17,12 @@ enum State {
 export const MissBobrEntity: GameEntity<NpcConfig, NpcObj> = {
   async loadResources(k: KCtx): Promise<any> {
     return Promise.all([
-      k.loadSprite('miss-bobr', 'sprites/characters/bobr.gif', {
-        sliceX: 5,
-        sliceY: 4,
+      k.loadSprite('miss-bobr', 'sprites/characters/miss-bobr.gif', {
+        sliceX: 4,
+        sliceY: 2,
         anims: {
           idle: {from: 0, to: 1, speed: 3, loop: true},
-          walk: {from: 5, to: 8, speed: 14, loop: true}, // speed here is frames per second
-          jump: {from: 10, to: 10},
-          fall: {from: 10, to: 10},
+          walk: {from: 4, to: 7, speed: 5, loop: true}, // speed here is frames per second
         },
       }),
     ]);
@@ -109,29 +105,7 @@ export const MissBobrEntity: GameEntity<NpcConfig, NpcObj> = {
     }
 
     async function performInteraction(type: InteractionType, player: PlayerComp) {
-      switch (type) {
-        case InteractionType.SAY_INTRO_REPEAT:
-          await showDialogSeries(
-            k,
-            mainObj,
-            player,
-            [
-              //
-              t('level1.oldBobr.intro1'),
-              t('level1.oldBobr.intro2'),
-            ],
-            {unskippable: true},
-          );
-
-          gsm.update({
-            persistent: {
-              oldBobr: {
-                isIntroSaid: true,
-              },
-            },
-          });
-          break;
-      }
+      //
     }
 
     function walkToPosition(newPos: Vec2) {

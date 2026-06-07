@@ -3,6 +3,7 @@ import {addBackground} from '../components/addBackground';
 import {addFlyingLeafs, getLeafsGenerator} from '../components/addFlyingLeafs';
 import {addLevel} from '../components/addLevel';
 import {BumblebeeEntity} from '../entities/bumblebee';
+import {InteractableItemEntity} from '../entities/interactable-item';
 import {NpcObj} from '../entities/generic/npc';
 import {GopherEntity} from '../entities/gopher';
 import {MissBobrEntity} from '../entities/miss-bobr';
@@ -60,6 +61,22 @@ export const sceneLevel_1_2e = async (k: KCtx) => {
           if (!gsm.state.persistent.level1.isMissBobrCutsceneShown) {
             MissBobrEntity.spawn(k, worldPos, {flipX: true});
           }
+        },
+      },
+      f: {
+        loadResources: async k => {
+          k.loadSprite('flower-1', 'sprites/items/flower-1.png');
+        },
+        factory: (k, tilePos, worldPos) => {
+          InteractableItemEntity.spawn(k, worldPos, {
+            sprite: 'flower-1',
+            interact: async player => {
+              await player.showDialogSeries([
+                //
+                t('level1.bobr.flowerDialog'),
+              ]);
+            },
+          });
         },
       },
       T: {
