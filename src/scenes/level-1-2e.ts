@@ -68,7 +68,7 @@ export const sceneLevel_1_2e = async (k: KCtx) => {
           k.loadSprite('flower-1', 'sprites/items/flower-1.png');
         },
         factory: (k, tilePos, worldPos) => {
-          InteractableItemEntity.spawn(k, worldPos, {
+          const obj = InteractableItemEntity.spawn(k, worldPos, {
             sprite: 'flower-1',
             interact: async player => {
               await player.showDialogSeries([
@@ -77,6 +77,7 @@ export const sceneLevel_1_2e = async (k: KCtx) => {
               ]);
             },
           });
+          obj.use(k.z(1));
         },
       },
       T: {
