@@ -6,11 +6,13 @@ import {FadeManager} from './components/FadeManager';
 import {GameStateManager} from './components/GameStateManager';
 import {HudManager} from './components/HudManager';
 import {ShaderManager} from './components/ShaderManager';
-import {sceneWrapper} from './misc/changeScene';
 import translationsEN from './i18n/en.json';
 import translationsRU from './i18n/ru.json';
 import {k} from './kaplay';
+import {sceneWrapper} from './misc/changeScene';
 import {Helpers} from './misc/Helpers';
+import {requestFullscreenOnFirstInteraction} from './misc/requestFullscreenOnFirstInteraction';
+import {watchForOrientationChange} from './misc/watchForOrientationChange';
 import {sceneLevel_1_1} from './scenes/level-1-1';
 import {sceneLevel_1_2} from './scenes/level-1-2';
 import {sceneLevel_1_2e} from './scenes/level-1-2e';
@@ -69,22 +71,6 @@ export let shaderManager: ShaderManager;
 
   const isInitialOrientationLandscape = Helpers.isLandscapeMode();
 
-  // Watch for orientation changes to adjust canvas size
-  window.addEventListener('resize', () => {
-    // If initial orientation was landscape, no need to reload on orientation change
-    if (isInitialOrientationLandscape) {
-      return;
-    }
-
-    if (Helpers.isLandscapeMode() === isInitialOrientationLandscape) {
-      return; // No change in orientation, no need to reload
-    }
-
-    setTimeout(() => {
-      window.location.reload();
-    }, 1000);
-  });
-
   // Check device orientation and show warning if not landscape
   if (!isInitialOrientationLandscape) {
     k.go('rotate-device');
@@ -92,22 +78,11 @@ export let shaderManager: ShaderManager;
     k.go('menu');
   }
 
+  watchForOrientationChange(isInitialOrientationLandscape);
+  requestFullscreenOnFirstInteraction();
+
   // setInterval(() => {
   //   k.debug.log('numObjects: ', k.debug.numObjects(), ' | fps: ', k.debug.fps());
   // }, 1000);
   // k.debug.inspect = true;
-})();
-
-// Request fullscreen on first user interaction
-(() => {
-  if (import.meta.env.DEV) {
-    return; // do not request fullscreen in dev mode
-  }
-
-  const callback = () => {
-    Helpers.requestFullscreen();
-    document.documentElement.removeEventListener('pointerup', callback);
-  };
-
-  document.documentElement.addEventListener('pointerup', callback);
 })();
