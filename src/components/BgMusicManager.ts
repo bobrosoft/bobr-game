@@ -70,6 +70,7 @@ export class BgMusicManager {
         await this.resumeAudioContext();
 
         await this.fadeOutCurrentMusic(options?.fadeOutDuration);
+        await Helpers.setTimeoutAsync(100);
 
         this.currentMusicName = name;
         this.currentMusic = this.k.play(name, {
@@ -141,17 +142,21 @@ export class BgMusicManager {
     fadeOutDuration = fadeOutDuration ?? this.config.fadeOutDuration + 0.000001; // to avoid division by zero
 
     if (this.currentMusic && !this.currentMusic.paused) {
-      await this.k.tween(this.currentMusic.volume, 0, fadeOutDuration, v => {
-        if (this.currentMusic) {
-          this.currentMusic.volume = v;
-        }
-      });
+      if (!Helpers.isIOS()) {
+        await this.k.tween(this.currentMusic.volume, 0, fadeOutDuration, v => {
+          if (this.currentMusic) {
+            this.currentMusic.volume = v;
+          }
+        });
+      }
       this.currentMusic.stop();
     }
   }
 
   /**
-   * Sets up event listeners to unlock audio on mobile devices after user interaction
+   * Sets up event listeners to unlock audio on mobile devices after user interaction.
+   * Listeners are intentionally kept active — iOS Safari can re-interrupt the AudioContext
+   * at any time (screen lock, tab switch, phone call), so we must be able to recover.
    */
   protected setupMobileAudioUnlock() {
     const unlockAudio = async () => {
@@ -164,37 +169,36 @@ export class BgMusicManager {
           this.pendingMusic = undefined;
           this.playMusic(name, options);
         }
-
-        // Remove listeners after first successful unlock
-        document.removeEventListener('touchstart', unlockAudio);
-        document.removeEventListener('touchend', unlockAudio);
-        document.removeEventListener('click', unlockAudio);
-        document.removeEventListener('keydown', unlockAudio);
       } catch (error) {
-        // Keep listeners if unlock failed
         console.warn('Audio unlock attempt failed:', error);
       }
     };
 
-    // Listen to various user interaction events
+    // User interaction events — kept active so re-interruptions (iOS) can be recovered
     document.addEventListener('touchstart', unlockAudio, {passive: true});
     document.addEventListener('touchend', unlockAudio, {passive: true});
     document.addEventListener('click', unlockAudio);
     document.addEventListener('keydown', unlockAudio);
+
+    // Resume when app returns to foreground (screen unlock, tab switch back, etc.)
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        unlockAudio().then();
+      }
+    });
+    window.addEventListener('focus', unlockAudio);
   }
 
   /**
-   * Tries to resume the audio context (required for mobile browsers)
+   * Tries to resume the audio context (required for mobile browsers).
    */
   protected async resumeAudioContext(): Promise<void> {
     try {
-      // Access audio context through the global AudioContext if available
       const audioCtx = (this.k as any).audio?.ctx;
-      if (audioCtx && audioCtx.state === 'suspended') {
+      if (audioCtx && (audioCtx.state === 'suspended' || audioCtx.state === 'interrupted')) {
         await audioCtx.resume();
       }
     } catch (error) {
-      // Silently fail if audio context is not accessible
       console.debug('Could not resume audio context:', error);
     }
   }

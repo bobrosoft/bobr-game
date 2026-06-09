@@ -16,6 +16,16 @@ export class Helpers {
   }
 
   /**
+   * Check if the device is running iOS (iPhone, iPad, iPod).
+   * @param userAgent
+   * @returns True if the device is running iOS, false otherwise.
+   */
+  static isIOS(userAgent?: string): boolean {
+    userAgent = userAgent || window.navigator.userAgent;
+    return /iphone|ipad|ipod/gi.test(userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  }
+
+  /**
    * Check if the device is in landscape mode based on window dimensions.
    * @returns True if the device is in landscape mode, false otherwise.
    */
