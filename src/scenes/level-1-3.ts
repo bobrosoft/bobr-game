@@ -11,8 +11,9 @@ import {GopherEntity} from '../entities/gopher';
 import {OldBobrEntity} from '../entities/old-bobr';
 import {getPlayer} from '../entities/player';
 import {KCtx} from '../kaplay';
-import {bgMusicManager, camManager, gsm} from '../main';
+import {bgMusicManager, camManager, gsm, shaderManager} from '../main';
 import {sceneLevel_1_2} from './level-1-2';
+import {sceneLevel_1_2e} from './level-1-2e';
 import map from './maps/level-1-3.txt?raw';
 import {tileDirectionSignLeft} from './tiles/tileDirectionSignLeft';
 import {tileDirectionSignRight} from './tiles/tileDirectionSignRight';
@@ -108,12 +109,17 @@ export const sceneLevel_1_3 = async (k: KCtx) => {
                 .then();
               return;
             }
-          }
 
-          return {
-            destLevel: sceneLevel_1_2.id,
-            destLevelExitIndex: 1,
-          };
+            return {
+              destLevel: sceneLevel_1_2e.id,
+              destLevelExitIndex: 1,
+            };
+          } else {
+            return {
+              destLevel: sceneLevel_1_2.id,
+              destLevelExitIndex: 1,
+            };
+          }
         },
       },
     ],
@@ -121,6 +127,7 @@ export const sceneLevel_1_3 = async (k: KCtx) => {
 
   await k.loadSprite('bg-home-day', 'sprites/backgrounds/home-day.png');
   addBackground(k, 'bg-home-day', {offsetY: 40});
+  shaderManager.enableDefaultShader();
 
   camManager.setCamConstraintsForLevel(level, {
     leftTilesPadding: 2, // to hide wall on the left and exit collision box

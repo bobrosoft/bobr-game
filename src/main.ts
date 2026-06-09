@@ -5,6 +5,7 @@ import {CamManager} from './components/CamManager';
 import {FadeManager} from './components/FadeManager';
 import {GameStateManager} from './components/GameStateManager';
 import {HudManager} from './components/HudManager';
+import {ShaderManager} from './components/ShaderManager';
 import {sceneWrapper} from './misc/changeScene';
 import translationsEN from './i18n/en.json';
 import translationsRU from './i18n/ru.json';
@@ -12,6 +13,7 @@ import {k} from './kaplay';
 import {Helpers} from './misc/Helpers';
 import {sceneLevel_1_1} from './scenes/level-1-1';
 import {sceneLevel_1_2} from './scenes/level-1-2';
+import {sceneLevel_1_2e} from './scenes/level-1-2e';
 import {sceneLevel_1_3} from './scenes/level-1-3';
 import {sceneMenu} from './scenes/menu';
 import {sceneRotateDevice} from './scenes/rotateDevice';
@@ -21,6 +23,7 @@ export const bgMusicManager: BgMusicManager = new BgMusicManager(k);
 export let hudManager: HudManager; // need to create it later because layers not yet defined
 export let fadeManager: FadeManager;
 export let camManager: CamManager;
+export let shaderManager: ShaderManager;
 
 (async () => {
   // Init i18n (without await it will not work)
@@ -51,16 +54,18 @@ export let camManager: CamManager;
     k.stay(),
   ]);
 
-  k.setVolume(0.5); // Set default volume for all sounds
+  k.setVolume(1); // Set default volume for all sounds
   hudManager = new HudManager(k);
   fadeManager = new FadeManager(k);
   camManager = new CamManager(k);
+  shaderManager = new ShaderManager(k);
 
   k.scene('menu', () => sceneMenu(k));
   k.scene('rotate-device', () => sceneRotateDevice(k));
   k.scene(sceneLevel_1_1.id, sceneWrapper(k, sceneLevel_1_1));
   k.scene(sceneLevel_1_2.id, sceneWrapper(k, sceneLevel_1_2));
   k.scene(sceneLevel_1_3.id, sceneWrapper(k, sceneLevel_1_3));
+  k.scene(sceneLevel_1_2e.id, sceneWrapper(k, sceneLevel_1_2e));
 
   const isInitialOrientationLandscape = Helpers.isLandscapeMode();
 

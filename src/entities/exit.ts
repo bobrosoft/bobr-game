@@ -10,8 +10,8 @@ export interface ExitConfig {
   spawnOffsetTiles: Vec2;
 
   /**
-   * Returns destination level ID and exit index to use when player uses this exit
-   * If undefined, exit will not function. It may be used to check exit conditions before exit.
+   * Returns destination level ID and exit index to use when player uses this exit.
+   * If returns undefined, exit will not function. It may be used to check exit conditions before exit.
    */
   getDestLevelParamsUponUse: () => {destLevel: string; destLevelExitIndex: number} | undefined;
 }

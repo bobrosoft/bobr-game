@@ -1,5 +1,6 @@
 import {t} from 'i18next';
 import {addBackground} from '../components/addBackground';
+import {addFlyingLeafs} from '../components/addFlyingLeafs';
 import {addFurnitureItem} from '../components/addFurnitureItem';
 import {addLevel} from '../components/addLevel';
 import {BumblebeeEntity} from '../entities/bumblebee';
@@ -10,7 +11,7 @@ import {MapItemEntity} from '../entities/map-item';
 import {OldBobrEntity} from '../entities/old-bobr';
 import {getPlayer} from '../entities/player';
 import {KCtx} from '../kaplay';
-import {bgMusicManager, camManager, fadeManager, gsm} from '../main';
+import {bgMusicManager, camManager, gsm, shaderManager} from '../main';
 import {sceneLevel_1_2} from './level-1-2';
 import map from './maps/level-1-1.txt?raw';
 import {tileDirectionSignLeft} from './tiles/tileDirectionSignLeft';
@@ -128,6 +129,8 @@ export const sceneLevel_1_1 = async (k: KCtx) => {
 
   await k.loadSprite('bg-home-day', 'sprites/backgrounds/home-day.png');
   addBackground(k, 'bg-home-day', {offsetY: 40});
+  addFlyingLeafs(k, {intensity: 2});
+  shaderManager.enableDefaultShader();
 
   bgMusicManager.playMusic('start-location');
 
