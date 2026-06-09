@@ -72,6 +72,7 @@ Run `node script/gen-spritesheet.js` to compile them into spritesheets placed un
 ## Coding Conventions
 - **TypeScript strict mode** is enabled — avoid `any` unless there is a documented reason.
 - Use **named exports** (no default exports for components/entities).
+- When writing comments to functions, don't describe precise implementation since it may change.
 - Keep entity logic inside the entity file; scenes only orchestrate spawning.
 - New tile types go in `src/scenes/tiles/` as separate files, following existing naming (`tile<Name>.ts`).
 - Audio files go in `public/music/` (background tracks) or `public/sounds/` (sound effects).
