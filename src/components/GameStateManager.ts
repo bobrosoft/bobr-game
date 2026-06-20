@@ -4,6 +4,9 @@ import {Helpers} from '../misc/Helpers';
 export interface GameState {
   version: number; // for future state migrations
   persistent: {
+    settings: {
+      isDefaultShaderEnabled: boolean;
+    };
     currentLevel: string;
     spawnAtExitIndex?: number; // index of the exit to spawn at when loading the level
     player: {
@@ -47,7 +50,7 @@ export class GameStateManager {
         const clearState = this.getClearState();
         const persistentState = JSON.parse(savedState) as GameState['persistent'];
 
-        this._state = Helpers.mergeDeep(this.getClearState(), {
+        this._state = Helpers.mergeDeep(clearState, {
           version: clearState.version, // use current version
           persistent: persistentState,
           temp: this.getTempStateFromPersistentState(persistentState),
@@ -233,6 +236,9 @@ export class GameStateManager {
 
   protected getClearState(): GameState {
     const initialPersistentState: GameState['persistent'] = {
+      settings: {
+        isDefaultShaderEnabled: true,
+      },
       currentLevel: undefined,
       player: {
         deaths: 0,

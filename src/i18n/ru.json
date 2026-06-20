@@ -1,12 +1,17 @@
 {
   "common": {
     "loading": "Загрузка...",
+    "yes": "Да",
+    "no": "Нет",
     "rotateDevice": "Поверните устройство",
     "howToInstall": "Как установить на домашний экран?",
     "notAllItemsFound": "Кажется, я ещё не всё собрал...",
     "noNeedToGoThereAnymore": "Там больше ничего нет, нет смысла туда идти..."
   },
   "menu": {
+    "play": "Играть",
+    "resetProgress": "Сбросить прогресс",
+    "defaultShader": "Шейдер по умолч.:",
     "attackControl": "J или Z для атаки",
     "jumpControl": "K, X или Пробел для прыжка"
   },

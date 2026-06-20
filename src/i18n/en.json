@@ -1,12 +1,17 @@
 {
   "common": {
     "loading": "Loading...",
+    "yes": "Yes",
+    "no": "No",
     "rotateDevice": "Rotate your device",
     "howToInstall": "How to install to the home screen?",
     "notAllItemsFound": "Looks like I haven't collected everything yet...",
     "noNeedToGoThereAnymore": "There's nothing else there, no need to go there anymore..."
   },
   "menu": {
+    "play": "Play",
+    "resetProgress": "Reset Progress",
+    "defaultShader": "Default Shader:",
     "attackControl": "J or Z to Attack",
     "jumpControl": "K, X or Space to Jump"
   },

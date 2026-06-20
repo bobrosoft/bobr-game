@@ -1,5 +1,6 @@
 import {EaseFuncs, TweenController} from 'kaplay';
 import {KCtx} from '../kaplay';
+import {gsm} from '../main';
 import {loadBloomShader} from '../shaders/bloom';
 import {loadCrtShader} from '../shaders/crt';
 
@@ -16,6 +17,12 @@ export class ShaderManager {
   }
 
   enableDefaultShader(): TweenController {
+    if (!gsm.state.persistent.settings.isDefaultShaderEnabled) {
+      return this.k.tween(0, 1, 0, () => {
+        // noop
+      });
+    }
+
     return this.enableShader('default', {duration: 1});
   }
 

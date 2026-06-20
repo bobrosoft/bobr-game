@@ -1,9 +1,7 @@
 import {AreaComp, GameObj, OpacityComp, PosComp, ScaleComp, SpriteComp} from 'kaplay';
 import {KCtx} from '../kaplay';
 import {gsm} from '../main';
-import {changeScene} from '../misc/changeScene';
 import {Helpers} from '../misc/Helpers';
-import {sceneLevel_1_1} from '../scenes/level-1-1';
 import {addJoystick, JoystickGameObj} from './addJoystick';
 import {GameState} from './GameStateManager';
 import {hud, HudComp} from './HudComp';
@@ -12,7 +10,6 @@ export class HudManager {
   protected isShown = false;
   protected dimOverlay: GameObj<OpacityComp>;
   protected joystick?: JoystickGameObj;
-  protected reloadButton: GameObj<HudComp | AreaComp>;
   protected luckyCharm: GameObj<HudComp | AreaComp | OpacityComp | PosComp | ScaleComp | SpriteComp>;
 
   constructor(protected k: KCtx) {
@@ -33,28 +30,6 @@ export class HudManager {
     if (Helpers.isTouchDevice()) {
       this.joystick = addJoystick(this.k, {size: Math.min(window.innerWidth / 15, 60)});
     }
-
-    // Add reload button to the top left corner
-    this.k.loadSprite('reload-button', 'sprites/icons/reload.png');
-    this.reloadButton = this.k.add([
-      'reload-button',
-      hud({shouldBeShown: true}),
-      this.k.rect(26, 26, {fill: false}),
-      this.k.area(),
-      this.k.pos(5, 7),
-      this.k.anchor('topleft'),
-    ]);
-    this.reloadButton.add([
-      //
-      hud({shouldBeShown: true}),
-      this.k.sprite('reload-button'),
-      this.k.pos(6, 5),
-      this.k.anchor('topleft'),
-    ]);
-    this.reloadButton.onClick(() => {
-      gsm.reset();
-      changeScene(this.k, sceneLevel_1_1.id, {isGameLevel: true}).then();
-    });
 
     // Add lucky charm
     this.k.loadSprite('lucky-charm', 'sprites/icons/lucky-charm.gif', {
