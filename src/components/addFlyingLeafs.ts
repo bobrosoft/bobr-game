@@ -26,7 +26,9 @@ export function addFlyingLeafs(
     ...config,
   };
 
-  k.loadSprite('particle-leaf', 'sprites/particles/leaf.png');
+  k.loadSprite('particle-leaf', 'sprites/particles/leafs-green.png', {
+    sliceX: 2,
+  });
 
   // Create dummy object so we can control effect lifetime
   const mainObj = k.add([
@@ -63,9 +65,9 @@ export function addFlyingLeafs(
     const initialPos = k.toWorld(k.vec2(screenPosX, screenPosY));
 
     const leaf = k.add([
-      k.sprite('particle-leaf'),
+      k.sprite('particle-leaf', {frame: k.choose([0, 1])}),
       k.pos(initialPos),
-      k.scale(k.rand(0.7, 1)),
+      k.scale(k.rand(0.8, 1.1)),
       k.rotate(k.rand(0, 360)),
       k.layer('game'),
       k.offscreen({distance: 200, destroy: true}),
