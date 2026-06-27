@@ -52,10 +52,12 @@ script/                    # Different scripts
 - `camManager` — `CamManager`: controls camera follow and bounds.
 
 ### Scenes
-Each scene is an async function `(k: KCtx) => void` registered in `main.ts` via `sceneWrapper`. Scene transitions are done through `changeScene()` from `misc/changeScene.ts`.
+Each scene is an async function `(k: KCtx) => void` registered in `main.ts` via `sceneWrapper`. 
+Scene transitions are done through `changeScene()` from `misc/changeScene.ts`.
 
 ### Tile Maps
-Levels use plain-text ASCII tile maps (`scenes/maps/*.txt`). The `addLevel()` component in `components/addLevel.ts` parses a map and calls tile factory functions (from `scenes/tiles/`) for each character.
+Levels use plain-text ASCII tile maps (`scenes/maps/*.txt`). The `addLevel()` component in `components/addLevel.ts` 
+parses a map and calls tile factory functions (from `scenes/tiles/`) for each character.
 
 ### Entities
 Each entity typically exposes:
@@ -63,7 +65,7 @@ Each entity typically exposes:
 - `static spawn(k: KCtx, pos: Vec2, ...)` — instantiates the entity in the scene.
 
 ### i18n
-All user-facing strings must go through `i18next` (`t('key')`). Translation files live in `src/i18n/`. Russian (`ru`) is the primary/fallback language.
+All user-facing strings must go through `i18next` (`t('key')`). Translation files live in `src/i18n/`.
 
 ### Spritesheet Generation
 Animated sprites are authored as source GIFs in `src/sprites-src/`.
@@ -78,6 +80,7 @@ Run `node script/gen-spritesheet.js` to compile them into spritesheets placed un
 - Audio files go in `public/music/` (background tracks) or `public/sounds/` (sound effects).
 - Sprites go in `public/sprites/` (compiled) and `src/sprites-src/` (source GIFs).
 - Run `npm run check && npm run lint` before committing changes.
+- Use `onClick` event if need to add a click event to the object, not `onMousePress`.
 
 ## Testing
 There is no automated test suite at this time.
