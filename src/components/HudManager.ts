@@ -57,6 +57,10 @@ export class HudManager {
     gsm.onUpdate(state => this.onStateUpdate(state));
   }
 
+  prepareForNewScene() {
+    this.luckyCharm.shouldBeShown = gsm.state.persistent.player.hasLuckyCharm;
+  }
+
   show() {
     this.k.get('hud', {recursive: true}).forEach(o => {
       if (!o.shouldBeShown) {
@@ -92,42 +96,41 @@ export class HudManager {
     });
   }
 
-  async onStateUpdate(state: GameState) {
-    // Check if need to show lucky charm
-    if (state.persistent.player.hasLuckyCharm && !this.luckyCharm.shouldBeShown) {
-      this.luckyCharm.shouldBeShown = true;
-      this.luckyCharm.paused = false;
+  async showLuckyCharmAnimation() {
+    this.luckyCharm.shouldBeShown = true;
+    this.luckyCharm.paused = false;
 
-      const initialPos = this.k.vec2(this.k.width() / 2 + 10, this.k.height() / 2 - 10);
-      const endPos = this.luckyCharm.pos.clone();
-      this.luckyCharm.play('health2');
-      this.luckyCharm.pos = initialPos.clone();
-      this.luckyCharm.scale = this.k.vec2(2);
+    const initialPos = this.k.vec2(this.k.width() / 2 + 10, this.k.height() / 2 - 10);
+    const endPos = this.luckyCharm.pos.clone();
+    this.luckyCharm.play('health2');
+    this.luckyCharm.pos = initialPos.clone();
+    this.luckyCharm.scale = this.k.vec2(2);
 
-      await this.slightlyDimTheGame();
-      await this.k.tween(0, 1, 1, v => {
-        this.luckyCharm.opacity = v;
-      });
+    await this.slightlyDimTheGame();
+    await this.k.tween(0, 1, 1, v => {
+      this.luckyCharm.opacity = v;
+    });
 
-      await this.k.wait(1);
-      this.k.play('player-take-key');
+    await this.k.wait(1);
+    this.k.play('player-take-key');
 
-      this.slightlyUndimTheGame().then();
-      await this.k.tween(
-        0,
-        1,
-        1.5,
-        v => {
-          this.luckyCharm.pos = this.k.vec2(
-            this.k.lerp(initialPos.x, endPos.x, v),
-            this.k.lerp(initialPos.y, endPos.y, v),
-          );
-          this.luckyCharm.scale = this.k.vec2(this.k.lerp(2, 1, v));
-        },
-        this.k.easings['easeOutElastic'],
-      );
-    }
+    this.slightlyUndimTheGame().then();
+    await this.k.tween(
+      0,
+      1,
+      1.5,
+      v => {
+        this.luckyCharm.pos = this.k.vec2(
+          this.k.lerp(initialPos.x, endPos.x, v),
+          this.k.lerp(initialPos.y, endPos.y, v),
+        );
+        this.luckyCharm.scale = this.k.vec2(this.k.lerp(2, 1, v));
+      },
+      this.k.easings['easeOutElastic'],
+    );
+  }
 
+  protected async onStateUpdate(state: GameState) {
     // Check if need to hide lucky charm
     if (!state.persistent.player.hasLuckyCharm && this.luckyCharm.shouldBeShown) {
       this.luckyCharm.shouldBeShown = false;

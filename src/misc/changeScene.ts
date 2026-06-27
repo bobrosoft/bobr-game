@@ -49,6 +49,7 @@ export function sceneWrapper(k: KCtx, sceneFunc: (k: KCtx) => Promise<void>) {
     // You should use changeScene to change scene for it to work properly
 
     gsm.prepareForNewScene();
+    hudManager.prepareForNewScene();
     await sceneFunc(k);
     await Helpers.setTimeoutAsync(500);
 

@@ -4,7 +4,7 @@ import {infoIcon} from '../components/InfoIconComp';
 import {interactable} from '../components/InteractableComp';
 import {showDialogSeries} from '../components/showDialog';
 import {KCtx} from '../kaplay';
-import {gsm} from '../main';
+import {gsm, hudManager} from '../main';
 import {defaultFriction} from '../misc/defaults';
 import {sceneLevel_1_2} from '../scenes/level-1-2';
 import {GameEntity} from './generic/entity';
@@ -171,7 +171,7 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcObj> = {
               },
             },
           });
-          await k.wait(3.5); // sync with HUD animation
+          await hudManager.showLuckyCharmAnimation();
 
           await showDialogSeries(
             k,
