@@ -1,7 +1,7 @@
 import {t} from 'i18next';
 import {GameObj, Vec2} from 'kaplay';
 import {KCtx} from '../kaplay';
-import {gsm} from '../main';
+import {gsm, shaderManager} from '../main';
 import {changeScene} from '../misc/changeScene';
 import {Helpers} from '../misc/Helpers';
 import {sceneLevel_1_1} from './level-1-1';
@@ -79,8 +79,19 @@ function createLayout(k: KCtx, cx: number, cy: number) {
   };
 }
 
-export const sceneMenu = (k: KCtx) => {
+export const sceneMenu = async (k: KCtx) => {
   const layout = createLayout(k, k.width() / 2, k.height() / 2);
+
+  // Add default blue background
+  k.add([
+    k.layer('bg'),
+    k.rect(k.width(), k.height()),
+    k.color('#74dcf6'),
+    k.pos(0, 0),
+    k.anchor('topleft'),
+    k.fixed(),
+    k.stay(),
+  ]);
 
   /// Add buttons
   layout.add(
@@ -188,4 +199,6 @@ export const sceneMenu = (k: KCtx) => {
       k.fixed(),
     ]);
   }
+
+  shaderManager.disableShader();
 };

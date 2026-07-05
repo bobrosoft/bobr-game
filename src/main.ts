@@ -9,7 +9,7 @@ import {ShaderManager} from './components/ShaderManager';
 import translationsEN from './i18n/en.json';
 import translationsRU from './i18n/ru.json';
 import {k} from './kaplay';
-import {sceneWrapper} from './misc/changeScene';
+import {changeScene, sceneWrapper} from './misc/changeScene';
 import {Helpers} from './misc/Helpers';
 import {requestFullscreenOnFirstInteraction} from './misc/requestFullscreenOnFirstInteraction';
 import {watchForOrientationChange} from './misc/watchForOrientationChange';
@@ -45,25 +45,14 @@ export let shaderManager: ShaderManager;
 
   k.loadFont('pixel', 'fonts/Press_Start_2P/PressStart2P-Regular.ttf');
   k.setLayers(['bg', 'game', 'hud', 'menu', 'fade'], 'game');
-
-  // Add default blue background
-  k.add([
-    k.layer('bg'),
-    k.rect(k.width(), k.height()),
-    k.color('#74dcf6'),
-    k.pos(0, 0),
-    k.anchor('topleft'),
-    k.fixed(),
-    k.stay(),
-  ]);
-
   k.setVolume(1); // Set default volume for all sounds
+  
   hudManager = new HudManager(k);
   fadeManager = new FadeManager(k);
   camManager = new CamManager(k);
   shaderManager = new ShaderManager(k);
 
-  k.scene('menu', () => sceneMenu(k));
+  k.scene('menu', sceneWrapper(k, sceneMenu));
   k.scene('menu-debug', () => sceneMenuDebug(k));
   k.scene('rotate-device', () => sceneRotateDevice(k));
   k.scene(sceneLevel_1_1.id, sceneWrapper(k, sceneLevel_1_1));
@@ -77,7 +66,7 @@ export let shaderManager: ShaderManager;
   if (!isInitialOrientationLandscape) {
     k.go('rotate-device');
   } else {
-    k.go('menu');
+    changeScene(k, 'menu', {isGameLevel: false}).then();
   }
 
   watchForOrientationChange(isInitialOrientationLandscape);

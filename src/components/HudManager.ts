@@ -1,6 +1,7 @@
 import {AreaComp, GameObj, OpacityComp, PosComp, ScaleComp, SpriteComp} from 'kaplay';
 import {KCtx} from '../kaplay';
 import {gsm} from '../main';
+import {changeScene} from '../misc/changeScene';
 import {Helpers} from '../misc/Helpers';
 import {addJoystick, JoystickGameObj} from './addJoystick';
 import {GameState} from './GameStateManager';
@@ -10,6 +11,7 @@ export class HudManager {
   protected isShown = false;
   protected dimOverlay: GameObj<OpacityComp>;
   protected joystick?: JoystickGameObj;
+  protected menuButton: GameObj<HudComp | AreaComp>;
   protected luckyCharm: GameObj<HudComp | AreaComp | OpacityComp | PosComp | ScaleComp | SpriteComp>;
 
   constructor(protected k: KCtx) {
@@ -30,6 +32,28 @@ export class HudManager {
     if (Helpers.isTouchDevice()) {
       this.joystick = addJoystick(this.k, {size: Math.min(window.innerWidth / 15, 60)});
     }
+
+    // Add reload button to the top left corner
+    this.k.loadSprite('menu-button', 'sprites/icons/menu.png');
+    this.menuButton = this.k.add([
+      'menu-button',
+      hud({shouldBeShown: true}),
+      this.k.rect(30, 30, {fill: false}),
+      this.k.area(),
+      this.k.pos(5, 5),
+      this.k.anchor('topleft'),
+    ]);
+    this.menuButton.add([
+      //
+      hud({shouldBeShown: true}),
+      this.k.pos(6, 6),
+      this.k.sprite('menu-button'),
+    ]);
+    this.menuButton.onClick(() => {
+      if (!this.menuButton.paused) {
+        changeScene(this.k, 'menu', {isGameLevel: false}).then();
+      }
+    });
 
     // Add lucky charm
     this.k.loadSprite('lucky-charm', 'sprites/icons/lucky-charm.gif', {

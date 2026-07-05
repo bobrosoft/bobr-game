@@ -3,6 +3,7 @@ import {fadeManager, gsm, hudManager} from '../main';
 import {Helpers} from './Helpers';
 
 let isUsingQuickSwitch = false;
+let isGameLevel = false;
 
 /**
  * Change to a new scene with a fade out and fade in effect.
@@ -17,6 +18,7 @@ export async function changeScene(
   options: {isGameLevel: boolean; spawnAtExitIndex?: number; quickSwitch?: boolean},
 ): Promise<void> {
   isUsingQuickSwitch = options?.quickSwitch || false;
+  isGameLevel = options?.isGameLevel || false;
 
   // Remember game level and where to spawn in the new scene
   if (options.isGameLevel) {
@@ -29,7 +31,7 @@ export async function changeScene(
   }
 
   // Start transition
-  if (!isUsingQuickSwitch) {
+  if (!isUsingQuickSwitch || !isGameLevel) {
     hudManager.hide();
   }
   await fadeManager.fadeToBlack(0.3, {showLoadingIfSlow: true});
@@ -53,11 +55,14 @@ export function sceneWrapper(k: KCtx, sceneFunc: (k: KCtx) => Promise<void>) {
     await sceneFunc(k);
     await Helpers.setTimeoutAsync(500);
 
+    // Control fade behavior
     if (isUsingQuickSwitch) {
-      hudManager.show();
       await fadeManager.fadeFromBlack(0.5);
     } else {
       await fadeManager.fadeFromBlack(1);
+    }
+
+    if (isGameLevel) {
       hudManager.show();
     }
   };

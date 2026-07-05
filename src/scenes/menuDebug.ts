@@ -1,5 +1,5 @@
 import {GameState} from '../components/GameStateManager';
-import {KCtx} from '../kaplay';
+import {k, KCtx} from '../kaplay';
 import {gsm} from '../main';
 import {changeScene} from '../misc/changeScene';
 import {sceneLevel_1_1} from './level-1-1';
@@ -79,7 +79,7 @@ export const sceneMenuDebug = (k: KCtx) => {
     const labelY = 40;
     const cx = k.width() / 2;
     addTopLevelMenuLabel(k, '< Back', cx - LABEL_GAP / 2 - 20, labelY, () => {
-      k.go('menu');
+      changeScene(k, 'menu', {isGameLevel: false}).then();
     });
     addTopLevelMenuLabel(k, 'Level 1', cx + LABEL_GAP / 2 + 20, labelY, () => {
       //
@@ -105,7 +105,6 @@ export const sceneMenuDebug = (k: KCtx) => {
 
   function handleGameStateChange(newState: GameState['persistent']) {
     // Apply new game state
-    console.log(newState);
     gsm.update({
       persistent: {
         ...newState,
