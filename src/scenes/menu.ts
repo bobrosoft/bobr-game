@@ -82,6 +82,7 @@ function createLayout(k: KCtx, cx: number, cy: number) {
 export const sceneMenu = (k: KCtx) => {
   const layout = createLayout(k, k.width() / 2, k.height() / 2);
 
+  /// Add buttons
   layout.add(
     buttonFactory(k, t('menu.play'), '#4a9e4a', () => {
       changeScene(k, gsm.state.persistent.currentLevel || sceneLevel_1_1.id, {
@@ -128,6 +129,34 @@ export const sceneMenu = (k: KCtx) => {
   });
 
   layout.build();
+
+  // Add hidden debug trigger (top-right corner, 5 clicks within 2 seconds)
+  {
+    const REQUIRED_CLICKS = 5;
+    const TIME_WINDOW_SEC = 2;
+    let clickTimes: number[] = [];
+
+    const debugTrigger = k.add([
+      k.layer('menu'),
+      k.rect(40, 40),
+      k.pos(k.width(), 0),
+      k.anchor('topright'),
+      k.fixed(),
+      k.opacity(0),
+      k.area(),
+    ]);
+
+    debugTrigger.onClick(() => {
+      const now = k.time();
+      clickTimes.push(now);
+      clickTimes = clickTimes.filter(t => now - t <= TIME_WINDOW_SEC);
+
+      if (clickTimes.length >= REQUIRED_CLICKS) {
+        clickTimes = [];
+        k.go('menu-debug');
+      }
+    });
+  }
 
   // Version label (bottom-right)
   k.add([

@@ -83,7 +83,7 @@ export async function addLevel(k: KCtx, map: string, config: Config): Promise<Ad
   });
 
   // If we have a remembered exit to spawn at, use it
-  if (gsm.state.persistent.spawnAtExitIndex !== undefined) {
+  if (Number.isInteger(gsm.state.persistent.spawnAtExitIndex)) {
     const exitIndex = gsm.state.persistent.spawnAtExitIndex;
 
     if (!exitPointsPositions[exitIndex]) {

@@ -18,6 +18,7 @@ import {sceneLevel_1_2} from './scenes/level-1-2';
 import {sceneLevel_1_2e} from './scenes/level-1-2e';
 import {sceneLevel_1_3} from './scenes/level-1-3';
 import {sceneMenu} from './scenes/menu';
+import {sceneMenuDebug} from './scenes/menuDebug';
 import {sceneRotateDevice} from './scenes/rotateDevice';
 
 export const gsm = new GameStateManager();
@@ -63,6 +64,7 @@ export let shaderManager: ShaderManager;
   shaderManager = new ShaderManager(k);
 
   k.scene('menu', () => sceneMenu(k));
+  k.scene('menu-debug', () => sceneMenuDebug(k));
   k.scene('rotate-device', () => sceneRotateDevice(k));
   k.scene(sceneLevel_1_1.id, sceneWrapper(k, sceneLevel_1_1));
   k.scene(sceneLevel_1_2.id, sceneWrapper(k, sceneLevel_1_2));
