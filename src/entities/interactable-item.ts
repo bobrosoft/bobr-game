@@ -7,7 +7,7 @@ export interface InteractableItemConfig {
   sprite: string;
   flipX?: boolean;
   levitate?: boolean;
-  interact: (player: PlayerComp) => Promise<void>;
+  interact?: (player: PlayerComp) => Promise<void>;
   preInteractAction?: () => Promise<boolean>; // return false to prevent interaction
   postInteractAction?: () => Promise<void>;
 }
@@ -32,20 +32,24 @@ export const InteractableItemEntity: GameEntity<InteractableItemConfig, Interact
       k.scale(),
       k.animate(),
       k.offscreen({hide: true}),
-      interactable(async player => {
-        if (config.preInteractAction) {
-          const canInteract = await config.preInteractAction();
-          if (!canInteract) {
-            return;
-          }
-        }
+      ...(config.interact
+        ? [
+            interactable(async player => {
+              if (config.preInteractAction) {
+                const canInteract = await config.preInteractAction();
+                if (!canInteract) {
+                  return;
+                }
+              }
 
-        await config.interact(player);
+              await config.interact!(player);
 
-        if (config.postInteractAction) {
-          await config.postInteractAction();
-        }
-      }),
+              if (config.postInteractAction) {
+                await config.postInteractAction();
+              }
+            }),
+          ]
+        : []),
     ]);
 
     if (config.levitate) {

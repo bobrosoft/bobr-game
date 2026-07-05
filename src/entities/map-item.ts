@@ -1,19 +1,12 @@
-import {AnimateComp, AreaComp, GameObj, PosComp, ScaleComp} from 'kaplay';
-import {interactable, InteractableComp} from '../components/InteractableComp';
 import {GameEntity} from './generic/entity';
+import {InteractableItemConfig, InteractableItemEntity, InteractableItemGameObj} from './interactable-item';
 import {PlayerComp} from './player';
 
-export interface MapItemConfig {
-  sprite: string;
-  flipX?: boolean;
-  levitate?: boolean;
-  interact?: (player: PlayerComp) => Promise<void>;
+export interface MapItemConfig extends InteractableItemConfig {
   shouldPickupOnInteract?: boolean;
-  preInteractAction?: () => Promise<boolean>; // you can return false to prevent interaction
-  postInteractAction?: () => Promise<void>;
 }
 
-export interface MapItemGameObj extends GameObj<PosComp | AnimateComp | AreaComp | ScaleComp | InteractableComp> {
+export interface MapItemGameObj extends InteractableItemGameObj {
   animatePickupAndDestroy(player: PlayerComp): void;
 }
 
@@ -27,52 +20,28 @@ export const MapItemEntity: GameEntity<MapItemConfig, MapItemGameObj> = {
   spawn(k, posXY, config) {
     if (!config) throw new Error('MapItemEntity.spawn: config is required');
 
-    const mainObj = k.add([
-      //
-      'map-item',
-      k.pos(posXY),
-      k.sprite(config.sprite, {flipX: config.flipX || false}),
-      k.anchor('bot'),
-      k.area({isSensor: true}),
-      k.scale(),
-      k.animate(),
-      k.offscreen({hide: true}),
-      ...(config?.interact
-        ? [
-            interactable(async player => {
-              if (config.preInteractAction) {
-                const canInteract = await config.preInteractAction();
-                if (!canInteract) {
-                  return;
-                }
-              }
+    let mainObj!: MapItemGameObj;
 
-              await config.interact?.(player);
+    const baseObj = InteractableItemEntity.spawn(k, posXY, {
+      sprite: config.sprite,
+      flipX: config.flipX,
+      levitate: config.levitate,
+      preInteractAction: config.preInteractAction,
+      postInteractAction: config.postInteractAction,
+      interact: config.interact
+        ? async player => {
+            await config.interact!(player);
 
-              if (config.shouldPickupOnInteract !== false) {
-                k.play('player-take-item');
-                mainObj.animatePickupAndDestroy(player);
-              }
+            if (config.shouldPickupOnInteract !== false) {
+              k.play('player-take-item');
+              mainObj.animatePickupAndDestroy(player);
+            }
+          }
+        : undefined,
+    });
 
-              if (config.postInteractAction) {
-                await config.postInteractAction();
-              }
-            }),
-          ]
-        : []),
-      {
-        animatePickupAndDestroy,
-      },
-    ]);
-
-    if (config.levitate) {
-      mainObj.use(k.animate({relative: true}));
-      mainObj.animate('pos', [k.vec2(0, -2), k.vec2(0, -6)], {
-        duration: 1,
-        easings: [k.easings['easeInOutCubic']],
-        direction: 'ping-pong',
-      });
-    }
+    mainObj = baseObj as unknown as MapItemGameObj;
+    mainObj.animatePickupAndDestroy = animatePickupAndDestroy;
 
     function animatePickupAndDestroy(player: PlayerComp): void {
       (async () => {
