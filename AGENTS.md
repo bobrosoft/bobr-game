@@ -79,6 +79,7 @@ Run `node script/gen-spritesheet.js` to compile them into spritesheets placed un
 - New tile types go in `src/scenes/tiles/` as separate files, following existing naming (`tile<Name>.ts`).
 - Audio files go in `public/music/` (background tracks) or `public/sounds/` (sound effects).
 - Sprites go in `public/sprites/` (compiled) and `src/sprites-src/` (source GIFs).
+- Use `npm run lintfix` after all code edits to auto-fix linting issues.
 - Run `npm run check && npm run lint` before committing changes.
 - Use `onClick` event if need to add a click event to the object, not `onMousePress`.
 
