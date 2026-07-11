@@ -5,6 +5,7 @@ import {gsm, shaderManager} from '../main';
 import {changeScene} from '../misc/changeScene';
 import {Helpers} from '../misc/Helpers';
 import {sceneLevel_1_1} from './level-1-1';
+import {sceneMenuDebug} from './menuDebug';
 
 const BTN_WIDTH = 160;
 const BTN_HEIGHT = 28;
@@ -164,7 +165,7 @@ export const sceneMenu = async (k: KCtx) => {
 
       if (clickTimes.length >= REQUIRED_CLICKS) {
         clickTimes = [];
-        k.go('menu-debug');
+        k.go(sceneMenuDebug.id);
       }
     });
   }
@@ -202,3 +203,5 @@ export const sceneMenu = async (k: KCtx) => {
 
   shaderManager.disableShader();
 };
+
+sceneMenu.id = 'menu';

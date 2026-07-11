@@ -3,6 +3,7 @@ import {k, KCtx} from '../kaplay';
 import {gsm} from '../main';
 import {changeScene} from '../misc/changeScene';
 import {sceneLevel_1_1} from './level-1-1';
+import {sceneMenu} from './menu';
 
 const CHOOSE_LEVEL_LABEL_TEXT_SIZE = 8;
 function addTopLevelMenuLabel(
@@ -79,10 +80,10 @@ export const sceneMenuDebug = (k: KCtx) => {
     const labelY = 40;
     const cx = k.width() / 2;
     addTopLevelMenuLabel(k, '< Back', cx - LABEL_GAP / 2 - 20, labelY, () => {
-      changeScene(k, 'menu', {isGameLevel: false}).then();
+      changeScene(k, sceneMenu.id, {isGameLevel: false}).then();
     });
     addTopLevelMenuLabel(k, 'Level 1', cx + LABEL_GAP / 2 + 20, labelY, () => {
-      //
+      // noop
     });
   }
 
@@ -147,3 +148,5 @@ const LEVEL_STATES: Array<{label: string; state: string}> = [
       '{"currentLevel":"level-1-1","player":{"deaths":1,"hasLuckyCharm":true,"inventory":["home-kitchen-chair-left","home-kitchen-table","home-kitchen-chair-right","home-stove","home-bed"]},"oldBobr":{"isIntroSaid":true,"isRespawnInfoSaid":true},"level1":{"isBoarDead":true,"isMissBobrCutsceneShown":true},"spawnAtExitIndex":null}',
   },
 ];
+
+sceneMenuDebug.id = 'menu-debug';

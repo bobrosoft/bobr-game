@@ -60,3 +60,5 @@ export const sceneRotateDevice = (k: KCtx) => {
     document.querySelector('body').removeChild(a);
   });
 };
+
+sceneRotateDevice.id = 'rotate-device';

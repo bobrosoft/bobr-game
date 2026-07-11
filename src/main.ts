@@ -52,9 +52,9 @@ export let shaderManager: ShaderManager;
   camManager = new CamManager(k);
   shaderManager = new ShaderManager(k);
 
-  k.scene('menu', sceneWrapper(k, sceneMenu));
-  k.scene('menu-debug', () => sceneMenuDebug(k));
-  k.scene('rotate-device', () => sceneRotateDevice(k));
+  k.scene(sceneMenu.id, sceneWrapper(k, sceneMenu));
+  k.scene(sceneMenuDebug.id, () => sceneMenuDebug(k));
+  k.scene(sceneRotateDevice.id, () => sceneRotateDevice(k));
   k.scene(sceneLevel_1_1.id, sceneWrapper(k, sceneLevel_1_1));
   k.scene(sceneLevel_1_2.id, sceneWrapper(k, sceneLevel_1_2));
   k.scene(sceneLevel_1_3.id, sceneWrapper(k, sceneLevel_1_3));
@@ -64,9 +64,9 @@ export let shaderManager: ShaderManager;
 
   // Check device orientation and show warning if not landscape
   if (!isInitialOrientationLandscape) {
-    k.go('rotate-device');
+    k.go(sceneRotateDevice.id);
   } else {
-    changeScene(k, 'menu', {isGameLevel: false}).then();
+    changeScene(k, sceneMenu.id, {isGameLevel: false}).then();
   }
 
   watchForOrientationChange(isInitialOrientationLandscape);

@@ -3,6 +3,7 @@ import {KCtx} from '../kaplay';
 import {gsm} from '../main';
 import {changeScene} from '../misc/changeScene';
 import {Helpers} from '../misc/Helpers';
+import {sceneMenu} from '../scenes/menu';
 import {addJoystick, JoystickGameObj} from './addJoystick';
 import {GameState} from './GameStateManager';
 import {hud, HudComp} from './HudComp';
@@ -51,7 +52,7 @@ export class HudManager {
     ]);
     this.menuButton.onClick(() => {
       if (!this.menuButton.paused) {
-        changeScene(this.k, 'menu', {isGameLevel: false}).then();
+        changeScene(this.k, sceneMenu.id, {isGameLevel: false}).then();
       }
     });
 
