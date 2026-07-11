@@ -16,4 +16,3 @@ export function requestFullscreenOnFirstInteraction(): void {
 
   document.documentElement.addEventListener('pointerup', callback);
 }
-

@@ -5,9 +5,7 @@ import {defaultFriction} from '../../misc/defaults';
 
 export const tileGroundGrass: TileEntity = {
   async loadResources(k: KCtx): Promise<any> {
-    return Promise.all([
-      k.loadSprite('tile-grass-ground', 'sprites/tiles/grass-ground.png'),
-    ]);
+    return Promise.all([k.loadSprite('tile-grass-ground', 'sprites/tiles/grass-ground.png')]);
   },
 
   factory(

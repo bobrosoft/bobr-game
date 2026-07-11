@@ -48,4 +48,3 @@ export function watchForOrientationChange(isInitialOrientationLandscape: boolean
     scheduleReloadIfOrientationChanged(isNowLandscape);
   });
 }
-
