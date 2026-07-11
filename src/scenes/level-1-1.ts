@@ -3,6 +3,7 @@ import {addBackground} from '../components/addBackground';
 import {addFlyingLeafs} from '../components/addFlyingLeafs';
 import {addFurnitureItem} from '../components/addFurnitureItem';
 import {addLevel} from '../components/addLevel';
+import {showDialogSeries} from '../components/showDialog';
 import {BumblebeeEntity} from '../entities/bumblebee';
 import {ITEM_ID} from '../entities/generic/item-id';
 import {GopherEntity} from '../entities/gopher';
@@ -11,7 +12,7 @@ import {MapItemEntity} from '../entities/map-item';
 import {OldBobrEntity} from '../entities/old-bobr';
 import {getPlayer} from '../entities/player';
 import {KCtx} from '../kaplay';
-import {bgMusicManager, camManager, gsm, shaderManager} from '../main';
+import {bgMusicManager, camManager, gsm, hudManager, shaderManager} from '../main';
 import {sceneLevel_1_2} from './level-1-2';
 import map from './maps/level-1-1.txt?raw';
 import {tileDirectionSignLeft} from './tiles/tileDirectionSignLeft';
@@ -75,7 +76,102 @@ export const sceneLevel_1_1 = async (k: KCtx) => {
       B: {
         loadResources: OldBobrEntity.loadResources,
         factory: (k, tilePos, worldPos) => {
-          OldBobrEntity.spawn(k, worldPos, {});
+          enum InteractionType {
+            SAY_INTRO = 'SAY_INTRO',
+            SAY_INTRO_REPEAT = 'SAY_INTRO_REPEAT',
+            GIVE_LUCKY_CHARM = 'GIVE_LUCKY_CHARM',
+          }
+
+          const mainObj = OldBobrEntity.spawn(k, worldPos, {
+            getAvailableInteractionType: (): InteractionType => {
+              if (!gsm.state.persistent.level1.isIntroSaid) {
+                return InteractionType.SAY_INTRO;
+              } else if (gsm.state.persistent.player.deaths >= 1 && !gsm.state.persistent.player.hasLuckyCharm) {
+                return InteractionType.GIVE_LUCKY_CHARM;
+              } else {
+                return InteractionType.SAY_INTRO_REPEAT;
+              }
+            },
+
+            performInteraction: async (type: InteractionType): Promise<void> => {
+              switch (type) {
+                case InteractionType.SAY_INTRO:
+                  await showDialogSeries(
+                    k,
+                    mainObj,
+                    player,
+                    [
+                      //
+                      t('level1.oldBobr.intro1'),
+                      t('level1.oldBobr.intro2'),
+                    ],
+                    {unskippable: true},
+                  );
+
+                  gsm.update({
+                    persistent: {
+                      level1: {
+                        isIntroSaid: true,
+                      },
+                    },
+                  });
+                  break;
+
+                case InteractionType.SAY_INTRO_REPEAT:
+                  await showDialogSeries(k, mainObj, player, [
+                    //
+                    t(
+                      k.choose([
+                        'level1.oldBobr.introRepeat1',
+                        'level1.oldBobr.introRepeat2',
+                        'level1.oldBobr.introRepeat3',
+                      ]),
+                    ),
+                  ]);
+                  break;
+
+                case InteractionType.GIVE_LUCKY_CHARM:
+                  await showDialogSeries(
+                    k,
+                    mainObj,
+                    player,
+                    [
+                      //
+                      t('level1.oldBobr.giveLuckyCharm1'),
+                      t('level1.oldBobr.giveLuckyCharm2'),
+                    ],
+                    {unskippable: true},
+                  );
+
+                  gsm.update({
+                    persistent: {
+                      player: {
+                        hasLuckyCharm: true,
+                      },
+                    },
+                    temp: {
+                      player: {
+                        health: 2,
+                      },
+                    },
+                  });
+                  await hudManager.showLuckyCharmAnimation();
+
+                  await showDialogSeries(
+                    k,
+                    mainObj,
+                    player,
+                    [
+                      //
+                      t('level1.oldBobr.giveLuckyCharm3'),
+                    ],
+                    {unskippable: true},
+                  );
+
+                  break;
+              }
+            },
+          });
         },
       },
       '1': {

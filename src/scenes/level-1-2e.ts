@@ -59,7 +59,13 @@ export const sceneLevel_1_2e = async (k: KCtx) => {
         loadResources: MissBobrEntity.loadResources,
         factory: (k, tilePos, worldPos) => {
           if (!gsm.state.persistent.level1.isMissBobrCutsceneShown) {
-            MissBobrEntity.spawn(k, worldPos, {flipX: true});
+            MissBobrEntity.spawn(k, worldPos, {
+              flipX: true,
+              getAvailableInteractionType: (): string => {
+                return null;
+              },
+              performInteraction: async interactionType => {},
+            });
           }
         },
       },

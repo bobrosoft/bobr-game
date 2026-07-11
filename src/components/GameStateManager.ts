@@ -14,11 +14,9 @@ export interface GameState {
       hasLuckyCharm: boolean;
       inventory: ITEM_ID[]; // list of item IDs
     };
-    oldBobr: {
+    level1: {
       isIntroSaid?: boolean;
       isRespawnInfoSaid?: boolean;
-    };
-    level1: {
       isBoarDead?: boolean;
       isMissBobrCutsceneShown?: boolean;
     };
@@ -244,9 +242,6 @@ export class GameStateManager {
         deaths: 0,
         hasLuckyCharm: false,
         inventory: [],
-      },
-      oldBobr: {
-        isIntroSaid: false,
       },
       level1: {
         isBoarDead: false,

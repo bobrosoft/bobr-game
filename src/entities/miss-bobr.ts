@@ -2,7 +2,6 @@ import {Vec2} from 'kaplay';
 import {infoIcon} from '../components/InfoIconComp';
 import {interactable} from '../components/InteractableComp';
 import {KCtx} from '../kaplay';
-import {gsm} from '../main';
 import {defaultFriction} from '../misc/defaults';
 import {GameEntity} from './generic/entity';
 import {NpcConfig, NpcObj} from './generic/npc';
@@ -55,7 +54,7 @@ export const MissBobrEntity: GameEntity<NpcConfig, NpcObj> = {
     ]);
 
     async function interact(player: PlayerComp): Promise<void> {
-      const availableInteraction = getAvailableInteractionType();
+      const availableInteraction = C.getAvailableInteractionType();
       if (!availableInteraction) {
         return;
       }
@@ -68,7 +67,7 @@ export const MissBobrEntity: GameEntity<NpcConfig, NpcObj> = {
       // Rotate the sprite based on player position
       mainObj.flipX = mainObj.pos.x > player.pos.x;
 
-      await performInteraction(availableInteraction, player); // main logic is here
+      await C.performInteraction(availableInteraction); // main logic is here
       mainObj.enterState(State.IDLE);
     }
 
@@ -77,18 +76,17 @@ export const MissBobrEntity: GameEntity<NpcConfig, NpcObj> = {
         return false;
       }
 
-      const interactionType = getAvailableInteractionType();
+      const interactionType = C.getAvailableInteractionType();
       if (!interactionType) {
         return false;
       }
 
-      switch (interactionType) {
-        case InteractionType.SAY_INTRO_REPEAT:
-          return false;
-
-        default:
-          return true;
+      // Don't show icon if that's a repeat replica
+      if (interactionType.match(/REPEAT/)) {
+        return false;
       }
+
+      return true;
     }
 
     function updateInfoIcon() {
@@ -97,15 +95,6 @@ export const MissBobrEntity: GameEntity<NpcConfig, NpcObj> = {
       } else {
         mainObj.unuse(infoIcon.id);
       }
-    }
-
-    function getAvailableInteractionType(): InteractionType {
-      const gameState = gsm.state;
-      return InteractionType.SAY_INTRO_REPEAT;
-    }
-
-    async function performInteraction(type: InteractionType, player: PlayerComp) {
-      //
     }
 
     function walkToPosition(newPos: Vec2) {
@@ -149,7 +138,3 @@ export const MissBobrEntity: GameEntity<NpcConfig, NpcObj> = {
     return mainObj;
   },
 };
-
-enum InteractionType {
-  SAY_INTRO_REPEAT = 'SAY_INTRO_REPEAT',
-}

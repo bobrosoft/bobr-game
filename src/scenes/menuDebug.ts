@@ -125,27 +125,27 @@ const LEVEL_STATES: Array<{label: string; state: string}> = [
   {
     label: 'Level 1-2',
     state:
-      '{"currentLevel":"level-1-2","player":{"deaths":1,"hasLuckyCharm":true,"inventory":["home-kitchen-chair-left","home-kitchen-table"]},"oldBobr":{"isIntroSaid":true,"isRespawnInfoSaid":true},"level1":{"isBoarDead":false},"spawnAtExitIndex":0}',
+      '{"currentLevel":"level-1-2","player":{"deaths":1,"hasLuckyCharm":true,"inventory":["home-kitchen-chair-left","home-kitchen-table"]},"level1":{"isIntroSaid":true,"isRespawnInfoSaid":true,"isBoarDead":false},"spawnAtExitIndex":0}',
   },
   {
     label: 'Level 1-3 (boar alive)',
     state:
-      '{"currentLevel":"level-1-3","player":{"deaths":1,"hasLuckyCharm":true,"inventory":["home-kitchen-chair-left","home-kitchen-table","home-kitchen-chair-right"]},"oldBobr":{"isIntroSaid":true,"isRespawnInfoSaid":true},"level1":{"isBoarDead":false},"spawnAtExitIndex":0}',
+      '{"currentLevel":"level-1-3","player":{"deaths":1,"hasLuckyCharm":true,"inventory":["home-kitchen-chair-left","home-kitchen-table","home-kitchen-chair-right"]},"level1":{"isIntroSaid":true,"isRespawnInfoSaid":true,"isBoarDead":false},"spawnAtExitIndex":0}',
   },
   {
     label: 'Level 1-3 (boar dead)',
     state:
-      '{"currentLevel":"level-1-3","player":{"deaths":1,"hasLuckyCharm":true,"inventory":["home-kitchen-chair-left","home-kitchen-table","home-kitchen-chair-right","home-stove","home-bed"]},"oldBobr":{"isIntroSaid":true,"isRespawnInfoSaid":true},"level1":{"isBoarDead":true},"spawnAtExitIndex":0}',
+      '{"currentLevel":"level-1-3","player":{"deaths":1,"hasLuckyCharm":true,"inventory":["home-kitchen-chair-left","home-kitchen-table","home-kitchen-chair-right","home-stove","home-bed"]},"level1":{"isIntroSaid":true,"isRespawnInfoSaid":true,"isBoarDead":true},"spawnAtExitIndex":0}',
   },
   {
     label: 'Level 1-2e (cutscene)',
     state:
-      '{"currentLevel":"level-1-2e","player":{"deaths":1,"hasLuckyCharm":true,"inventory":["home-kitchen-chair-left","home-kitchen-table","home-kitchen-chair-right","home-stove","home-bed"]},"oldBobr":{"isIntroSaid":true,"isRespawnInfoSaid":true},"level1":{"isBoarDead":true,"isMissBobrCutsceneShown":false},"spawnAtExitIndex":1}',
+      '{"currentLevel":"level-1-2e","player":{"deaths":1,"hasLuckyCharm":true,"inventory":["home-kitchen-chair-left","home-kitchen-table","home-kitchen-chair-right","home-stove","home-bed"]},"level1":{"isIntroSaid":true,"isRespawnInfoSaid":true,"isBoarDead":true,"isMissBobrCutsceneShown":false},"spawnAtExitIndex":1}',
   },
   {
     label: 'Level 1-1 (all items)',
     state:
-      '{"currentLevel":"level-1-1","player":{"deaths":1,"hasLuckyCharm":true,"inventory":["home-kitchen-chair-left","home-kitchen-table","home-kitchen-chair-right","home-stove","home-bed"]},"oldBobr":{"isIntroSaid":true,"isRespawnInfoSaid":true},"level1":{"isBoarDead":true,"isMissBobrCutsceneShown":true},"spawnAtExitIndex":null}',
+      '{"currentLevel":"level-1-1","player":{"deaths":1,"hasLuckyCharm":true,"inventory":["home-kitchen-chair-left","home-kitchen-table","home-kitchen-chair-right","home-stove","home-bed"]},"level1":{"isIntroSaid":true,"isRespawnInfoSaid":true,"isBoarDead":true,"isMissBobrCutsceneShown":true},"spawnAtExitIndex":null}',
   },
 ];
 

@@ -1,14 +1,10 @@
-import {t} from 'i18next';
 import {Vec2} from 'kaplay';
 import {infoIcon} from '../components/InfoIconComp';
 import {interactable} from '../components/InteractableComp';
-import {showDialogSeries} from '../components/showDialog';
 import {KCtx} from '../kaplay';
-import {gsm, hudManager} from '../main';
 import {defaultFriction} from '../misc/defaults';
-import {sceneLevel_1_2} from '../scenes/level-1-2';
 import {GameEntity} from './generic/entity';
-import {NpcObj, NpcConfig} from './generic/npc';
+import {NpcConfig, NpcObj} from './generic/npc';
 import {PlayerComp} from './player';
 
 enum State {
@@ -54,7 +50,7 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcObj> = {
     ]);
 
     async function interact(player: PlayerComp): Promise<void> {
-      const availableInteraction = getAvailableInteractionType();
+      const availableInteraction = C.getAvailableInteractionType();
       if (!availableInteraction) {
         return;
       }
@@ -67,7 +63,7 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcObj> = {
       // Rotate the sprite based on player position
       mainObj.flipX = mainObj.pos.x > player.pos.x;
 
-      await performInteraction(availableInteraction, player); // main logic is here
+      await C.performInteraction(availableInteraction); // main logic is here
       mainObj.enterState(State.IDLE);
     }
 
@@ -76,18 +72,17 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcObj> = {
         return false;
       }
 
-      const interactionType = getAvailableInteractionType();
+      const interactionType = C.getAvailableInteractionType();
       if (!interactionType) {
         return false;
       }
 
-      switch (interactionType) {
-        case InteractionType.SAY_INTRO_REPEAT:
-          return false;
-
-        default:
-          return true;
+      // Don't show icon if that's a repeat replica
+      if (interactionType.match(/REPEAT/)) {
+        return false;
       }
+
+      return true;
     }
 
     function updateInfoIcon() {
@@ -95,112 +90,6 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcObj> = {
         mainObj.use(infoIcon(6 * (mainObj.flipX ? -1 : 1)));
       } else {
         mainObj.unuse(infoIcon.id);
-      }
-    }
-
-    function getAvailableInteractionType(): InteractionType {
-      const gameState = gsm.state;
-
-      if (!gameState.persistent.oldBobr.isIntroSaid) {
-        return InteractionType.SAY_INTRO;
-      } else if (gameState.persistent.player.deaths >= 1 && !gameState.persistent.player.hasLuckyCharm) {
-        return InteractionType.GIVE_LUCKY_CHARM;
-      } else if (
-        gameState.persistent.currentLevel === sceneLevel_1_2.id &&
-        !gameState.persistent.oldBobr.isRespawnInfoSaid
-      ) {
-        return InteractionType.SAY_RESPAWN_INFO;
-      } else {
-        return InteractionType.SAY_INTRO_REPEAT;
-      }
-    }
-
-    async function performInteraction(type: InteractionType, player: PlayerComp) {
-      switch (type) {
-        case InteractionType.SAY_INTRO:
-          await showDialogSeries(
-            k,
-            mainObj,
-            player,
-            [
-              //
-              t('level1.oldBobr.intro1'),
-              t('level1.oldBobr.intro2'),
-            ],
-            {unskippable: true},
-          );
-
-          gsm.update({
-            persistent: {
-              oldBobr: {
-                isIntroSaid: true,
-              },
-            },
-          });
-          break;
-
-        case InteractionType.SAY_INTRO_REPEAT:
-          await showDialogSeries(k, mainObj, player, [
-            //
-            t(k.choose(['level1.oldBobr.introRepeat1', 'level1.oldBobr.introRepeat2', 'level1.oldBobr.introRepeat3'])),
-          ]);
-          break;
-
-        case InteractionType.GIVE_LUCKY_CHARM:
-          await showDialogSeries(
-            k,
-            mainObj,
-            player,
-            [
-              //
-              t('level1.oldBobr.giveLuckyCharm1'),
-              t('level1.oldBobr.giveLuckyCharm2'),
-            ],
-            {unskippable: true},
-          );
-
-          gsm.update({
-            persistent: {
-              player: {
-                hasLuckyCharm: true,
-              },
-            },
-            temp: {
-              player: {
-                health: 2,
-              },
-            },
-          });
-          await hudManager.showLuckyCharmAnimation();
-
-          await showDialogSeries(
-            k,
-            mainObj,
-            player,
-            [
-              //
-              t('level1.oldBobr.giveLuckyCharm3'),
-            ],
-            {unskippable: true},
-          );
-
-          break;
-
-        case InteractionType.SAY_RESPAWN_INFO:
-          await showDialogSeries(k, mainObj, player, [
-            //
-            t('level1.oldBobr.respawnInfo1'),
-            t('level1.oldBobr.respawnInfo2'),
-          ]);
-
-          gsm.update({
-            persistent: {
-              oldBobr: {
-                isRespawnInfoSaid: true,
-              },
-            },
-          });
-          break;
       }
     }
 
@@ -220,10 +109,3 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcObj> = {
     return mainObj;
   },
 };
-
-enum InteractionType {
-  SAY_INTRO = 'SAY_INTRO',
-  SAY_INTRO_REPEAT = 'SAY_INTRO_REPEAT',
-  GIVE_LUCKY_CHARM = 'GIVE_LUCKY_CHARM',
-  SAY_RESPAWN_INFO = 'SAY_RESPAWN_INFO',
-}
