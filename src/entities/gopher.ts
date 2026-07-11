@@ -24,7 +24,7 @@ export const GopherEntity: GameEntity<EnemyConfig, EnemyObj> = {
     ]);
   },
 
-  spawn(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg?: EnemyConfig): EnemyObj {
+  spawn(k: KCtx, posXY: Vec2 = k.vec2(100, 100), cfg: EnemyConfig): EnemyObj {
     const C: EnemyConfig = {
       health: 2,
       attackPower: 1,

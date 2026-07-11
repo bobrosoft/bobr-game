@@ -28,7 +28,7 @@ export const BumblebeeEntity: GameEntity<Config, EnemyObj> = {
     ]);
   },
 
-  spawn(k: KCtx, posXY: Vec2 = k.vec2(200, 80), config?: Config): EnemyObj {
+  spawn(k: KCtx, posXY: Vec2 = k.vec2(200, 80), config: Config): EnemyObj {
     const C: Config = {
       health: 1,
       attackPower: 1,

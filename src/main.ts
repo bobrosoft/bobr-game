@@ -46,7 +46,7 @@ export let shaderManager: ShaderManager;
   k.loadFont('pixel', 'fonts/Press_Start_2P/PressStart2P-Regular.ttf');
   k.setLayers(['bg', 'game', 'hud', 'menu', 'fade'], 'game');
   k.setVolume(1); // Set default volume for all sounds
-  
+
   hudManager = new HudManager(k);
   fadeManager = new FadeManager(k);
   camManager = new CamManager(k);

@@ -31,7 +31,7 @@ export const OldBobrEntity: GameEntity<NpcConfig, NpcObj> = {
     ]);
   },
 
-  spawn(k: KCtx, posXY: Vec2 = k.vec2(100, 100), config?: NpcConfig): NpcObj {
+  spawn(k: KCtx, posXY: Vec2 = k.vec2(100, 100), config: NpcConfig): NpcObj {
     const C: NpcConfig = {
       ...config,
     };

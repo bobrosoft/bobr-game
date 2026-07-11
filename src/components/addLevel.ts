@@ -109,7 +109,7 @@ export async function addLevel(k: KCtx, map: string, config: Config): Promise<Ad
   }
 
   // Create player at required position
-  const player = PlayerEntity.spawn(k, playerSpawnPos);
+  const player = PlayerEntity.spawn(k, playerSpawnPos, {});
 
   k.setGravity(1000);
 

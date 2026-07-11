@@ -76,7 +76,7 @@ enum State {
   INTERACT = 'INTERACT',
 }
 
-export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
+export const PlayerEntity: GameEntity<Partial<PlayerConfig>, PlayerComp> = {
   async loadResources(k: KCtx): Promise<any> {
     return Promise.all([
       k.loadSprite('player', 'sprites/characters/bobr.gif', {
@@ -97,7 +97,7 @@ export const PlayerEntity: GameEntity<PlayerConfig, PlayerComp> = {
     ]);
   },
 
-  spawn(k: KCtx, posXY: Vec2 = k.vec2(100, 100), config?: Partial<PlayerConfig>): PlayerComp {
+  spawn(k: KCtx, posXY: Vec2 = k.vec2(100, 100), config: Partial<PlayerConfig>): PlayerComp {
     const C: PlayerConfig = {...DEFAULTS, ...config};
 
     const player = k.add([

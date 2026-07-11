@@ -47,9 +47,9 @@ export const BoarEntity: GameEntity<Config, EnemyObj> = {
     ]);
   },
 
-  spawn(k: KCtx, posXY: Vec2 = k.vec2(100, 100), config?: Config): EnemyObj {
+  spawn(k: KCtx, posXY: Vec2 = k.vec2(100, 100), config: Config): EnemyObj {
     const C: Config = {
-      health: config?.isAlreadyDead ? 0 : 5,
+      health: config.isAlreadyDead ? 0 : 5,
       attackPower: 1,
       knockbackPower: k.vec2(250, -230),
       detectionRange: 150,

@@ -49,13 +49,13 @@ export const sceneLevel_1_3 = async (k: KCtx) => {
       G: {
         loadResources: GopherEntity.loadResources,
         factory: (k, tilePos, worldPos) => {
-          GopherEntity.spawn(k, worldPos);
+          GopherEntity.spawn(k, worldPos, {});
         },
       },
       F: {
         loadResources: BumblebeeEntity.loadResources,
         factory: (k, tilePos, worldPos) => {
-          BumblebeeEntity.spawn(k, worldPos);
+          BumblebeeEntity.spawn(k, worldPos, {});
         },
       },
       B: {

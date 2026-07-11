@@ -48,13 +48,13 @@ export const sceneLevel_1_1 = async (k: KCtx) => {
       G: {
         loadResources: GopherEntity.loadResources,
         factory: (k, tilePos, worldPos) => {
-          GopherEntity.spawn(k, worldPos);
+          GopherEntity.spawn(k, worldPos, {});
         },
       },
       F: {
         loadResources: BumblebeeEntity.loadResources,
         factory: (k, tilePos, worldPos) => {
-          BumblebeeEntity.spawn(k, worldPos);
+          BumblebeeEntity.spawn(k, worldPos, {});
         },
       },
       H: {
@@ -75,7 +75,7 @@ export const sceneLevel_1_1 = async (k: KCtx) => {
       B: {
         loadResources: OldBobrEntity.loadResources,
         factory: (k, tilePos, worldPos) => {
-          OldBobrEntity.spawn(k, worldPos);
+          OldBobrEntity.spawn(k, worldPos, {});
         },
       },
       '1': {
