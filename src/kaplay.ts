@@ -23,11 +23,11 @@ export const k = kaplay({
       gamepad: ['dpad-right'],
     },
     jump: {
-      keyboard: ['space', 'up', 'w', 'k', 'x'],
+      keyboard: ['space', 'up', 'w', 'l', 'x'],
       gamepad: ['south'],
     },
     action: {
-      keyboard: ['j', 'z'],
+      keyboard: ['k', 'z'],
       gamepad: ['east'],
     },
   },

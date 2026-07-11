@@ -12,8 +12,8 @@
     "play": "Play",
     "resetProgress": "Reset Progress",
     "defaultShader": "Default Shader:",
-    "attackControl": "J or Z to Attack",
-    "jumpControl": "K, X or Space to Jump"
+    "attackControl": "Z or K to Attack",
+    "jumpControl": "X, L or Space to Jump"
   },
   "home": {
     "kitchenTableRepeat1": "Hmm, who would throw away such a gorgeous table?..",
