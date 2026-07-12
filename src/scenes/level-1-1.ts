@@ -1,7 +1,7 @@
 import {t} from 'i18next';
 import {addBackground} from '../components/addBackground';
 import {addFlyingLeafs} from '../components/addFlyingLeafs';
-import {addFurnitureItem} from '../components/addFurnitureItem';
+import {addCollectableItem} from '../components/addCollectableItem';
 import {addLevel} from '../components/addLevel';
 import {showDialogSeries} from '../components/showDialog';
 import {BumblebeeEntity} from '../entities/bumblebee';
@@ -177,7 +177,7 @@ export const sceneLevel_1_1 = async (k: KCtx) => {
       '1': {
         loadResources: MapItemEntity.loadResources,
         factory: (k, tilePos, worldPos) => {
-          addFurnitureItem(k, {
+          addCollectableItem(k, {
             itemId: ITEM_ID.HOME_KITCHEN_CHAIR_LEFT,
             sprite: 'home-kitchen-chair-left',
             worldPos,
@@ -187,7 +187,7 @@ export const sceneLevel_1_1 = async (k: KCtx) => {
       '2': {
         loadResources: MapItemEntity.loadResources,
         factory: (k, tilePos, worldPos) => {
-          addFurnitureItem(k, {
+          addCollectableItem(k, {
             itemId: ITEM_ID.HOME_KITCHEN_TABLE,
             sprite: 'home-kitchen-table',
             worldPos,

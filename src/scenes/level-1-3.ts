@@ -1,7 +1,7 @@
 import {t} from 'i18next';
 import {OffScreenComp} from 'kaplay';
 import {addBackground} from '../components/addBackground';
-import {addFurnitureItem} from '../components/addFurnitureItem';
+import {addCollectableItem} from '../components/addCollectableItem';
 import {addLevel} from '../components/addLevel';
 import {showDialogSeries} from '../components/showDialog';
 import {BoarEntity} from '../entities/boar';
@@ -150,7 +150,7 @@ export const sceneLevel_1_3 = async (k: KCtx) => {
           await k.loadSprite('home-bed', 'sprites/home/home-bed.png');
         },
         factory: (k, tilePos, worldPos) => {
-          addFurnitureItem(k, {
+          addCollectableItem(k, {
             itemId: ITEM_ID.HOME_BED,
             sprite: 'home-bed',
             worldPos,

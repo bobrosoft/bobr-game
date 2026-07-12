@@ -5,11 +5,11 @@ import {KCtx} from '../kaplay';
 import {gsm} from '../main';
 
 /**
- * Helper to add a furniture item to the map
+ * Helper to add a collectable item to the map
  * @param k
  * @param config
  */
-export function addFurnitureItem(
+export function addCollectableItem(
   k: KCtx,
   config: {
     itemId: ITEM_ID;

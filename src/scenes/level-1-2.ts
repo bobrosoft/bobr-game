@@ -1,7 +1,7 @@
 import {t} from 'i18next';
 import {addBackground} from '../components/addBackground';
 import {addFlyingLeafs} from '../components/addFlyingLeafs';
-import {addFurnitureItem} from '../components/addFurnitureItem';
+import {addCollectableItem} from '../components/addCollectableItem';
 import {addLevel} from '../components/addLevel';
 import {showDialogSeries} from '../components/showDialog';
 import {BumblebeeEntity} from '../entities/bumblebee';
@@ -158,7 +158,7 @@ export const sceneLevel_1_2 = async (k: KCtx) => {
           await k.loadSprite('home-kitchen-chair-right', 'sprites/home/home-kitchen-chair-right.png');
         },
         factory: (k, tilePos, worldPos) => {
-          addFurnitureItem(k, {
+          addCollectableItem(k, {
             itemId: ITEM_ID.HOME_KITCHEN_CHAIR_RIGHT,
             sprite: 'home-kitchen-chair-right',
             worldPos,
@@ -178,7 +178,7 @@ export const sceneLevel_1_2 = async (k: KCtx) => {
           });
         },
         factory: (k, tilePos, worldPos) => {
-          addFurnitureItem(k, {
+          addCollectableItem(k, {
             itemId: ITEM_ID.HOME_STOVE,
             sprite: 'home-stove',
             worldPos,
