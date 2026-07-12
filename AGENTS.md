@@ -50,6 +50,7 @@ script/                    # Different scripts
 - `hudManager` — `HudManager`: renders the HUD overlay (health, items, etc.).
 - `fadeManager` — `FadeManager`: manages screen-fade animations for scene transitions.
 - `camManager` — `CamManager`: controls camera follow and bounds.
+- `shaderManager` — `ShaderManager`: handles shader effects for the game.
 
 ### Scenes
 Each scene is an async function `(k: KCtx) => void` registered in `main.ts` via `sceneWrapper`. 
