@@ -105,8 +105,9 @@ export function showDialogSeries(
     async function showNextDialog() {
       if (currentIndex < texts.length) {
         let dialog: GameObj;
+        let isUnskippable = cfg?.unskippable && !import.meta.env.DEV; // allow to skip in dev mode even if unskippable
 
-        if (cfg?.unskippable) {
+        if (isUnskippable) {
           await new Promise<void>(res => {
             dialog = showDialog(k, targetObj, texts[currentIndex], {
               speed: cfg?.speed,

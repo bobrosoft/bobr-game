@@ -3,14 +3,14 @@ import {addBackground} from '../components/addBackground';
 import {addFlyingLeafs, getLeafsGenerator} from '../components/addFlyingLeafs';
 import {addLevel} from '../components/addLevel';
 import {BumblebeeEntity} from '../entities/bumblebee';
-import {InteractableItemEntity} from '../entities/interactable-item';
 import {NpcObj} from '../entities/generic/npc';
 import {GopherEntity} from '../entities/gopher';
+import {InteractableItemEntity} from '../entities/interactable-item';
 import {MissBobrEntity} from '../entities/miss-bobr';
 import {TriggerEntity} from '../entities/trigger';
 import {KCtx} from '../kaplay';
 import {bgMusicManager, camManager, gsm, shaderManager} from '../main';
-import {sceneLevel_1_1} from './level-1-1';
+import {sceneLevel_1_1e} from './level-1-1e';
 import map from './maps/level-1-2e.txt?raw';
 import {tileDirectionSignLeft} from './tiles/tileDirectionSignLeft';
 import {tileDirectionSignRight} from './tiles/tileDirectionSignRight';
@@ -157,7 +157,7 @@ export const sceneLevel_1_2e = async (k: KCtx) => {
         currentMapExitIndex: 0,
         spawnOffsetTiles: k.vec2(2, 0),
         getDestLevelParamsUponUse: () => ({
-          destLevel: sceneLevel_1_1.id,
+          destLevel: sceneLevel_1_1e.id,
           destLevelExitIndex: 0,
         }),
       },

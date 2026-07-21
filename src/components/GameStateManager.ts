@@ -14,11 +14,16 @@ export interface GameState {
       hasLuckyCharm: boolean;
       inventory: ITEM_ID[]; // list of item IDs
     };
+    home: {
+      isStoveLit?: boolean;
+    };
     level1: {
       isIntroSaid?: boolean;
       isRespawnInfoSaid?: boolean;
       isBoarDead?: boolean;
       isMissBobrCutsceneShown?: boolean;
+      isFirewoodInfoSaid?: boolean;
+      isFirewoodGatheredSaid?: boolean;
     };
   };
   temp: {
@@ -38,6 +43,16 @@ export class GameStateManager {
 
   get state() {
     return this._state;
+  }
+
+  // Level 1 helpers
+  get lvl1() {
+    return {
+      hasAllFirewood:
+        this.getIsPlayerHasItem(ITEM_ID.LEVEL1_FIREWOOD_1) &&
+        this.getIsPlayerHasItem(ITEM_ID.LEVEL1_FIREWOOD_2) &&
+        this.getIsPlayerHasItem(ITEM_ID.LEVEL1_FIREWOOD_3),
+    };
   }
 
   constructor() {
@@ -242,6 +257,9 @@ export class GameStateManager {
         deaths: 0,
         hasLuckyCharm: false,
         inventory: [],
+      },
+      home: {
+        isStoveLit: false,
       },
       level1: {
         isBoarDead: false,

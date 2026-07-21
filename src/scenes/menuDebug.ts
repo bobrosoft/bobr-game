@@ -104,12 +104,15 @@ export const sceneMenuDebug = (k: KCtx) => {
     });
   });
 
-  function handleGameStateChange(newState: GameState['persistent']) {
+  function handleGameStateChange(newPersistentState: GameState['persistent']) {
+    const oldState = gsm.state;
+    gsm.reset(); // need to reset state because gsm.update is merging old state with new one but we need full reset
+
     // Apply new game state
     gsm.update({
       persistent: {
-        ...newState,
-        settings: gsm.state.persistent.settings,
+        ...newPersistentState,
+        settings: oldState.persistent.settings,
       },
     });
 
@@ -143,9 +146,14 @@ const LEVEL_STATES: Array<{label: string; state: string}> = [
       '{"currentLevel":"level-1-2e","player":{"deaths":1,"hasLuckyCharm":true,"inventory":["home-kitchen-chair-left","home-kitchen-table","home-kitchen-chair-right","home-stove","home-bed"]},"level1":{"isIntroSaid":true,"isRespawnInfoSaid":true,"isBoarDead":true,"isMissBobrCutsceneShown":false},"spawnAtExitIndex":1}',
   },
   {
-    label: 'Level 1-1 (all items)',
+    label: 'Level 1-1e (no firewood)',
     state:
-      '{"currentLevel":"level-1-1","player":{"deaths":1,"hasLuckyCharm":true,"inventory":["home-kitchen-chair-left","home-kitchen-table","home-kitchen-chair-right","home-stove","home-bed"]},"level1":{"isIntroSaid":true,"isRespawnInfoSaid":true,"isBoarDead":true,"isMissBobrCutsceneShown":true},"spawnAtExitIndex":null}',
+      '{"currentLevel":"level-1-1e","player":{"deaths":1,"hasLuckyCharm":true,"inventory":["home-kitchen-chair-left","home-kitchen-table","home-kitchen-chair-right","home-stove","home-bed"]},"level1":{"isIntroSaid":true,"isRespawnInfoSaid":true,"isBoarDead":true,"isMissBobrCutsceneShown":true},"spawnAtExitIndex":null}',
+  },
+  {
+    label: 'Level 1-1e (all firewood)',
+    state:
+      '{"currentLevel":"level-1-1e","player":{"deaths":1,"hasLuckyCharm":true,"inventory":["home-kitchen-chair-left","home-kitchen-table","home-kitchen-chair-right","home-stove","home-bed","level1-firewood-1","level1-firewood-2","level1-firewood-3"]},"home":{"isStoveLit":false},"level1":{"isBoarDead":true,"isIntroSaid":true,"isRespawnInfoSaid":true,"isMissBobrCutsceneShown":true,"isFirewoodInfoSaid":true},"spawnAtExitIndex":null}',
   },
 ];
 

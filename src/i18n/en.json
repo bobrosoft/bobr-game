@@ -20,11 +20,15 @@
     "kitchenTableRepeat2": "Mmm, it smells so good...",
     "kitchenTableRepeat3": "Mmm, it looks so tasty... but I still need it.",
     "kitchenChairRepeat1": "Why is it so small?.. Oh well, I don't have much choice.",
-    "bedRepeat1": "I'll sleep when I finish everything for today..."
+    "bedRepeat1": "I'll sleep when I finish everything for today...",
+    "stoveNotLitRepeat1": "No firewood to light the stove. I need to gather some.",
+    "stoveLitRepeat1": "Finally, it's warm! Time to rest."
   },
   "level1": {
     "bobr": {
-      "afterBedPickup": "Great. I have the minimum to spend the night. Time to head back home."
+      "afterBedPickup": "Great. I have the minimum to spend the night. Time to head back home.",
+      "flowerDialog": "Forget-me-nots... How beautiful!",
+      "allFirewoodCollected": "I think that's enough. Time to head back home."
     },
     "oldBobr": {
       "intro1": "Hello, grandson! You finally bought your own hut... Even if it's with a mortgage, you're still doing great!",
@@ -33,10 +37,18 @@
       "introRepeat2": "It's a nice day for a walk, don't you think?",
       "introRepeat3": "The house won't furnish itself... Time to get to work!",
       "giveLuckyCharm1": "Oh, I barely dragged you here... Are you okay?..",
-      "giveLuckyCharm2": "Ou, I almost forgot! Here, take this for good luck...",
+      "giveLuckyCharm2": "Ah, I almost forgot! Here, take this for good luck...",
       "giveLuckyCharm3": "It's my lucky charm. May it protect you as it once protected me.",
       "respawnInfo1": "If something happens to you, I'll always help you get back home.",
-      "respawnInfo2": "And don't worry about the things you've already collected – they won't be lost!"
+      "respawnInfo2": "And don't worry about the things you've already collected – they won't be lost!",
+      "gatherFirewood1": "I see you've collected everything you need to spend the night. Good job!",
+      "gatherFirewood2": "But it's still cold at home, the stove isn't lit. Gather some firewood. I saw some nearby.",
+      "gatherFirewoodRepeat1": "Gather some firewood, or you'll freeze.",
+      "gatherFirewoodRepeat2": "There's firewood nearby. Don't be lazy.",
+      "firewoodGathered1": "Great!",
+      "firewoodGathered2": "Now you can light the stove and warm up.",
+      "firewoodGatheredRepeat1": "The firewood is collected. Time to go home.",
+      "firewoodGatheredRepeat2": "Come on in, that's enough adventure for today."
     }
   }
 }

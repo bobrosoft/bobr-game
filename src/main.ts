@@ -14,6 +14,7 @@ import {Helpers} from './misc/Helpers';
 import {requestFullscreenOnFirstInteraction} from './misc/requestFullscreenOnFirstInteraction';
 import {watchForOrientationChange} from './misc/watchForOrientationChange';
 import {sceneLevel_1_1} from './scenes/level-1-1';
+import {sceneLevel_1_1e} from './scenes/level-1-1e';
 import {sceneLevel_1_2} from './scenes/level-1-2';
 import {sceneLevel_1_2e} from './scenes/level-1-2e';
 import {sceneLevel_1_3} from './scenes/level-1-3';
@@ -59,6 +60,7 @@ export let shaderManager: ShaderManager;
   k.scene(sceneLevel_1_2.id, sceneWrapper(k, sceneLevel_1_2));
   k.scene(sceneLevel_1_3.id, sceneWrapper(k, sceneLevel_1_3));
   k.scene(sceneLevel_1_2e.id, sceneWrapper(k, sceneLevel_1_2e));
+  k.scene(sceneLevel_1_1e.id, sceneWrapper(k, sceneLevel_1_1e));
 
   const isInitialOrientationLandscape = Helpers.isLandscapeMode();
 

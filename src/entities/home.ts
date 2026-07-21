@@ -85,7 +85,7 @@ export const HomeEntity: GameEntity<Config> = {
       k.pos(64, 0),
       k.area({isSensor: true}),
       interactable(async player => {
-        await showDialogSeries(k, player, player, [t(k.choose(['home.kitchenChairRepeat1']))]);
+        await player.showDialogSeries([t(k.choose(['home.kitchenChairRepeat1']))]);
       }),
     ]);
     kitchenChairLeft.hidden = true;
@@ -99,7 +99,7 @@ export const HomeEntity: GameEntity<Config> = {
       k.area({isSensor: true}),
       k.z(1),
       interactable(async player => {
-        await showDialogSeries(k, player, player, [
+        await player.showDialogSeries([
           t(k.choose(['home.kitchenTableRepeat1', 'home.kitchenTableRepeat2', 'home.kitchenTableRepeat3'])),
         ]);
       }),
@@ -114,7 +114,7 @@ export const HomeEntity: GameEntity<Config> = {
       k.pos(120, 0),
       k.area({isSensor: true}),
       interactable(async player => {
-        await showDialogSeries(k, player, player, [t(k.choose(['home.kitchenChairRepeat1']))]);
+        await player.showDialogSeries([t(k.choose(['home.kitchenChairRepeat1']))]);
       }),
     ]);
     kitchenChairRight.hidden = true;
@@ -126,6 +126,24 @@ export const HomeEntity: GameEntity<Config> = {
       k.anchor('bot'),
       k.pos(160, 0),
       k.area({isSensor: true}),
+      interactable(async player => {
+        if (gsm.state.persistent.home.isStoveLit) {
+          await player.showDialogSeries([t(k.choose(['home.stoveLitRepeat1']))]);
+        } else if (gsm.lvl1.hasAllFirewood) {
+          gsm.update({
+            persistent: {
+              home: {
+                isStoveLit: true,
+              },
+            },
+          });
+
+          updateFurnitureVisibility();
+          await player.showDialogSeries([t(k.choose(['home.stoveLitRepeat1']))]);
+        } else {
+          await player.showDialogSeries([t(k.choose(['home.stoveNotLitRepeat1']))]);
+        }
+      }),
     ]);
     stove.hidden = true;
 
@@ -138,7 +156,7 @@ export const HomeEntity: GameEntity<Config> = {
       k.pos(129, -65),
       k.area({isSensor: true}),
       interactable(async player => {
-        await showDialogSeries(k, player, player, [t(k.choose(['home.bedRepeat1']))]);
+        await player.showDialogSeries([t(k.choose(['home.bedRepeat1']))]);
       }),
     ]);
     bed.hidden = true;
@@ -169,7 +187,11 @@ export const HomeEntity: GameEntity<Config> = {
 
       if (hasStove) {
         stove.hidden = false;
-        stove.play('burn');
+        if (gsm.state.persistent.home.isStoveLit) {
+          stove.play('burn');
+        } else {
+          stove.play('idle');
+        }
       } else {
         stove.hidden = true;
         stove.play('idle');

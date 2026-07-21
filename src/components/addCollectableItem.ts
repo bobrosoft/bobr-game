@@ -23,7 +23,7 @@ export function addCollectableItem(
     return;
   }
 
-  return MapItemEntity.spawn(k, config.worldPos, {
+  const mainObj = MapItemEntity.spawn(k, config.worldPos, {
     sprite: config.sprite,
     levitate: true,
     interact: async player => {
@@ -33,4 +33,7 @@ export function addCollectableItem(
     preInteractAction: config.preInteractAction,
     postInteractAction: config.postInteractAction,
   });
+
+  mainObj.tag([config.itemId, config.sprite]);
+  return mainObj;
 }
