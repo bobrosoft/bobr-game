@@ -117,7 +117,7 @@ export const sceneLevel_1_2 = async (k: KCtx) => {
                       },
                     },
                   });
-                  await hudManager.showLuckyCharmAnimation();
+                  await hudManager.playEquipmentItemAnimation('lucky-charm');
 
                   await showDialogSeries(
                     k,

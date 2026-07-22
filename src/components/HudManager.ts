@@ -121,19 +121,29 @@ export class HudManager {
     });
   }
 
-  async showLuckyCharmAnimation() {
-    this.luckyCharm.shouldBeShown = true;
-    this.luckyCharm.paused = false;
+  async playEquipmentItemAnimation(itemType: 'lucky-charm') {
+    switch (itemType) {
+      case 'lucky-charm':
+        return this.performEquipmentItemAnimation(this.luckyCharm);
 
-    const initialPos = this.k.vec2(this.k.width() / 2 + 10, this.k.height() / 2 - 10);
-    const endPos = this.luckyCharm.pos.clone();
-    this.luckyCharm.play('health2');
-    this.luckyCharm.pos = initialPos.clone();
-    this.luckyCharm.scale = this.k.vec2(2);
+      default:
+        throw new Error(`Unknown equipment item type: ${itemType}`);
+    }
+  }
+
+  protected async performEquipmentItemAnimation(obj: typeof this.luckyCharm) {
+    obj.shouldBeShown = true;
+    obj.paused = false;
+    obj.opacity = 0;
+
+    const initialPos = this.k.vec2((this.k.width() + obj.width) / 2, (this.k.height() - obj.height) / 2);
+    const finalPos = obj.pos.clone();
+    obj.pos = initialPos.clone();
+    obj.scale = this.k.vec2(2);
 
     await this.slightlyDimTheGame();
     await this.k.tween(0, 1, 1, v => {
-      this.luckyCharm.opacity = v;
+      obj.opacity = v;
     });
 
     await this.k.wait(1);
@@ -145,11 +155,8 @@ export class HudManager {
       1,
       1.5,
       v => {
-        this.luckyCharm.pos = this.k.vec2(
-          this.k.lerp(initialPos.x, endPos.x, v),
-          this.k.lerp(initialPos.y, endPos.y, v),
-        );
-        this.luckyCharm.scale = this.k.vec2(this.k.lerp(2, 1, v));
+        obj.pos = this.k.vec2(this.k.lerp(initialPos.x, finalPos.x, v), this.k.lerp(initialPos.y, finalPos.y, v));
+        obj.scale = this.k.vec2(this.k.lerp(2, 1, v));
       },
       this.k.easings['easeOutElastic'],
     );
