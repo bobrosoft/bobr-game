@@ -86,5 +86,5 @@ Run `node script/gen-spritesheet.js` to compile them into spritesheets placed un
 
 ## Testing
 There is no automated test suite at this time.
-Manual testing is done by running the dev server (`npm run dev`) and playing through the game in a browser.
+Don't run browser checks, it will be done by developer.
 
