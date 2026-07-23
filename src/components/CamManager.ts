@@ -36,7 +36,7 @@ export class CamManager {
       bottomTilesPadding?: number;
     },
   ) {
-    const levelWidth = level.levelWidth() - level.tileWidth() / 2;
+    const levelWidth = level.levelWidth();
     const levelHeight = level.levelHeight() - level.tileHeight();
     const kWidth = this.k.width();
     const kHeight = this.k.height();

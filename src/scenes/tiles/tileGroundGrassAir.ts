@@ -1,5 +1,5 @@
-import {Comp, CompList, Vec2} from 'kaplay';
-import {SiblingTiles, TileEntity} from '../../components/addLevel';
+import {Comp, CompList} from 'kaplay';
+import {TileEntity} from '../../components/addLevel';
 import {KCtx} from '../../kaplay';
 import {defaultFriction} from '../../misc/defaults';
 
@@ -12,13 +12,7 @@ export const tileGroundGrassAir: TileEntity = {
     ]);
   },
 
-  factory(
-    k: KCtx,
-    tilePos: Vec2,
-    worldPos: Vec2,
-    getSiblings: () => SiblingTiles,
-    charAt: (x: number, y: number) => string,
-  ): CompList<Comp> | void {
+  factory({k, getSiblings}): CompList<Comp> | void {
     const siblings = getSiblings();
 
     return [
@@ -33,7 +27,7 @@ export const tileGroundGrassAir: TileEntity = {
       ),
       k.area({...defaultFriction, shape: new k.Rect(k.vec2(0, -8), 32, 24)}),
       k.body({isStatic: true}),
-      k.anchor('bot'),
+      k.anchor('botleft'),
       k.offscreen({hide: true}),
     ];
   },

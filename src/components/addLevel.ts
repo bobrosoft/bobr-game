@@ -38,6 +38,9 @@ export async function addLevel(k: KCtx, map: string, config: Config): Promise<Ad
     tileHeight: config.tileHeight,
     tiles: {},
     wildcardTile: (char: string, pos: Vec2) => {
+      const worldPos = pos.scale(k.vec2(config.tileWidth, config.tileHeight));
+      const worldPosTileCentered = worldPos.add(config.tileWidth / 2, 0);
+
       if (!char.trim()) {
         // Empty space, ignore
         return undefined;
@@ -45,25 +48,26 @@ export async function addLevel(k: KCtx, map: string, config: Config): Promise<Ad
 
       // Remember player default spawn point
       if (char === 'P') {
-        playerSpawnPos = pos.scale(k.vec2(config.tileWidth, config.tileHeight));
+        playerSpawnPos = worldPosTileCentered;
         return undefined;
       }
 
       // Remember all exit points
       if (char === 'E') {
-        exitPointsPositions.push({worldPos: pos.scale(k.vec2(config.tileWidth, config.tileHeight))});
+        exitPointsPositions.push({worldPos});
         return undefined;
       }
 
       if (config.tiles[char]) {
         return (
-          config.tiles[char].factory(
+          config.tiles[char].factory({
             k,
-            pos,
-            pos.scale(k.vec2(config.tileWidth, config.tileHeight)),
-            () => getSiblingsAt(pos.x, pos.y),
+            tilePos: pos,
+            worldPos,
+            worldPosTileCentered,
+            getSiblings: () => getSiblingsAt(pos.x, pos.y),
             charAt,
-          ) || undefined
+          }) || undefined
         );
       }
     },
@@ -171,11 +175,19 @@ export interface TileEntity {
    */
   loadResources(k: KCtx): Promise<any>;
 
-  factory(
-    k: KCtx,
-    tilePos: Vec2,
-    worldPos: Vec2,
-    getSiblings: () => SiblingTiles,
-    charAt: (x: number, y: number) => string,
-  ): CompList<Comp> | void;
+  factory({
+    k,
+    tilePos,
+    worldPos,
+    worldPosTileCentered,
+    getSiblings,
+    charAt,
+  }: {
+    k: KCtx;
+    tilePos: Vec2;
+    worldPos: Vec2;
+    worldPosTileCentered: Vec2;
+    getSiblings: () => SiblingTiles;
+    charAt: (x: number, y: number) => string;
+  }): CompList<Comp> | void;
 }

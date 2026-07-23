@@ -45,21 +45,21 @@ export const sceneLevel_1_2e = async (k: KCtx) => {
       r: tileRock,
       G: {
         loadResources: GopherEntity.loadResources,
-        factory: (k, tilePos, worldPos) => {
-          GopherEntity.spawn(k, worldPos, {});
+        factory: ({k, worldPosTileCentered}) => {
+          GopherEntity.spawn(k, worldPosTileCentered, {});
         },
       },
       F: {
         loadResources: BumblebeeEntity.loadResources,
-        factory: (k, tilePos, worldPos) => {
-          BumblebeeEntity.spawn(k, worldPos, {});
+        factory: ({k, worldPosTileCentered}) => {
+          BumblebeeEntity.spawn(k, worldPosTileCentered, {});
         },
       },
       M: {
         loadResources: MissBobrEntity.loadResources,
-        factory: (k, tilePos, worldPos) => {
+        factory: ({k, worldPosTileCentered}) => {
           if (!gsm.state.persistent.level1.isMissBobrCutsceneShown) {
-            MissBobrEntity.spawn(k, worldPos, {
+            MissBobrEntity.spawn(k, worldPosTileCentered, {
               flipX: true,
               getAvailableInteractionType: (): string => {
                 return null;
@@ -73,8 +73,8 @@ export const sceneLevel_1_2e = async (k: KCtx) => {
         loadResources: async k => {
           k.loadSprite('flower-1', 'sprites/items/flower-1.png');
         },
-        factory: (k, tilePos, worldPos) => {
-          const obj = InteractableItemEntity.spawn(k, worldPos, {
+        factory: ({k, worldPosTileCentered}) => {
+          const obj = InteractableItemEntity.spawn(k, worldPosTileCentered, {
             sprite: 'flower-1',
             interact: async player => {
               await player.showDialogSeries([
@@ -88,8 +88,8 @@ export const sceneLevel_1_2e = async (k: KCtx) => {
       },
       T: {
         loadResources: TriggerEntity.loadResources,
-        factory: (k, tilePos, worldPos) => {
-          TriggerEntity.spawn(k, worldPos, {
+        factory: ({k, worldPosTileCentered}) => {
+          TriggerEntity.spawn(k, worldPosTileCentered, {
             heightTiles: 4,
             onPlayerCollide: async () => {
               // Check if we have already shown cutscene

@@ -47,26 +47,26 @@ export const sceneLevel_1_2 = async (k: KCtx) => {
       r: tileRock,
       G: {
         loadResources: GopherEntity.loadResources,
-        factory: (k, tilePos, worldPos) => {
-          GopherEntity.spawn(k, worldPos, {});
+        factory: ({k, worldPosTileCentered}) => {
+          GopherEntity.spawn(k, worldPosTileCentered, {});
         },
       },
       F: {
         loadResources: BumblebeeEntity.loadResources,
-        factory: (k, tilePos, worldPos) => {
-          BumblebeeEntity.spawn(k, worldPos, {});
+        factory: ({k, worldPosTileCentered}) => {
+          BumblebeeEntity.spawn(k, worldPosTileCentered, {});
         },
       },
       B: {
         loadResources: OldBobrEntity.loadResources,
-        factory: (k, tilePos, worldPos) => {
+        factory: ({k, worldPosTileCentered}) => {
           enum InteractionType {
             SAY_INTRO_REPEAT = 'SAY_INTRO_REPEAT',
             GIVE_LUCKY_CHARM = 'GIVE_LUCKY_CHARM',
             SAY_RESPAWN_INFO = 'SAY_RESPAWN_INFO',
           }
 
-          const mainObj = OldBobrEntity.spawn(k, worldPos, {
+          const mainObj = OldBobrEntity.spawn(k, worldPosTileCentered, {
             flipX: true,
             getAvailableInteractionType: (): InteractionType => {
               if (gsm.state.persistent.player.deaths >= 1 && !gsm.state.persistent.player.hasLuckyCharm) {
@@ -157,11 +157,11 @@ export const sceneLevel_1_2 = async (k: KCtx) => {
           await MapItemEntity.loadResources(k);
           await k.loadSprite('home-kitchen-chair-right', 'sprites/home/home-kitchen-chair-right.png');
         },
-        factory: (k, tilePos, worldPos) => {
+        factory: ({k, worldPosTileCentered}) => {
           addCollectableItem(k, {
             itemId: ITEM_ID.HOME_KITCHEN_CHAIR_RIGHT,
             sprite: 'home-kitchen-chair-right',
-            worldPos,
+            worldPos: worldPosTileCentered,
           });
         },
       },
@@ -177,11 +177,11 @@ export const sceneLevel_1_2 = async (k: KCtx) => {
             },
           });
         },
-        factory: (k, tilePos, worldPos) => {
+        factory: ({k, worldPosTileCentered}) => {
           addCollectableItem(k, {
             itemId: ITEM_ID.HOME_STOVE,
             sprite: 'home-stove',
-            worldPos,
+            worldPos: worldPosTileCentered,
           });
         },
       },

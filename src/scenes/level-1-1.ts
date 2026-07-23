@@ -48,19 +48,19 @@ export const sceneLevel_1_1 = async (k: KCtx) => {
       r: tileRock,
       G: {
         loadResources: GopherEntity.loadResources,
-        factory: (k, tilePos, worldPos) => {
-          GopherEntity.spawn(k, worldPos, {});
+        factory: ({k, worldPosTileCentered}) => {
+          GopherEntity.spawn(k, worldPosTileCentered, {});
         },
       },
       F: {
         loadResources: BumblebeeEntity.loadResources,
-        factory: (k, tilePos, worldPos) => {
-          BumblebeeEntity.spawn(k, worldPos, {});
+        factory: ({k, worldPosTileCentered}) => {
+          BumblebeeEntity.spawn(k, worldPosTileCentered, {});
         },
       },
       H: {
         loadResources: HomeEntity.loadResources,
-        factory: (k, tilePos, worldPos) => {
+        factory: ({k, worldPos}) => {
           HomeEntity.spawn(k, worldPos, {
             onEnter: () => {
               // Need to reset spawn point when entering home
@@ -75,14 +75,14 @@ export const sceneLevel_1_1 = async (k: KCtx) => {
       },
       B: {
         loadResources: OldBobrEntity.loadResources,
-        factory: (k, tilePos, worldPos) => {
+        factory: ({k, worldPosTileCentered}) => {
           enum InteractionType {
             SAY_INTRO = 'SAY_INTRO',
             SAY_INTRO_REPEAT = 'SAY_INTRO_REPEAT',
             GIVE_LUCKY_CHARM = 'GIVE_LUCKY_CHARM',
           }
 
-          const mainObj = OldBobrEntity.spawn(k, worldPos, {
+          const mainObj = OldBobrEntity.spawn(k, worldPosTileCentered, {
             getAvailableInteractionType: (): InteractionType => {
               if (!gsm.state.persistent.level1.isIntroSaid) {
                 return InteractionType.SAY_INTRO;
@@ -176,21 +176,21 @@ export const sceneLevel_1_1 = async (k: KCtx) => {
       },
       '1': {
         loadResources: MapItemEntity.loadResources,
-        factory: (k, tilePos, worldPos) => {
+        factory: ({k, worldPosTileCentered}) => {
           addCollectableItem(k, {
             itemId: ITEM_ID.HOME_KITCHEN_CHAIR_LEFT,
             sprite: 'home-kitchen-chair-left',
-            worldPos,
+            worldPos: worldPosTileCentered,
           });
         },
       },
       '2': {
         loadResources: MapItemEntity.loadResources,
-        factory: (k, tilePos, worldPos) => {
+        factory: ({k, worldPosTileCentered}) => {
           addCollectableItem(k, {
             itemId: ITEM_ID.HOME_KITCHEN_TABLE,
             sprite: 'home-kitchen-table',
-            worldPos,
+            worldPos: worldPosTileCentered,
           });
         },
       },

@@ -29,7 +29,7 @@ export const ExitEntity: GameEntity<ExitConfig, ExitGameObj> = {
       'exit',
       k.pos(posXY),
       k.rect(32, 64, {fill: false}),
-      k.anchor('bot'),
+      k.anchor('botleft'),
       k.area({isSensor: true}),
       k.offscreen({hide: true}),
     ]);

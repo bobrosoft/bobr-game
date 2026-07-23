@@ -49,19 +49,19 @@ export const sceneLevel_1_1e = async (k: KCtx) => {
       r: tileRock,
       G: {
         loadResources: GopherEntity.loadResources,
-        factory: (k, tilePos, worldPos) => {
-          GopherEntity.spawn(k, worldPos, {});
+        factory: ({k, worldPosTileCentered}) => {
+          GopherEntity.spawn(k, worldPosTileCentered, {});
         },
       },
       F: {
         loadResources: BumblebeeEntity.loadResources,
-        factory: (k, tilePos, worldPos) => {
-          BumblebeeEntity.spawn(k, worldPos, {});
+        factory: ({k, worldPosTileCentered}) => {
+          BumblebeeEntity.spawn(k, worldPosTileCentered, {});
         },
       },
       H: {
         loadResources: HomeEntity.loadResources,
-        factory: (k, tilePos, worldPos) => {
+        factory: ({k, worldPos}) => {
           HomeEntity.spawn(k, worldPos, {
             onEnter: () => {
               // Need to reset spawn point when entering home
@@ -76,7 +76,7 @@ export const sceneLevel_1_1e = async (k: KCtx) => {
       },
       B: {
         loadResources: OldBobrEntity.loadResources,
-        factory: (k, tilePos, worldPos) => {
+        factory: ({k, worldPosTileCentered}) => {
           enum InteractionType {
             SAY_GATHER_FIREWOOD = 'SAY_GATHER_FIREWOOD',
             SAY_GATHER_FIREWOOD_REPEAT = 'SAY_GATHER_FIREWOOD_REPEAT',
@@ -84,7 +84,7 @@ export const sceneLevel_1_1e = async (k: KCtx) => {
             SAY_FIREWOOD_GATHERED_REPEAT = 'SAY_FIREWOOD_GATHERED_REPEAT',
           }
 
-          const mainObj = OldBobrEntity.spawn(k, worldPos, {
+          const mainObj = OldBobrEntity.spawn(k, worldPosTileCentered, {
             getAvailableInteractionType: (): InteractionType => {
               if (!gsm.state.persistent.level1.isFirewoodInfoSaid) {
                 return InteractionType.SAY_GATHER_FIREWOOD;
@@ -179,11 +179,11 @@ export const sceneLevel_1_1e = async (k: KCtx) => {
       },
       '1': {
         loadResources: MapItemEntity.loadResources,
-        factory: (k, tilePos, worldPos) => {
+        factory: ({k, worldPosTileCentered}) => {
           addCollectableItem(k, {
             itemId: ITEM_ID.LEVEL1_FIREWOOD_1,
             sprite: 'item-firewood',
-            worldPos,
+            worldPos: worldPosTileCentered,
             postInteractAction: async () => {
               await checkIfAllFirewoodCollected();
             },
@@ -192,11 +192,11 @@ export const sceneLevel_1_1e = async (k: KCtx) => {
       },
       '2': {
         loadResources: MapItemEntity.loadResources,
-        factory: (k, tilePos, worldPos) => {
+        factory: ({k, worldPosTileCentered}) => {
           addCollectableItem(k, {
             itemId: ITEM_ID.LEVEL1_FIREWOOD_2,
             sprite: 'item-firewood',
-            worldPos,
+            worldPos: worldPosTileCentered,
             postInteractAction: async () => {
               await checkIfAllFirewoodCollected();
             },
@@ -205,11 +205,11 @@ export const sceneLevel_1_1e = async (k: KCtx) => {
       },
       '3': {
         loadResources: MapItemEntity.loadResources,
-        factory: (k, tilePos, worldPos) => {
+        factory: ({k, worldPosTileCentered}) => {
           addCollectableItem(k, {
             itemId: ITEM_ID.LEVEL1_FIREWOOD_3,
             sprite: 'item-firewood',
-            worldPos,
+            worldPos: worldPosTileCentered,
             postInteractAction: async () => {
               await checkIfAllFirewoodCollected();
             },

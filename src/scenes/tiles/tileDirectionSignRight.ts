@@ -1,5 +1,5 @@
-import {Comp, CompList, Vec2} from 'kaplay';
-import {SiblingTiles, TileEntity} from '../../components/addLevel';
+import {Comp, CompList} from 'kaplay';
+import {TileEntity} from '../../components/addLevel';
 import {KCtx} from '../../kaplay';
 
 export const tileDirectionSignRight: TileEntity = {
@@ -7,17 +7,11 @@ export const tileDirectionSignRight: TileEntity = {
     return Promise.all([k.loadSprite('direction-sign', 'sprites/tiles/direction-sign.png')]);
   },
 
-  factory(
-    k: KCtx,
-    tilePos: Vec2,
-    worldPos: Vec2,
-    getSiblings: () => SiblingTiles,
-    charAt: (x: number, y: number) => string,
-  ): CompList<Comp> | void {
+  factory({k}): CompList<Comp> | void {
     return [
       //
       k.sprite('direction-sign'),
-      k.anchor('bot'),
+      k.anchor('botleft'),
     ];
   },
 };

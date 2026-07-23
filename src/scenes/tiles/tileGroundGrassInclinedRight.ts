@@ -1,5 +1,5 @@
-import {Comp, CompList, Vec2} from 'kaplay';
-import {SiblingTiles, TileEntity} from '../../components/addLevel';
+import {Comp, CompList} from 'kaplay';
+import {TileEntity} from '../../components/addLevel';
 import {KCtx} from '../../kaplay';
 import {defaultFriction} from '../../misc/defaults';
 
@@ -11,13 +11,7 @@ export const tileGroundGrassInclinedRight: TileEntity = {
     ]);
   },
 
-  factory(
-    k: KCtx,
-    tilePos: Vec2,
-    worldPos: Vec2,
-    getSiblings: () => SiblingTiles,
-    charAt: (x: number, y: number) => string,
-  ): CompList<Comp> | void {
+  factory({k, getSiblings}): CompList<Comp> | void {
     const siblings = getSiblings();
     if (siblings.right === '\\') {
       return [
@@ -27,14 +21,14 @@ export const tileGroundGrassInclinedRight: TileEntity = {
           ...defaultFriction,
           shape: new k.Polygon([
             //
-            k.vec2(16, 0),
-            k.vec2(16, -16),
-            k.vec2(-16, -32),
-            k.vec2(-16, 0),
+            k.vec2(32, 0),
+            k.vec2(32, -16),
+            k.vec2(0, -32),
+            k.vec2(0, 0),
           ]),
         }),
         k.body({isStatic: true}),
-        k.anchor('bot'),
+        k.anchor('botleft'),
         k.offscreen({hide: true}),
       ];
     }
@@ -46,14 +40,14 @@ export const tileGroundGrassInclinedRight: TileEntity = {
         ...defaultFriction,
         shape: new k.Polygon([
           //
-          k.vec2(16, 0),
-          k.vec2(-16, -16),
-          k.vec2(-16, 0),
-          k.vec2(16, 16),
+          k.vec2(32, 0),
+          k.vec2(0, -16),
+          k.vec2(0, 0),
+          k.vec2(32, 16),
         ]),
       }),
       k.body({isStatic: true}),
-      k.anchor('bot'),
+      k.anchor('botleft'),
       k.offscreen({hide: true}),
     ];
   },
