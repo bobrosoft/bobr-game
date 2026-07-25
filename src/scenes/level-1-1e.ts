@@ -229,8 +229,8 @@ export const sceneLevel_1_1e = async (k: KCtx) => {
     ],
   });
 
-  await k.loadSprite('bg-home-day', 'sprites/backgrounds/home-day.png');
-  addBackground(k, 'bg-home-day', {offsetY: 40});
+  await k.loadSprite('bg-home-evening', 'sprites/backgrounds/home-evening.png');
+  addBackground(k, 'bg-home-evening', {offsetY: 40});
   addFlyingLeafs(k, {intensity: 2});
   shaderManager.enableDefaultShader();
 

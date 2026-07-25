@@ -195,8 +195,13 @@ export const sceneLevel_1_3 = async (k: KCtx) => {
     ],
   });
 
-  await k.loadSprite('bg-home-day', 'sprites/backgrounds/home-day.png');
-  addBackground(k, 'bg-home-day', {offsetY: 40});
+  if (!gsm.state.persistent.level1.isBoarDead) {
+    await k.loadSprite('bg-home-day', 'sprites/backgrounds/home-day.png');
+    addBackground(k, 'bg-home-day', {offsetY: 40});
+  } else {
+    await k.loadSprite('bg-home-evening', 'sprites/backgrounds/home-evening.png');
+    addBackground(k, 'bg-home-evening', {offsetY: 40});
+  }
   shaderManager.enableDefaultShader();
 
   camManager.setCamConstraintsForLevel(level, {

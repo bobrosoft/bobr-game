@@ -11,6 +11,7 @@ import {TriggerEntity} from '../entities/trigger';
 import {KCtx} from '../kaplay';
 import {bgMusicManager, camManager, gsm, shaderManager} from '../main';
 import {sceneLevel_1_1e} from './level-1-1e';
+import {sceneLevel_1_3} from './level-1-3';
 import map from './maps/level-1-2e.txt?raw';
 import {tileDirectionSignLeft} from './tiles/tileDirectionSignLeft';
 import {tileDirectionSignRight} from './tiles/tileDirectionSignRight';
@@ -164,16 +165,16 @@ export const sceneLevel_1_2e = async (k: KCtx) => {
       {
         currentMapExitIndex: 1,
         spawnOffsetTiles: k.vec2(-2, 0),
-        getDestLevelParamsUponUse: () => {
-          player.showDialogSeries([t('common.noNeedToGoThereAnymore')]);
-          return undefined;
-        },
+        getDestLevelParamsUponUse: () => ({
+          destLevel: sceneLevel_1_3.id,
+          destLevelExitIndex: 0,
+        }),
       },
     ],
   });
 
-  await k.loadSprite('bg-home-day', 'sprites/backgrounds/home-day.png');
-  addBackground(k, 'bg-home-day', {offsetY: 40});
+  await k.loadSprite('bg-home-evening', 'sprites/backgrounds/home-evening.png');
+  addBackground(k, 'bg-home-evening', {offsetY: 40});
   addFlyingLeafs(k, {intensity: 2});
   shaderManager.enableDefaultShader();
 
