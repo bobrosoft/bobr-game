@@ -41,6 +41,11 @@ export const HomeEntity: GameEntity<Config> = {
           burn: {from: 6, to: 11, loop: true},
         },
       }),
+      k.loadSprite('home-stove-pipe', 'sprites/home/home-stove-pipe.png'),
+      k.loadSprite('particle-ground', 'sprites/particles/ground.png', {
+        sliceX: 2,
+        sliceY: 1,
+      }),
     ]);
   },
 
@@ -146,6 +151,37 @@ export const HomeEntity: GameEntity<Config> = {
       }),
     ]);
     stove.hidden = true;
+
+    const stovePipe = container.add([
+      //
+      'home-stove-pipe',
+      k.sprite('home-stove-pipe'),
+      k.anchor('bot'),
+      k.pos(170, -28),
+    ]);
+
+    // Add particles generator for smoke for the stovepipe
+    const stoveSmokeEmitter = container.add([
+      k.particles(
+        {
+          max: 15,
+          speed: [80, 80],
+          lifeTime: [1.5, 3.5],
+          angle: [0, 360],
+          angularVelocity: [0, 30],
+          opacities: [1.0, 0.7, 0.0],
+          scales: [1.0, 1.2, 1.5, 2],
+          texture: k.getSprite('particle-ground').data.frames[0].tex, // texture of a sprite
+          quads: [k.getSprite('particle-ground').data.frames[0].q], // frames of a sprite
+        },
+        {
+          rate: 8,
+          position: k.vec2(178, -84),
+          direction: -15,
+          spread: 15,
+        },
+      ),
+    ]);
 
     /// Add furniture to second floor
     const bed = container.add([
