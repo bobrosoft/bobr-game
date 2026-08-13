@@ -50,5 +50,9 @@
       "firewoodGatheredRepeat1": "Дрова собраны. Пора домой.",
       "firewoodGatheredRepeat2": "Заходи домой, на сегодня достаточно приключений."
     }
+  },
+  "theEnd": {
+    "toBeContinued": "To be continued…",
+    "thanksForPlaying": "Спасибо за игру!"
   }
 }

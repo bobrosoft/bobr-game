@@ -21,6 +21,7 @@ import {sceneLevel_1_3} from './scenes/level-1-3';
 import {sceneMenu} from './scenes/menu';
 import {sceneMenuDebug} from './scenes/menuDebug';
 import {sceneRotateDevice} from './scenes/rotateDevice';
+import {sceneToBeContinued} from './scenes/toBeContinued';
 
 export const gsm = new GameStateManager();
 export const bgMusicManager: BgMusicManager = new BgMusicManager(k);
@@ -61,6 +62,7 @@ export let shaderManager: ShaderManager;
   k.scene(sceneLevel_1_3.id, sceneWrapper(k, sceneLevel_1_3));
   k.scene(sceneLevel_1_2e.id, sceneWrapper(k, sceneLevel_1_2e));
   k.scene(sceneLevel_1_1e.id, sceneWrapper(k, sceneLevel_1_1e));
+  k.scene(sceneToBeContinued.id, sceneWrapper(k, sceneToBeContinued));
 
   const isInitialOrientationLandscape = Helpers.isLandscapeMode();
 

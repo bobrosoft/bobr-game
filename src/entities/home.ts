@@ -5,7 +5,9 @@ import {interactable} from '../components/InteractableComp';
 import {showDialogSeries} from '../components/showDialog';
 import {KCtx} from '../kaplay';
 import {bgMusicManager, gsm} from '../main';
+import {changeScene} from '../misc/changeScene';
 import {defaultFriction} from '../misc/defaults';
+import {sceneToBeContinued} from '../scenes/toBeContinued';
 import {GameEntity} from './generic/entity';
 import {ITEM_ID} from './generic/item-id';
 
@@ -192,7 +194,11 @@ export const HomeEntity: GameEntity<Config> = {
       k.pos(129, -65),
       k.area({isSensor: true}),
       interactable(async player => {
-        await player.showDialogSeries([t(k.choose(['home.bedRepeat1']))]);
+        if (gsm.lvl1.canCompleteLevel) {
+          changeScene(k, sceneToBeContinued.id, {isGameLevel: false}).then();
+        } else {
+          await player.showDialogSeries([t(k.choose(['home.bedRepeat1']))]);
+        }
       }),
     ]);
     bed.hidden = true;

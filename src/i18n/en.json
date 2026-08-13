@@ -50,5 +50,9 @@
       "firewoodGatheredRepeat1": "The firewood is collected. Time to go home.",
       "firewoodGatheredRepeat2": "Come on in, that's enough adventure for today."
     }
+  },
+  "theEnd": {
+    "toBeContinued": "To be continued…",
+    "thanksForPlaying": "Thanks for playing!"
   }
 }

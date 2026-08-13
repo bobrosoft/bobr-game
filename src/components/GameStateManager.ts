@@ -52,6 +52,8 @@ export class GameStateManager {
         this.getIsPlayerHasItem(ITEM_ID.LEVEL1_FIREWOOD_1) &&
         this.getIsPlayerHasItem(ITEM_ID.LEVEL1_FIREWOOD_2) &&
         this.getIsPlayerHasItem(ITEM_ID.LEVEL1_FIREWOOD_3),
+
+      canCompleteLevel: this.state.persistent.home.isStoveLit,
     };
   }
 
