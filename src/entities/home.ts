@@ -44,10 +44,7 @@ export const HomeEntity: GameEntity<Config> = {
         },
       }),
       k.loadSprite('home-stove-pipe', 'sprites/home/home-stove-pipe.png'),
-      k.loadSprite('particle-ground', 'sprites/particles/ground.png', {
-        sliceX: 2,
-        sliceY: 1,
-      }),
+      k.loadSprite('particle-smoke', 'sprites/particles/smoke.png'),
     ]);
   },
 
@@ -173,8 +170,8 @@ export const HomeEntity: GameEntity<Config> = {
           angularVelocity: [0, 30],
           opacities: [1.0, 0.7, 0.0],
           scales: [1.0, 1.2, 1.5, 2],
-          texture: k.getSprite('particle-ground').data.frames[0].tex, // texture of a sprite
-          quads: [k.getSprite('particle-ground').data.frames[0].q], // frames of a sprite
+          texture: k.getSprite('particle-smoke').data.frames[0].tex, // texture of a sprite
+          quads: [k.getSprite('particle-smoke').data.frames[0].q], // frames of a sprite
         },
         {
           rate: 8,
