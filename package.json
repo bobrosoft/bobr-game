@@ -8,8 +8,8 @@
     "lintfix": "eslint --fix --ext .ts ./src",
     "build": "rm -rf ./dist && vite build",
     "preview": "vite preview",
-    "zip": "npm run build && mkdir -p dist && zip -r dist/game.zip dist -x \"**/.DS_Store\"",
-    "deploy": "npm run build && gh-pages -d dist"
+    "zip": "pnpm run build && mkdir -p dist && zip -r dist/game.zip dist -x \"**/.DS_Store\"",
+    "deploy": "pnpm run build && gh-pages -d dist"
   },
   "dependencies": {
     "deepmerge": "^4.3.1",
