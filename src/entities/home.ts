@@ -158,6 +158,7 @@ export const HomeEntity: GameEntity<Config> = {
       k.anchor('bot'),
       k.pos(170, -28),
     ]);
+    stovePipe.hidden = true;
 
     // Add particles generator for smoke for the stovepipe
     const stoveSmokeEmitter = container.add([
@@ -227,6 +228,7 @@ export const HomeEntity: GameEntity<Config> = {
 
       if (hasStove) {
         stove.hidden = false;
+        stovePipe.hidden = false;
         if (gsm.state.persistent.home.isStoveLit) {
           stove.play('burn');
           stoveSmokeEmitter.paused = false;
@@ -236,6 +238,7 @@ export const HomeEntity: GameEntity<Config> = {
         }
       } else {
         stove.hidden = true;
+        stovePipe.hidden = true;
         stove.play('idle');
         stoveSmokeEmitter.paused = true;
       }
