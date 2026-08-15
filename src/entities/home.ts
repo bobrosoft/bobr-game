@@ -181,6 +181,7 @@ export const HomeEntity: GameEntity<Config> = {
         },
       ),
     ]);
+    stoveSmokeEmitter.paused = true;
 
     /// Add furniture to second floor
     const bed = container.add([
@@ -228,12 +229,15 @@ export const HomeEntity: GameEntity<Config> = {
         stove.hidden = false;
         if (gsm.state.persistent.home.isStoveLit) {
           stove.play('burn');
+          stoveSmokeEmitter.paused = false;
         } else {
           stove.play('idle');
+          stoveSmokeEmitter.paused = true;
         }
       } else {
         stove.hidden = true;
         stove.play('idle');
+        stoveSmokeEmitter.paused = true;
       }
     }
 
