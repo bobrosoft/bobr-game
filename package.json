@@ -1,6 +1,10 @@
 {
   "name": "bobr-game",
   "type": "module",
+  "packageManager": "pnpm@11.21.0",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "check": "tsc",
     "dev": "vite --host 0.0.0.0",
