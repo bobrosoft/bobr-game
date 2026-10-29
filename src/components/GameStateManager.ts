@@ -12,6 +12,7 @@ export interface GameState {
     player: {
       deaths: number;
       hasLuckyCharm: boolean;
+      hasMatches: boolean;
       inventory: ITEM_ID[]; // list of item IDs
     };
     home: {
@@ -23,7 +24,6 @@ export interface GameState {
       isBoarDead?: boolean;
       isMissBobrCutsceneShown?: boolean;
       isFirewoodInfoSaid?: boolean;
-      isFirewoodGatheredSaid?: boolean;
     };
   };
   temp: {
@@ -258,6 +258,7 @@ export class GameStateManager {
       player: {
         deaths: 0,
         hasLuckyCharm: false,
+        hasMatches: false,
         inventory: [],
       },
       home: {

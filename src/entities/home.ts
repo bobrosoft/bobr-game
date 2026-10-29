@@ -133,7 +133,7 @@ export const HomeEntity: GameEntity<Config> = {
       interactable(async player => {
         if (gsm.state.persistent.home.isStoveLit) {
           await player.showDialogSeries([t(k.choose(['home.stoveLitRepeat1']))]);
-        } else if (gsm.lvl1.hasAllFirewood) {
+        } else if (gsm.lvl1.hasAllFirewood && gsm.state.persistent.player.hasMatches) {
           gsm.update({
             persistent: {
               home: {
@@ -144,6 +144,8 @@ export const HomeEntity: GameEntity<Config> = {
 
           updateFurnitureVisibility();
           await player.showDialogSeries([t(k.choose(['home.stoveLitRepeat1']))]);
+        } else if (gsm.lvl1.hasAllFirewood) {
+          await player.showDialogSeries([t(k.choose(['home.stoveNotLitNoMatchesRepeat1']))]);
         } else {
           await player.showDialogSeries([t(k.choose(['home.stoveNotLitRepeat1']))]);
         }

@@ -22,6 +22,7 @@
     "kitchenChairRepeat1": "Why is it so small?.. Oh well, I don't have much choice.",
     "bedRepeat1": "I'll sleep when I finish everything for today...",
     "stoveNotLitRepeat1": "No firewood to light the stove. I need to gather some.",
+    "stoveNotLitNoMatchesRepeat1": "Okay, I have firewood. Now I need something to light it with...",
     "stoveLitRepeat1": "Finally, it's warm! Time to rest."
   },
   "level1": {
@@ -45,8 +46,8 @@
       "gatherFirewood2": "But it's still cold at home, the stove isn't lit. Gather some firewood. I saw some nearby.",
       "gatherFirewoodRepeat1": "Gather some firewood, or you'll freeze.",
       "gatherFirewoodRepeat2": "There's firewood nearby. Don't be lazy.",
-      "firewoodGathered1": "Great!",
-      "firewoodGathered2": "Now you can light the stove and warm up.",
+      "giveMatches1": "You'll need matches to light the stove. Here you go.",
+      "giveMatches2": "Now you can warm up.",
       "firewoodGatheredRepeat1": "The firewood is collected. Time to go home.",
       "firewoodGatheredRepeat2": "Come on in, that's enough adventure for today."
     }

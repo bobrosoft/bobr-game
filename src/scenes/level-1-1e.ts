@@ -11,7 +11,7 @@ import {HomeEntity} from '../entities/home';
 import {MapItemEntity} from '../entities/map-item';
 import {OldBobrEntity} from '../entities/old-bobr';
 import {KCtx} from '../kaplay';
-import {bgMusicManager, camManager, gsm, shaderManager} from '../main';
+import {bgMusicManager, camManager, gsm, hudManager, shaderManager} from '../main';
 import {sceneLevel_1_2e} from './level-1-2e';
 import map from './maps/level-1-1e.txt?raw';
 import {tileDirectionSignLeft} from './tiles/tileDirectionSignLeft';
@@ -80,7 +80,7 @@ export const sceneLevel_1_1e = async (k: KCtx) => {
           enum InteractionType {
             SAY_GATHER_FIREWOOD = 'SAY_GATHER_FIREWOOD',
             SAY_GATHER_FIREWOOD_REPEAT = 'SAY_GATHER_FIREWOOD_REPEAT',
-            SAY_FIREWOOD_GATHERED = 'SAY_FIREWOOD_GATHERED',
+            GIVE_MATCHES = 'GIVE_MATCHES',
             SAY_FIREWOOD_GATHERED_REPEAT = 'SAY_FIREWOOD_GATHERED_REPEAT',
           }
 
@@ -90,8 +90,8 @@ export const sceneLevel_1_1e = async (k: KCtx) => {
                 return InteractionType.SAY_GATHER_FIREWOOD;
               } else if (!gsm.lvl1.hasAllFirewood) {
                 return InteractionType.SAY_GATHER_FIREWOOD_REPEAT;
-              } else if (!gsm.state.persistent.level1.isFirewoodGatheredSaid) {
-                return InteractionType.SAY_FIREWOOD_GATHERED;
+              } else if (!gsm.state.persistent.player.hasMatches) {
+                return InteractionType.GIVE_MATCHES;
               } else {
                 return InteractionType.SAY_FIREWOOD_GATHERED_REPEAT;
               }
@@ -138,27 +138,37 @@ export const sceneLevel_1_1e = async (k: KCtx) => {
                   ]);
                   break;
 
-                case InteractionType.SAY_FIREWOOD_GATHERED:
+                case InteractionType.GIVE_MATCHES:
                   await showDialogSeries(
                     k,
                     mainObj,
                     player,
                     [
                       //
-                      t('level1.oldBobr.firewoodGathered1'),
-                      t('level1.oldBobr.firewoodGathered2'),
+                      t('level1.oldBobr.giveMatches1'),
                     ],
                     {unskippable: true},
                   );
 
-                  // Mark that the firewood info has been said
                   gsm.update({
                     persistent: {
-                      level1: {
-                        isFirewoodGatheredSaid: true,
+                      player: {
+                        hasMatches: true,
                       },
                     },
                   });
+                  await hudManager.playEquipmentItemAnimation('matches');
+
+                  await showDialogSeries(
+                    k,
+                    mainObj,
+                    player,
+                    [
+                      //
+                      t('level1.oldBobr.giveMatches2'),
+                    ],
+                    {unskippable: true},
+                  );
                   break;
 
                 case InteractionType.SAY_FIREWOOD_GATHERED_REPEAT:

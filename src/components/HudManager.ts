@@ -14,6 +14,7 @@ export class HudManager {
   protected joystick?: JoystickGameObj;
   protected menuButton: GameObj<HudComp | AreaComp>;
   protected luckyCharm: GameObj<HudComp | AreaComp | OpacityComp | PosComp | ScaleComp | SpriteComp>;
+  protected matches: GameObj<HudComp | AreaComp | OpacityComp | PosComp | ScaleComp | SpriteComp>;
 
   constructor(protected k: KCtx) {
     // Add local fade-in overlay for HUD
@@ -35,9 +36,9 @@ export class HudManager {
     }
 
     // Add reload button to the top left corner
-    this.k.loadSprite('menu-button', 'sprites/icons/menu.png');
+    this.k.loadSprite('hud-menu-button', 'sprites/icons/menu.png');
     this.menuButton = this.k.add([
-      'menu-button',
+      'hud-menu-button',
       hud({shouldBeShown: true}),
       this.k.rect(30, 30, {fill: false}),
       this.k.area(),
@@ -48,7 +49,7 @@ export class HudManager {
       //
       hud({shouldBeShown: true}),
       this.k.pos(6, 6),
-      this.k.sprite('menu-button'),
+      this.k.sprite('hud-menu-button'),
     ]);
     this.menuButton.onClick(() => {
       if (!this.menuButton.paused) {
@@ -57,7 +58,7 @@ export class HudManager {
     });
 
     // Add lucky charm
-    this.k.loadSprite('lucky-charm', 'sprites/icons/lucky-charm.gif', {
+    this.k.loadSprite('hud-lucky-charm', 'sprites/icons/lucky-charm.gif', {
       sliceX: 2,
       sliceY: 1,
       anims: {
@@ -66,11 +67,23 @@ export class HudManager {
       },
     });
     this.luckyCharm = this.k.add([
-      'lucky-charm',
+      'hud-lucky-charm',
       hud({shouldBeShown: gsm.state.persistent.player.hasLuckyCharm}),
-      this.k.sprite('lucky-charm'),
+      this.k.sprite('hud-lucky-charm'),
       this.k.area(),
       this.k.pos(this.k.width() - 10, 10),
+      this.k.anchor('topright'),
+      this.k.scale(1),
+    ]);
+
+    // Add matches (placeholder: reuses the lucky-charm sprite until a dedicated icon exists)
+    this.k.loadSprite('hud-matches', 'sprites/icons/matches.png');
+    this.matches = this.k.add([
+      'hud-matches',
+      hud({shouldBeShown: gsm.state.persistent.player.hasMatches}),
+      this.k.sprite('hud-matches'),
+      this.k.area(),
+      this.k.pos(this.luckyCharm.pos.x - 20, this.luckyCharm.pos.y),
       this.k.anchor('topright'),
       this.k.scale(1),
     ]);
@@ -84,6 +97,7 @@ export class HudManager {
 
   prepareForNewScene() {
     this.luckyCharm.shouldBeShown = gsm.state.persistent.player.hasLuckyCharm;
+    this.matches.shouldBeShown = gsm.state.persistent.player.hasMatches;
   }
 
   show() {
@@ -121,10 +135,13 @@ export class HudManager {
     });
   }
 
-  async playEquipmentItemAnimation(itemType: 'lucky-charm') {
+  async playEquipmentItemAnimation(itemType: 'lucky-charm' | 'matches') {
     switch (itemType) {
       case 'lucky-charm':
         return this.performEquipmentItemAnimation(this.luckyCharm);
+
+      case 'matches':
+        return this.performEquipmentItemAnimation(this.matches);
 
       default:
         throw new Error(`Unknown equipment item type: ${itemType}`);
